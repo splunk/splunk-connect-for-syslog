@@ -12,7 +12,21 @@ splunk:
 #   hec_verify_tls: "yes"
 
 sc4s:
-  {}
+  # Container listen ports for the default syslog sources. The Kubernetes
+  # Service always exposes the standard 514/601 externally and maps to these
+  # container ports, so external clients are unaffected if you change them.
+  #
+  # The defaults bind the privileged ports 514/601 directly (root behavior). To
+  # run SC4S as non-root under the "restricted" Pod Security Standard, move these
+  # above 1024 (for example 5514/5601). A non-root process cannot bind ports
+  # below 1024 in Kubernetes because the container runtime cannot grant the
+  # ambient NET_BIND_SERVICE capability needed across exec -- see the non-root
+  # securityContext preset below.
+  listenPorts:
+    tcp: 514
+    udp: 514
+    rfc6587: 601
+    rfc5426: 601
 #   Use this setting to add proxy support if needed.
 #   proxy:
 #       http: "http://your_proxy_ip.com"

@@ -52,7 +52,16 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
           - name: SC4S_RUNTIME_ENV
-            value: "k8s"            
+            value: "k8s"
+          {{- $lp := .Values.sc4s.listenPorts | default dict }}
+          - name: SC4S_LISTEN_DEFAULT_TCP_PORT
+            value: "{{ $lp.tcp | default 514 }}"
+          - name: SC4S_LISTEN_DEFAULT_UDP_PORT
+            value: "{{ $lp.udp | default 514 }}"
+          - name: SC4S_LISTEN_DEFAULT_RFC6587_PORT
+            value: "{{ $lp.rfc6587 | default 601 }}"
+          - name: SC4S_LISTEN_DEFAULT_RFC5426_PORT
+            value: "{{ $lp.rfc5426 | default 601 }}"
           # Inject additional enviroment variable from values.yaml to add proxy support
           {{- with .Values.sc4s.proxy }}
           {{- if .http }}
@@ -141,19 +150,19 @@ spec:
 
           ports:
             - name: bsd-dflt-tcp
-              containerPort: 514
+              containerPort: {{ $lp.tcp | default 514 }}
               protocol: TCP
             - name: bsd-dflt-udp
-              containerPort: 514
+              containerPort: {{ $lp.udp | default 514 }}
               protocol: UDP
             - name: bsd-dflt-tls
               containerPort: 6514
               protocol: TCP
             - name: ietf-dflt-tcp
-              containerPort: 601
+              containerPort: {{ $lp.rfc6587 | default 601 }}
               protocol: TCP
             - name: ietf-dflt-udp
-              containerPort: 601
+              containerPort: {{ $lp.rfc5426 | default 601 }}
               protocol: UDP
             - name: ietf-dflt-tls
               containerPort: 5425
