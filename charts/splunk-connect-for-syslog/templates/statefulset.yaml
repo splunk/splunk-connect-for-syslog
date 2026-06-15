@@ -239,17 +239,20 @@ spec:
             mountPath: /etc/syslog-ng/conf.d/configmap/addons/
             readOnly: true
           {{- end }}
+          startupProbe:
+            exec:
+              command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
+            periodSeconds: 5
+            failureThreshold: 30
+            timeoutSeconds: 5
           livenessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
-            initialDelaySeconds: 10
-            periodSeconds: 3              
-            timeoutSeconds: 5            
+            periodSeconds: 3
+            timeoutSeconds: 5
           readinessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
-            initialDelaySeconds: 10
-            failureThreshold: 60
             periodSeconds: 10
             timeoutSeconds: 5
           resources:
