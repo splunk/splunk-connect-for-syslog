@@ -163,7 +163,6 @@ if grep -q 'alpine' /etc/os-release; then
   CA_TRUST_DIR=/usr/local/share/ca-certificates
   CA_TRUST_CMD=update-ca-certificates
 else
-  # if we fallback to ubi
   IS_ALPINE=false
   CA_TRUST_DIR=/usr/share/pki/ca-trust-source/anchors
   CA_TRUST_CMD=update-ca-trust

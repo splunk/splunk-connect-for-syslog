@@ -66,6 +66,10 @@ spec:
             value: "{{ $lp.rfc6587 | default 601 }}"
           - name: SC4S_LISTEN_DEFAULT_RFC5426_PORT
             value: "{{ $lp.rfc5426 | default 601 }}"
+          - name: SC4S_LISTEN_DEFAULT_TLS_PORT
+            value: "{{ $lp.tls | default 6514 }}"
+          - name: SC4S_LISTEN_DEFAULT_RFC5425_PORT
+            value: "{{ $lp.rfc5425 | default 5425 }}"
           # Inject additional enviroment variable from values.yaml to add proxy support
           {{- with .Values.sc4s.proxy }}
           {{- if .http }}
@@ -160,7 +164,7 @@ spec:
               containerPort: {{ $lp.udp | default 514 }}
               protocol: UDP
             - name: bsd-dflt-tls
-              containerPort: 6514
+              containerPort: {{ $lp.tls | default 6514 }}
               protocol: TCP
             - name: ietf-dflt-tcp
               containerPort: {{ $lp.rfc6587 | default 601 }}
@@ -169,7 +173,7 @@ spec:
               containerPort: {{ $lp.rfc5426 | default 601 }}
               protocol: UDP
             - name: ietf-dflt-tls
-              containerPort: 5425
+              containerPort: {{ $lp.rfc5425 | default 5425 }}
               protocol: TCP
             - name: health
               containerPort: 8080
@@ -261,12 +265,16 @@ spec:
           livenessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
-            periodSeconds: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
             timeoutSeconds: 5
           readinessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
+            initialDelaySeconds: 10
             periodSeconds: 10
+            failureThreshold: 5
             timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

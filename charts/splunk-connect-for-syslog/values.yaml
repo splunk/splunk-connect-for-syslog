@@ -28,6 +28,8 @@ sc4s:
 #   udp: 514
 #   rfc6587: 601
 #   rfc5426: 601
+#   tls: 6514
+#   rfc5425: 5425
 #   Use this setting to add proxy support if needed.
 #   proxy:
 #       http: "http://your_proxy_ip.com"
