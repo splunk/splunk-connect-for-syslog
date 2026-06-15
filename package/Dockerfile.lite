@@ -64,17 +64,9 @@ EXPOSE 514
 EXPOSE 601/tcp
 EXPOSE 6514/tcp
 
-# The image keeps root as the default runtime user so that the standard
-# Docker/Podman runtimes can bind the privileged default ports (514/601) and
-# read /dev/log without extra configuration.
-#
-# To support rootless/non-root runtimes (e.g. Kubernetes with a restrictive
-# PodSecurity policy) the directories written to at startup are owned by and
-# writable for the unprivileged "syslog" user (UID/GID 1024). A non-root
-# runtime can therefore set runAsUser/runAsGroup=1024 without the entrypoint
-# failing to create folders. Binding the privileged default ports as non-root
-# additionally requires the NET_BIND_SERVICE capability (granted via the
-# container securityContext) or remapping listeners to ports >1024.
+#Note this is commented out because the default syslog-ng config will try to read
+#/dev/log a low priv user cannot read this and the container will fail in SC4S
+#and other uses the low user may be selected
 
 HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 

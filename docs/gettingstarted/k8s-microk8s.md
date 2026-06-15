@@ -122,13 +122,7 @@ For hardened environments (for example RKE2, OpenShift, or any cluster that
 enforces `runAsNonRoot`) you can run SC4S as the unprivileged `syslog` user
 (UID/GID `1024`) baked into the image.
 
-A non-root process **cannot bind ports below 1024** in Kubernetes. The
-`NET_BIND_SERVICE` capability does not solve this: the container runtime grants
-the capability only in the bounding set, not the *ambient* set, and Kubernetes
-has no field to set ambient capabilities — so the capability is dropped when the
-container `exec`s into syslog-ng as a non-root UID. Setting
-`allowPrivilegeEscalation: false` (required by the `restricted` profile) also
-disables file-capability based workarounds.
+A non-root process **cannot bind ports below 1024** in Kubernetes. 
 
 The supported approach is to move the syslog listeners to **unprivileged ports**
 inside the container while the Kubernetes `Service` continues to expose the
@@ -164,14 +158,13 @@ securityContext:
 Notes:
 
 - `sc4s.listenPorts` moves the container listeners above 1024 so no privileged
-  bind (and therefore no `NET_BIND_SERVICE`) is required. The `Service` still
-  publishes `514`/`601` to the network and forwards to these container ports, so
-  upstream senders are unaffected.
+  bind is required. The `Service` still publishes `514`/`601` to the network 
+  and forwards to these container ports, so upstream senders are unaffected.
 - `fsGroup: 1024` makes the persistent volume writable by the `syslog` group so
   the disk buffer and runtime state can be written.
 - The non-root preset relies on UID/GID `1024` owning the image directories.
-  Running as an arbitrary UID requires rebuilding the image with matching
-  ownership.
+  **Running as an arbitrary UID requires rebuilding the image with matching
+  ownership.**
 - When running as non-root, the container cannot update the system CA trust
   store. To trust a custom CA for the Splunk HEC destination, mount the CA
   material directly (for example via `splunk.hec_tls`) instead of relying on the
