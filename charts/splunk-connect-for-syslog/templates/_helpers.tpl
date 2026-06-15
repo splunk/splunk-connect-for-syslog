@@ -62,22 +62,3 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-{{/*
-Pod-level securityContext. Defaults to an empty context (root, default
-behavior); set .Values.podSecurityContext to run as non-root. See values.yaml
-for the recommended non-root preset.
-*/}}
-{{- define "splunk-connect-for-syslog.podSecurityContext" -}}
-{{- toYaml .Values.podSecurityContext -}}
-{{- end -}}
-
-{{/*
-Container-level securityContext. Defaults to an empty context (root, default
-behavior); set .Values.securityContext to run as non-root. See values.yaml for
-the recommended non-root preset (NET_BIND_SERVICE is needed so the default
-privileged ports 514/601 can bind as a non-root user).
-*/}}
-{{- define "splunk-connect-for-syslog.securityContext" -}}
-{{- toYaml .Values.securityContext -}}
-{{- end -}}
