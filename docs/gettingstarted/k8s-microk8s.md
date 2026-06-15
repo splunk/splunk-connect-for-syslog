@@ -120,11 +120,32 @@ Use the `config_files` and `context_files` variables to specify configuration an
 By default the Helm chart runs SC4S as `root`, matching the historical behavior.
 For hardened environments (for example RKE2, OpenShift, or any cluster that
 enforces `runAsNonRoot`) you can run SC4S as the unprivileged `syslog` user
-(UID/GID `1024`) baked into the image by setting `podSecurityContext` and
-`securityContext` in your `values.yaml`. The following preset is compliant with
-the Pod Security Standards `restricted` profile:
+(UID/GID `1024`) baked into the image.
+
+A non-root process **cannot bind ports below 1024** in Kubernetes. The
+`NET_BIND_SERVICE` capability does not solve this: the container runtime grants
+the capability only in the bounding set, not the *ambient* set, and Kubernetes
+has no field to set ambient capabilities — so the capability is dropped when the
+container `exec`s into syslog-ng as a non-root UID. Setting
+`allowPrivilegeEscalation: false` (required by the `restricted` profile) also
+disables file-capability based workarounds.
+
+The supported approach is to move the syslog listeners to **unprivileged ports**
+inside the container while the Kubernetes `Service` continues to expose the
+standard `514`/`601` externally and maps them to the container ports. External
+clients keep sending to `514`/`601`; nothing changes for them.
+
+The following preset is compliant with the Pod Security Standards `restricted`
+profile:
 
 ```yaml
+sc4s:
+  listenPorts:
+    tcp: 5514
+    udp: 5514
+    rfc6587: 5601
+    rfc5426: 5601
+
 podSecurityContext:
   runAsNonRoot: true
   runAsUser: 1024
@@ -138,21 +159,16 @@ securityContext:
   capabilities:
     drop:
       - ALL
-    add:
-      - NET_BIND_SERVICE
 ```
-
-> `NET_BIND_SERVICE` is the only capability the `restricted` Pod Security
-> Standards profile allows adding (Kubernetes v1.25+), so binding the default
-> privileged ports remains compliant.
 
 Notes:
 
+- `sc4s.listenPorts` moves the container listeners above 1024 so no privileged
+  bind (and therefore no `NET_BIND_SERVICE`) is required. The `Service` still
+  publishes `514`/`601` to the network and forwards to these container ports, so
+  upstream senders are unaffected.
 - `fsGroup: 1024` makes the persistent volume writable by the `syslog` group so
   the disk buffer and runtime state can be written.
-- `NET_BIND_SERVICE` is added so the default privileged ports (514, 601) can be
-  bound while running as a non-root user. If you only expose ports above 1024,
-  you do not need it.
 - The non-root preset relies on UID/GID `1024` owning the image directories.
   Running as an arbitrary UID requires rebuilding the image with matching
   ownership.
@@ -161,9 +177,9 @@ Notes:
   material directly (for example via `splunk.hec_tls`) instead of relying on the
   in-container trust update.
 
-Both maps default to an empty context (root). Set only the fields you need; the
-values you provide are passed through to the pod and container `securityContext`
-verbatim.
+Both `securityContext` maps default to an empty context (root). Set only the
+fields you need; the values you provide are passed through to the pod and
+container `securityContext` verbatim.
 
 # Manage resources
 

@@ -107,8 +107,8 @@ COPY package/sbin/source_ports_validator.py /
 # Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
 # entrypoint creates/updates at startup, enabling non-root runtimes without
 # breaking the default root runtime.
-RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log \
-    && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out /var/log/syslog-ng.err \
+RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log /home/syslog \
+    && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out /var/log/syslog-ng.err /home/syslog \
     && chmod -R g+rwX /etc/syslog-ng /var/lib/syslog-ng \
     && chmod g+rw /var/log/syslog-ng.out /var/log/syslog-ng.err
 

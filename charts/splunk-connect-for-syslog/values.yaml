@@ -195,9 +195,12 @@ podAnnotations: {}
 # To run SC4S as the unprivileged "syslog" user (UID/GID 1024) baked into the
 # image -- required for hardened environments such as RKE2/OpenShift or any
 # cluster that enforces the "restricted" Pod Security Standard -- uncomment the
-# preset below. NET_BIND_SERVICE lets the default privileged ports (514/601) bind
-# as non-root and is the only capability the "restricted" profile permits adding;
-# fsGroup makes the persistent volume writable by the "syslog" group.
+# preset below AND move the listeners above 1024 via sc4s.listenPorts (e.g.
+# 5514/5601). A non-root process cannot bind ports below 1024 in Kubernetes:
+# the runtime cannot grant the ambient NET_BIND_SERVICE capability across exec,
+# so privileged binds fail. The Service still exposes 514/601 externally and
+# maps them to the container ports. fsGroup makes the persistent volume writable
+# by the "syslog" group.
 podSecurityContext:
   {}
   # runAsNonRoot: true
@@ -213,8 +216,6 @@ securityContext:
   # capabilities:
   #   drop:
   #     - ALL
-  #   add:
-  #     - NET_BIND_SERVICE
 
 service:
   type: LoadBalancer
