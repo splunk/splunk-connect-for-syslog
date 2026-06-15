@@ -64,7 +64,7 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Pod-level securityContext. Defaults to an empty context (root, historical
+Pod-level securityContext. Defaults to an empty context (root, default
 behavior); set .Values.podSecurityContext to run as non-root. See values.yaml
 for the recommended non-root preset.
 */}}
@@ -73,7 +73,7 @@ for the recommended non-root preset.
 {{- end -}}
 
 {{/*
-Container-level securityContext. Defaults to an empty context (root, historical
+Container-level securityContext. Defaults to an empty context (root, default
 behavior); set .Values.securityContext to run as non-root. See values.yaml for
 the recommended non-root preset (NET_BIND_SERVICE is needed so the default
 privileged ports 514/601 can bind as a non-root user).

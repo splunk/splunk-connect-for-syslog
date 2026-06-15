@@ -17,7 +17,7 @@ This configuration requires as least two IP addresses: one for the host and one 
 ## Step 2: Install MicroK8s
 To install MicroK8s:
 ```bash
-sudo snap install microk8s --classic --channel=1.24
+sudo snap install microk8s --classic --channel=1.31/stable
 sudo usermod -a -G microk8s $USER
 sudo chown -f -R $USER ~/.kube
 su - $USER

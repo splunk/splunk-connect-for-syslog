@@ -54,17 +54,19 @@ spec:
           - name: SC4S_RUNTIME_ENV
             value: "k8s"            
           # Inject additional enviroment variable from values.yaml to add proxy support
-          {{- if .Values.sc4s.proxy.http }}
+          {{- with .Values.sc4s.proxy }}
+          {{- if .http }}
           - name: http_proxy
-            value: {{ .Values.sc4s.proxy.http | quote }}
+            value: {{ .http | quote }}
           {{- end }}
-          {{- if .Values.sc4s.proxy.https }}
+          {{- if .https }}
           - name: https_proxy
-            value: {{ .Values.sc4s.proxy.https | quote }}
+            value: {{ .https | quote }}
           {{- end }}
-          {{- if .Values.sc4s.proxy.no_proxy }}
+          {{- if .no_proxy }}
           - name: no_proxy
-            value: {{ .Values.sc4s.proxy.no_proxy | quote }}
+            value: {{ .no_proxy | quote }}
+          {{- end }}
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
             value: "{{ .Values.splunk.hec_url }}"
