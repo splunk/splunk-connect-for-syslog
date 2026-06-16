@@ -64,7 +64,7 @@ docker compose up
 
 Otherwise use `docker compose` with `-f` flag pointing to the compose file:
 ```bash
-docker compose up -f /path/to/compose/file/docker-compose.yml
+docker compose -f /path/to/compose/file/docker-compose.yml up
 ```
 
 # Stop SC4S
@@ -79,7 +79,7 @@ docker compose down
 or 
 
 ```bash
-docker compose down -f /path/to/compose/file/docker-compose.yml
+docker compose -f /path/to/compose/file/docker-compose.yml down
 ```
 # Validate your configuration
 

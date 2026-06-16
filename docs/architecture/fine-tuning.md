@@ -121,7 +121,7 @@ To change the fetch limit, modify the following options in `/opt/sc4s/env_file`:
 **for TCP**:
 
 ```bash
-SC4S_SOURCE_TCP_FETCH_LIMIT=1000
+SC4S_SOURCE_TCP_FETCH_LIMIT=2000
 ```
 
 **for UDP**:
