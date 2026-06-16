@@ -11650,7 +11650,7 @@
 <p>This configuration requires as least two IP addresses: one for the host and one for the internal load balancer. We suggest allocating three IP addresses for the host and 5-10 IP addresses for later use.</p>
 <h2 id="step-2-install-microk8s">Step 2: Install MicroK8s<a class="headerlink" href="#step-2-install-microk8s" title="Permanent link">&para;</a></h2>
 <p>To install MicroK8s:
-<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.24
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>snap<span class="w"> </span>install<span class="w"> </span>microk8s<span class="w"> </span>--classic<span class="w"> </span>--channel<span class="o">=</span><span class="m">1</span>.31/stable
 sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>microk8s<span class="w"> </span><span class="nv">$USER</span>
 sudo<span class="w"> </span>chown<span class="w"> </span>-f<span class="w"> </span>-R<span class="w"> </span><span class="nv">$USER</span><span class="w"> </span>~/.kube
 su<span class="w"> </span>-<span class="w"> </span><span class="nv">$USER</span>
@@ -11805,6 +11805,57 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
 <span class="w">       </span><span class="no">};</span>
 </code></pre></div></li>
 </ul>
+<h1 id="run-as-a-non-root-user">Run as a non-root user<a class="headerlink" href="#run-as-a-non-root-user" title="Permanent link">&para;</a></h1>
+<p>By default the Helm chart runs SC4S as <code>root</code>, matching the historical behavior.
+For hardened environments (for example RKE2, OpenShift, or any cluster that
+enforces <code>runAsNonRoot</code>) you can run SC4S as the unprivileged <code>syslog</code> user
+(UID/GID <code>1024</code>) baked into the image.</p>
+<p>A non-root process <strong>cannot bind ports below 1024</strong> in Kubernetes. </p>
+<p>The supported approach is to move the syslog listeners to <strong>unprivileged ports</strong>
+inside the container while the Kubernetes <code>Service</code> continues to expose the
+standard <code>514</code>/<code>601</code> externally and maps them to the container ports. External
+clients keep sending to <code>514</code>/<code>601</code>; nothing changes for them.</p>
+<p>The following preset is compliant with the Pod Security Standards <code>restricted</code>
+profile:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">listenPorts</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tcp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5514</span>
+<span class="w">    </span><span class="nt">udp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5514</span>
+<span class="w">    </span><span class="nt">rfc6587</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5601</span>
+<span class="w">    </span><span class="nt">rfc5426</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5601</span>
+
+<span class="nt">podSecurityContext</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">runAsNonRoot</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">runAsUser</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
+<span class="w">  </span><span class="nt">runAsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
+<span class="w">  </span><span class="nt">fsGroup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1024</span>
+<span class="w">  </span><span class="nt">seccompProfile</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RuntimeDefault</span>
+
+<span class="nt">securityContext</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">allowPrivilegeEscalation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">capabilities</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">drop</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ALL</span>
+</code></pre></div>
+<p>Notes:</p>
+<ul>
+<li><code>sc4s.listenPorts</code> moves the container listeners above 1024 so no privileged
+  bind is required. The <code>Service</code> still publishes <code>514</code>/<code>601</code> to the network 
+  and forwards to these container ports, so upstream senders are unaffected.</li>
+<li><code>fsGroup: 1024</code> makes the persistent volume writable by the <code>syslog</code> group so
+  the disk buffer and runtime state can be written.</li>
+<li>The non-root preset relies on UID/GID <code>1024</code> owning the image directories.
+  <strong>Running as an arbitrary UID requires rebuilding the image with matching
+  ownership.</strong></li>
+<li>When running as non-root, the container cannot update the system CA trust
+  store. To trust a custom CA for the Splunk HEC destination, mount the CA
+  material directly (for example via <code>splunk.hec_tls</code>) instead of relying on the
+  in-container trust update.</li>
+</ul>
+<p>Both <code>securityContext</code> maps default to an empty context (root). Set only the
+fields you need; the values you provide are passed through to the pod and
+container <code>securityContext</code> verbatim.</p>
 <h1 id="manage-resources">Manage resources<a class="headerlink" href="#manage-resources" title="Permanent link">&para;</a></h1>
 <p>You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. </p>
 <div class="highlight"><pre><span></span><code><span class="nt">resources</span><span class="p">:</span>
