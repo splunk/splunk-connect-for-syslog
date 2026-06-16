@@ -13,6 +13,23 @@ splunk:
 
 sc4s:
   {}
+# Container listen ports for the default syslog sources. The Kubernetes
+# Service always exposes the standard 514/601 externally and maps to these
+# container ports, so external clients are unaffected if you change them.
+#
+# The defaults bind the privileged ports 514/601 directly (root behavior). To
+# run SC4S as non-root under the "restricted" Pod Security Standard, move these
+# above 1024 (for example 5514/5601). A non-root process cannot bind ports
+# below 1024 in Kubernetes because the container runtime cannot grant the
+# ambient NET_BIND_SERVICE capability needed across exec -- see the non-root
+# securityContext preset below.
+# listenPorts:
+#   tcp: 514
+#   udp: 514
+#   rfc6587: 601
+#   rfc5426: 601
+#   tls: 6514
+#   rfc5425: 5425
 #   Use this setting to add proxy support if needed.
 #   proxy:
 #       http: "http://your_proxy_ip.com"
@@ -174,18 +191,31 @@ persistence:
 
 podAnnotations: {}
 
+# securityContext settings. Both default to an empty context, which preserves the
+# default behavior of running SC4S as root (recommended for existing deployments
+# and standard runtimes).
+#
+# To run SC4S as the unprivileged "syslog" user (UID/GID 1024) baked into the
+# image - required for hardened environments such as RKE2/OpenShift or any
+# cluster that enforces the "restricted" Pod Security Standard -- uncomment the
+# preset below AND move the listeners above 1024 via sc4s.listenPorts (e.g.
+# 5514/5601). A non-root process cannot bind ports below 1024 in Kubernetes.
+# The Service still exposes 514/601 externally and maps them to the container ports.
 podSecurityContext:
   {}
-  # fsGroup: 2000
+  # runAsNonRoot: true
+  # runAsUser: 1024
+  # runAsGroup: 1024
+  # fsGroup: 1024
+  # seccompProfile:
+  #   type: RuntimeDefault
 
 securityContext:
   {}
+  # allowPrivilegeEscalation: false
   # capabilities:
   #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  #     - ALL
 
 service:
   type: LoadBalancer

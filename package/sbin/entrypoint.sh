@@ -160,31 +160,30 @@ fi
 # Check Linux distribution and store TLS certs
 if grep -q 'alpine' /etc/os-release; then
   IS_ALPINE=true
+  CA_TRUST_DIR=/usr/local/share/ca-certificates
+  CA_TRUST_CMD=update-ca-certificates
 else
   IS_ALPINE=false
+  CA_TRUST_DIR=/usr/share/pki/ca-trust-source/anchors
+  CA_TRUST_CMD=update-ca-trust
 fi
-if [ "$IS_ALPINE" = true ]; then
-  if [ -f "${SC4S_TLS}/trusted.pem" ]
-  then
-    cp ${SC4S_TLS}/trusted.pem /usr/local/share/ca-certificates/trusted.crt
-    update-ca-certificates
-  fi
-  if [ -f "${SC4S_TLS}/ca.crt" ]
-  then
-    cp ${SC4S_TLS}/ca.crt /usr/local/share/ca-certificates/
-    update-ca-certificates
-  fi
-else
-  # if we fallback to ubi
-  if [ -f "${SC4S_TLS}/trusted.pem" ]
-  then
-    cp ${SC4S_TLS}/trusted.pem /usr/share/pki/ca-trust-source/anchors/
-    update-ca-trust
-  fi
-  if [ -f "${SC4S_TLS}/ca.crt" ]
-  then
-    cp ${SC4S_TLS}/ca.crt /usr/share/pki/ca-trust-source/anchors/
-    update-ca-trust
+
+# Adding custom CAs to the system trust store requires write access to the
+# system trust directory, which is only available to root. When running as a
+# non-root user this step is skipped with a warning; mount trusted CA material
+# directly to the destination instead (e.g. SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT).
+if [ -f "${SC4S_TLS}/trusted.pem" ] || [ -f "${SC4S_TLS}/ca.crt" ]; then
+  if [ -w "${CA_TRUST_DIR}" ]; then
+    if [ "$IS_ALPINE" = true ]; then
+      [ -f "${SC4S_TLS}/trusted.pem" ] && cp "${SC4S_TLS}/trusted.pem" "${CA_TRUST_DIR}/trusted.crt"
+      [ -f "${SC4S_TLS}/ca.crt" ] && cp "${SC4S_TLS}/ca.crt" "${CA_TRUST_DIR}/"
+    else
+      [ -f "${SC4S_TLS}/trusted.pem" ] && cp "${SC4S_TLS}/trusted.pem" "${CA_TRUST_DIR}/"
+      [ -f "${SC4S_TLS}/ca.crt" ] && cp "${SC4S_TLS}/ca.crt" "${CA_TRUST_DIR}/"
+    fi
+    ${CA_TRUST_CMD}
+  else
+    echo "SC4S_ENV_CHECK_TLS: Skipping system CA trust update; ${CA_TRUST_DIR} is not writable (running as non-root user uid=$(id -u)). Mount trusted CA material directly to the destination instead."
   fi
 fi
 

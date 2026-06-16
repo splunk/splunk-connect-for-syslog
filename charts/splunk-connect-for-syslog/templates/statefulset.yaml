@@ -36,12 +36,16 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "splunk-connect-for-syslog.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -52,19 +56,34 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
           - name: SC4S_RUNTIME_ENV
-            value: "k8s"            
+            value: "k8s"
+          {{- $lp := .Values.sc4s.listenPorts | default dict }}
+          - name: SC4S_LISTEN_DEFAULT_TCP_PORT
+            value: "{{ $lp.tcp | default 514 }}"
+          - name: SC4S_LISTEN_DEFAULT_UDP_PORT
+            value: "{{ $lp.udp | default 514 }}"
+          - name: SC4S_LISTEN_DEFAULT_RFC6587_PORT
+            value: "{{ $lp.rfc6587 | default 601 }}"
+          - name: SC4S_LISTEN_DEFAULT_RFC5426_PORT
+            value: "{{ $lp.rfc5426 | default 601 }}"
+          - name: SC4S_LISTEN_DEFAULT_TLS_PORT
+            value: "{{ $lp.tls | default 6514 }}"
+          - name: SC4S_LISTEN_DEFAULT_RFC5425_PORT
+            value: "{{ $lp.rfc5425 | default 5425 }}"
           # Inject additional enviroment variable from values.yaml to add proxy support
-          {{- if .Values.sc4s.proxy.http }}
+          {{- with .Values.sc4s.proxy }}
+          {{- if .http }}
           - name: http_proxy
-            value: {{ .Values.sc4s.proxy.http | quote }}
+            value: {{ .http | quote }}
           {{- end }}
-          {{- if .Values.sc4s.proxy.https }}
+          {{- if .https }}
           - name: https_proxy
-            value: {{ .Values.sc4s.proxy.https | quote }}
+            value: {{ .https | quote }}
           {{- end }}
-          {{- if .Values.sc4s.proxy.no_proxy }}
+          {{- if .no_proxy }}
           - name: no_proxy
-            value: {{ .Values.sc4s.proxy.no_proxy | quote }}
+            value: {{ .no_proxy | quote }}
+          {{- end }}
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
             value: "{{ .Values.splunk.hec_url }}"
@@ -139,22 +158,22 @@ spec:
 
           ports:
             - name: bsd-dflt-tcp
-              containerPort: 514
+              containerPort: {{ $lp.tcp | default 514 }}
               protocol: TCP
             - name: bsd-dflt-udp
-              containerPort: 514
+              containerPort: {{ $lp.udp | default 514 }}
               protocol: UDP
             - name: bsd-dflt-tls
-              containerPort: 6514
+              containerPort: {{ $lp.tls | default 6514 }}
               protocol: TCP
             - name: ietf-dflt-tcp
-              containerPort: 601
+              containerPort: {{ $lp.rfc6587 | default 601 }}
               protocol: TCP
             - name: ietf-dflt-udp
-              containerPort: 601
+              containerPort: {{ $lp.rfc5426 | default 601 }}
               protocol: UDP
             - name: ietf-dflt-tls
-              containerPort: 5425
+              containerPort: {{ $lp.rfc5425 | default 5425 }}
               protocol: TCP
             - name: health
               containerPort: 8080
@@ -237,18 +256,25 @@ spec:
             mountPath: /etc/syslog-ng/conf.d/configmap/addons/
             readOnly: true
           {{- end }}
+          startupProbe:
+            exec:
+              command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
+            periodSeconds: 5
+            failureThreshold: 30
+            timeoutSeconds: 5
           livenessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
-            periodSeconds: 3              
-            timeoutSeconds: 5            
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 5
           readinessProbe:
             exec:
               command: ["syslog-ng-ctl", "healthcheck", "--timeout", "5"]
             initialDelaySeconds: 10
-            failureThreshold: 60
             periodSeconds: 10
+            failureThreshold: 5
             timeoutSeconds: 5
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
