@@ -25,17 +25,17 @@ docker exec -it ansible_sc4s /bin/bash
 
 * To authenticate with username and password:
 ``` bash 
-ansible-playbook -i path/to/inventory_mk8s.yaml -u <username> --ask-pass path/to/playbooks/microk8s.yml
+ansible-playbook -i path/to/inventory_microk8s.yaml -u <username> --ask-pass path/to/playbooks/microk8s.yml
 ```
 
 * To authenitcate if you are running a high-availability cluster:
 ``` bash 
-ansible-playbook -i path/to/inventory_mk8s_ha.yaml -u <username> --ask-pass path/to/playbooks/microk8s_ha.yml
+ansible-playbook -i path/to/inventory_microk8s_ha.yaml -u <username> --ask-pass path/to/playbooks/microk8s_ha.yml
 ```
 
 * To authenticate using a key pair:
 ``` bash 
-ansible-playbook -i path/to/inventory_mk8s.yaml -u <username> --key-file <key_file> path/to/playbooks/microk8s.yml
+ansible-playbook -i path/to/inventory_microk8s.yaml -u <username> --key-file <key_file> path/to/playbooks/microk8s.yml
 ```
 
 ## Step 3: Validate your configuration
@@ -50,7 +50,7 @@ index=* sourcetype=sc4s:events "starting up"
 This should yield an event similar to the following:
 
 ```ini
-syslog-ng starting up; version='3.28.1'
+syslog-ng starting up; version='4.xx.x'
 ```
 
 You can verify whether all services in the cluster work by checking the ```sc4s_container``` in Splunk. Each service should have a different container ID. All other fields should be the same.

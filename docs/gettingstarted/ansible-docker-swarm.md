@@ -74,7 +74,7 @@ index=* sourcetype=sc4s:events "starting up"
 You should see an event similar to the following:
 
 ```ini
-syslog-ng starting up; version='3.28.1'
+syslog-ng starting up; version='4.xx.x'
 ```
 You can verify if all services in the Swarm cluster work by checking the ```sc4s_container``` in Splunk. Each service should have a different container ID. All other fields should be the same.
 

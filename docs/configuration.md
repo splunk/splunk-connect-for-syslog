@@ -126,6 +126,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archiving of all vendor_products. |
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ARCHIVE | yes(default) or undefined | Enables selective archiving by vendor product. |
+# pretty sure the deafuly in VENDOR_PRODUCT_*_ARCHIVE is indefined?
 
 ## Syslog Source Configuration
 
@@ -134,7 +135,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 | SC4S_SOURCE_TLS_ENABLE             | yes or no(default) | Enable TLS globally. Be sure to configure the certificate as shown in the following section.                                                                                                                                                |
 | SC4S_LISTEN_DEFAULT_TLS_PORT       | undefined or 6514  | Enable a TLS listener on port 6514.                                                                                                                                                                                                         |
 | SC4S_LISTEN_DEFAULT_RFC5425_PORT   | undefined or 5425  | Enable a TLS listener on port 5425.                                                                                                                                                                                                         |
-| SC4S_SOURCE_TLS_OPTIONS            | `no-sslv2`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and default values.                                                                      |
+| SC4S_SOURCE_TLS_OPTIONS            | `no-sslv2, no-sslv3, no-tlsv1`         | Comma-separated list of the following options: `no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none`.  See syslog-ng docs for the latest list and default values.                                                                      |
 | SC4S_SOURCE_TLS_CIPHER_SUITE       | See openssl        | Colon-delimited list of ciphers to support, for example, `ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384`.  See openssl for the latest list and defaults.                                                                        |
 | SC4S_SOURCE_TCP_MAX_CONNECTIONS    | 2000               | Maximum number of TCP connections.                                                                                                                                                                                                          |
 | SC4S_SOURCE_TLS_MAX_CONNECTIONS    | 2000               | Maximum number of TLS connections.                                                                                                                                                                                                          |
@@ -159,6 +160,10 @@ therefore an administrator must provide a means of log rotation to prune files a
 | SC4S_SOURCE_LISTEN_RFC5425_SOCKETS | 1                  | Number of kernel sockets per active TCP with TLS port, which configures multi-threading of the input buffer in the kernel to prevent packet loss. Total TCP input buffer is the sum of SOCKETS x SO_RCVBUFF.                                |
 | SC4S_SOURCE_STORE_RAWMSG           | undefined or "no"  | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype. Do not set this in production, substantial memory and disk overhead will result. Use this only for log path and filter development. |
 | SC4S_IPV6_ENABLE                   | yes or no(default) | Enable dual-stack IPv6 listeners and health checks.                                                                                                                                                                                         |
+
+# Something to consider in this PR:
+# Undocumented but user-facing HEC tuning knobs missing from destinations.md: BATCH_LINES (5000), BATCH_BYTES (4096kb), BATCH_TIMEOUT, TIMEOUT, LOG_FIFO_SIZE, CONNECTION_CLOSE, HEADERS. The HTTP-compression note implicitly depends on the BATCH_* ones
+# We can add these, I checked and all of them exist, not 100% sure if we want to expose them to the customer though?
 
 ## Configure your syslog source TLS certificate 
 

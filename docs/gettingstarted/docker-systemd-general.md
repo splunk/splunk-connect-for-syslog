@@ -96,7 +96,7 @@ index=* sourcetype=sc4s:events "starting up"
 You should see an event similar to the following:
 
 ```ini
-syslog-ng starting up; version='3.28.1'
+syslog-ng starting up; version='4.xx.x'
 ```
 
 The startup process should proceed normally without syntax errors. If it does not,

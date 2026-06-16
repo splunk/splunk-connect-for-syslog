@@ -47,7 +47,7 @@ index=* sourcetype=sc4s:events "starting up"
 This should yield an event similar to the following:
 
 ```ini
-syslog-ng starting up; version='3.28.1'
+syslog-ng starting up; version='4.xx.x'
 ```
 You can verify if all SC4S instances work by checking the ```sc4s_container``` in Splunk. Each instance should have a different container ID. All other fields should be the same.
 
