@@ -17,7 +17,7 @@ This configuration requires as least two IP addresses: one for the host and one 
 ## Step 2: Install MicroK8s
 To install MicroK8s:
 ```bash
-sudo snap install microk8s --classic --channel=1.24
+sudo snap install microk8s --classic --channel=1.31/stable
 sudo usermod -a -G microk8s $USER
 sudo chown -f -R $USER ~/.kube
 su - $USER
@@ -114,6 +114,65 @@ Use the `config_files` and `context_files` variables to specify configuration an
 ```yaml
 --8<---- "docs/resources/k8s/values_adv_config_file.yaml"
 ```
+
+# Run as a non-root user
+
+By default the Helm chart runs SC4S as `root`, matching the historical behavior.
+For hardened environments (for example RKE2, OpenShift, or any cluster that
+enforces `runAsNonRoot`) you can run SC4S as the unprivileged `syslog` user
+(UID/GID `1024`) baked into the image.
+
+A non-root process **cannot bind ports below 1024** in Kubernetes. 
+
+The supported approach is to move the syslog listeners to **unprivileged ports**
+inside the container while the Kubernetes `Service` continues to expose the
+standard `514`/`601` externally and maps them to the container ports. External
+clients keep sending to `514`/`601`; nothing changes for them.
+
+The following preset is compliant with the Pod Security Standards `restricted`
+profile:
+
+```yaml
+sc4s:
+  listenPorts:
+    tcp: 5514
+    udp: 5514
+    rfc6587: 5601
+    rfc5426: 5601
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1024
+  runAsGroup: 1024
+  fsGroup: 1024
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+```
+
+Notes:
+
+- `sc4s.listenPorts` moves the container listeners above 1024 so no privileged
+  bind is required. The `Service` still publishes `514`/`601` to the network 
+  and forwards to these container ports, so upstream senders are unaffected.
+- `fsGroup: 1024` makes the persistent volume writable by the `syslog` group so
+  the disk buffer and runtime state can be written.
+- The non-root preset relies on UID/GID `1024` owning the image directories.
+  **Running as an arbitrary UID requires rebuilding the image with matching
+  ownership.**
+- When running as non-root, the container cannot update the system CA trust
+  store. To trust a custom CA for the Splunk HEC destination, mount the CA
+  material directly (for example via `splunk.hec_tls`) instead of relying on the
+  in-container trust update.
+
+Both `securityContext` maps default to an empty context (root). Set only the
+fields you need; the values you provide are passed through to the pod and
+container `securityContext` verbatim.
 
 # Manage resources
 
