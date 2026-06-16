@@ -126,7 +126,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 |----------|---------------|-------------|
 | SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archiving of all vendor_products. |
 | SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ARCHIVE | yes(default) or undefined | Enables selective archiving by vendor product. |
-# pretty sure the deafuly in VENDOR_PRODUCT_*_ARCHIVE is indefined?
+# pretty sure the deafult in VENDOR_PRODUCT_*_ARCHIVE is undefined?
 
 ## Syslog Source Configuration
 
