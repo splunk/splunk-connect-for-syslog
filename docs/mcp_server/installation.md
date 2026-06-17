@@ -21,7 +21,39 @@ SC4S MCP server is currently available only for Podman or Docker runtimes.
   over `stdio` or streamable HTTP (for example: Cursor, Claude Desktop, or
   Visual Studio Code with an MCP extension).
 
-## Configuration reference
+## Prepare your SC4S instance
+
+Before running the MCP server, make sure your SC4S instance is properly configured.
+
+* **Enable SC4S management API** - by default SC4S API exposes only the `/health` endpoint. The configuration and metadata endpoints are **disabled**. To enable them, set `SC4S_API_MANAGEMENT_ENABLED` to `true` in your SC4S `env_file` (see
+[SC4S management API](../configuration.md#sc4s-management-api-endpoints)).
+* **Mount env_file** - some MCP management tools need to read and write SC4S's `env_file` at runtime. The `--env-file` flag alone is **not sufficient**: it only injects variables at startup and does not make the file writable inside the container. To make `env_file` accessible to the SC4S process, you need to bind-mount it into the container. If you are using systemd, follow the steps below:
+
+1. Add a new environment variable to the service file (by default located at `/lib/systemd/system/sc4s.service`):
+```
+Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
+```
+2. Add `-v $SC4S_ENV_FILE_MOUNT` to your `ExecStart` alongside the other `-v` flags:
+```ini
+ExecStart=/usr/bin/podman run \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
+        -v "$SC4S_ENV_FILE_MOUNT" \
+        --env-file=/opt/sc4s/env_file \
+        --network host \
+        --name SC4S \
+        --rm $SC4S_IMAGE
+```
+3. Reload and restart the systemd service:
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart sc4s
+```
+
+## SC4S MCP configuration reference
 
 The MCP server is configured through environment variables.
 
@@ -40,27 +72,10 @@ The MCP server is configured through environment variables.
 | `SC4S_MCP_TLS_KEY`          |                         | Path inside the container to the matching PEM-encoded private key.                                                                                                                                                                                                                                                           |
 | `SC4S_MCP_TLS_KEY_PASSWORD` |                         | Optional passphrase for an encrypted private key.                                                                                                                                                                                                                                                                            |
 
-## Build the image
-
-The Dockerfile is part of the SC4S repository. Build from the repository
-root so that the `docs/`, `package/lite/etc/addons/`, and
-`.agents/skills/parser-creator/` directories are available to the build
-context.
-
-Docker:
-
-```bash
-docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-```
-
-Podman:
-
-```bash
-podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
-```
-
 ## Run the container
 
+You can pull the latest SC4S MCP image from the registry:
+`ghcr.io/splunk/splunk-connect-for-syslog/container3mcp`.
 The examples below assume the SC4S container is reachable at
 `http://<SC4S_HOST>:8080`. If SC4S runs on the same host, use
 `--network host` and point `SC4S_API_URL` to `http://127.0.0.1:8080`.
@@ -72,7 +87,7 @@ docker run -d \
   -p 8000:8000 \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 Same host as SC4S (Linux):
@@ -81,17 +96,17 @@ Same host as SC4S (Linux):
 docker run -d --network host \
   -e SC4S_API_URL=http://127.0.0.1:8080 \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
-Podman (locally built images are stored under the `localhost/` prefix):
+Podman:
 
 ```bash
 podman run -d \
   -p 8000:8000 \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  localhost/sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 Same host as SC4S (Linux):
@@ -100,7 +115,7 @@ Same host as SC4S (Linux):
 podman run -d --network host \
   -e SC4S_API_URL=http://127.0.0.1:8080 \
   --name sc4s-mcp \
-  localhost/sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 The image ships a healthcheck that verifies the SSE endpoint is up. Check
@@ -123,7 +138,7 @@ docker run -d \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   -e SC4S_API_TOKEN="<your-token>" \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 Alternatively, pass the token as a file to avoid it appearing in process listings or `docker inspect` output:
@@ -138,7 +153,7 @@ docker run -d \
   -v /run/secrets/sc4s_api_token:/run/secrets/sc4s_api_token:ro \
   -e SC4S_API_TOKEN_FILE=/run/secrets/sc4s_api_token \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 When both `SC4S_API_TOKEN` and `SC4S_API_TOKEN_FILE` are unset or empty, no `Authorization` header is sent
@@ -167,7 +182,7 @@ docker run -d \
   -e SC4S_MCP_AUTH_TOKEN="$TOKEN" \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 Alternatively, write the token to a file and pass the path via `SC4S_MCP_AUTH_TOKEN_FILE` to avoid it appearing in process listings or `docker inspect` output:
@@ -183,7 +198,7 @@ docker run -d \
   -e SC4S_MCP_AUTH_TOKEN_FILE=/run/secrets/sc4s_mcp_token \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 Configure the MCP client to send the token in the `Authorization` header
@@ -215,7 +230,7 @@ docker run -d \
   -e SC4S_MCP_AUTH_TOKEN="$TOKEN" \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 If the private key is encrypted, also pass `-e SC4S_MCP_TLS_KEY_PASSWORD="$PASS"`.
@@ -242,40 +257,7 @@ Note that when using a self-signed certificate, it may be necessary to install
 the issuing CA in the OS or client trust store, as some MCP clients refuse untrusted
 certificates by default.
 
-## Prepare your SC4S instance
-
-Some MCP management tools (e.g. `sc4s_set_env`, `sc4s_get_env`)
-need to read and write SC4S's `env_file` at runtime. The `--env-file`
-Docker/Podman flag alone is **not sufficient**: it only injects variables at
-startup and does not make the file visible inside the container.
-To make `env_file` accessible to the SC4S process, you need to bind-mount it
-into the container. If you are using systemd, follow the steps below:
-
-1. Add a new environment variable to the service file (by default located at `/lib/systemd/system/sc4s.service`):
-```
-Environment="SC4S_ENV_FILE_MOUNT=/opt/sc4s/env_file:/opt/sc4s/env_file:z"
-```
-2. Add `-v $SC4S_ENV_FILE_MOUNT` to your `ExecStart` alongside the other `-v` flags:
-```ini
-ExecStart=/usr/bin/podman run \
-        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
-        -v "$SC4S_PERSIST_MOUNT" \
-        -v "$SC4S_LOCAL_MOUNT" \
-        -v "$SC4S_ARCHIVE_MOUNT" \
-        -v "$SC4S_TLS_MOUNT" \
-        -v "$SC4S_ENV_FILE_MOUNT" \
-        --env-file=/opt/sc4s/env_file \
-        --network host \
-        --name SC4S \
-        --rm $SC4S_IMAGE
-```
-3. Reload and restart the systemd service:
-```bash
-sudo systemctl daemon-reload
-sudo systemctl restart sc4s
-```
-
-### Generic MCP client configuration
+## Generic MCP client configuration
 
 Most MCP clients accept one of two connection styles. Consult your
 client's documentation for the exact configuration file and its location;
@@ -330,30 +312,29 @@ Omit the `headers` block when the server is running without
 
 ## Upgrading
 
-To upgrade the MCP server, rebuild the image from a newer revision of
-the repository and restart the container. Configuration is
-environment-based, so no data migration is required.
+To upgrade the MCP server, pull a newer image and restart the container.
+Configuration is environment-based, so no data migration is required.
 
 Docker:
 
 ```bash
 docker stop sc4s-mcp && docker rm sc4s-mcp
-docker build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+docker pull ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 docker run -d \
   -p 8000:8000 \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
 
 Podman:
 
 ```bash
 podman stop sc4s-mcp && podman rm sc4s-mcp
-podman build -t sc4s-mcp -f sc4s_mcp/Dockerfile .
+podman pull ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 podman run -d \
   -p 8000:8000 \
   -e SC4S_API_URL=http://<SC4S_HOST>:8080 \
   --name sc4s-mcp \
-  localhost/sc4s-mcp
+  ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
