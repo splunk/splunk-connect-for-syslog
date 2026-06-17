@@ -46,6 +46,20 @@
                                 }
                             ],
                             "countMatches": true
+                        },
+                        {
+                            "files": ["sc4s_mcp/pyproject.toml"],
+                            "from": "(version ?=.*)",
+                            "to": "version = \"${nextRelease.version}\"",
+                            "results": [
+                                {
+                                    "file": "sc4s_mcp/pyproject.toml",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                }
+                            ],
+                            "countMatches": true
                         }
                     ]
                 }
@@ -56,6 +70,7 @@
             ["@semantic-release/git", {
                 "assets": [
                     "pyproject.toml",
+                    "sc4s_mcp/pyproject.toml",
                     "package/etc/VERSION",
                     "deploy/k8s-microk8s/*",
                     "charts/splunk-connect-for-syslog/Chart.yaml"

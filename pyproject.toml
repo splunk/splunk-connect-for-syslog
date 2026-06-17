@@ -22,6 +22,9 @@ cryptography = "^49.0.0"
 flask-wtf = "^1.2.2"
 fastmcp = ">=3.2.0"
 httpx = "^0.28.1"
+authlib = ">=1.7.2"
+python-multipart = ">=0.0.27"
+starlette = ">=1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^9.0.0"
