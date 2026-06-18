@@ -44,7 +44,7 @@ To learn more about creating filters and parse blocks see pages: [Filter Message
 
 ### Adding parser to SC4S package
 
-For SC4S lite, parsers are grouped into `addons`. Create a folder (if it does not already exist) in `package/shared/addons` with the name of vendor. In this folder, also create an `addon_metadata.yaml` file with vendor name:
+Both the main and lite packages use the shared parser structure under `package/shared/addons`. To add a parser, create a vendor-specific directory (if it does not already exist) and add an `addon_metadata.yaml` file containing the vendor name:
 
 ```
 ---
