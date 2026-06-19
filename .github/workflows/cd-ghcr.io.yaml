@@ -36,7 +36,7 @@ jobs:
       matrix:
         container: [container3, container3lite]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           submodules: false
       - name: Setup regctl
