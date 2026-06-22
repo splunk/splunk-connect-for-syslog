@@ -101,8 +101,8 @@ an extended outage to the SC4S destination HEC endpoints. See the ["Estimate you
 |----------------------------------------------------|---------------|-------------|
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE       | yes(default) or no | Enable local disk buffering.  |
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE     | yes or no(default) | Enable reliable/normal disk buffering (normal is the recommended value).|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (varies based on number of workers, default: 16384000) | The worker's memory buffer size in bytes, used with reliable disk buffering.|
-| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (varies based on disk size, default: total disk size - 5GB) | Size of local disk buffering bytes, the default is calculated based on total disk size.|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE   | bytes (varies, default: 16384000 / number of workers) | The worker's memory buffer size in bytes **per worker**, used with reliable disk buffering.|
+| SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE  | bytes (varies based on disk size, default: (total disk size - 5GB) / number of workers) | Size of local disk buffer bytes **per worker**, the default is calculated based on total disk size.|
 | SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR          | path | Location to store the disk buffer files. This location is fixed when using the container and should not be modified.  |
 
 **Note:** The buffer options apply to each worker rather than the
@@ -124,9 +124,8 @@ therefore an administrator must provide a means of log rotation to prune files a
 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
-| SC4S_ARCHIVE_GLOBAL | yes or undefined | Enable archiving of all vendor_products. |
-| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ARCHIVE | yes(default) or undefined | Enables selective archiving by vendor product. |
-# pretty sure the deafult in VENDOR_PRODUCT_*_ARCHIVE is undefined?
+| SC4S_ARCHIVE_GLOBAL | yes or undefined(default) | Enable archiving of all vendor_products. |
+| SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ARCHIVE | yes or undefined(default) | Enables selective archiving by vendor product. |
 
 ## Syslog Source Configuration
 
@@ -161,7 +160,6 @@ therefore an administrator must provide a means of log rotation to prune files a
 | SC4S_SOURCE_STORE_RAWMSG           | undefined or "no"  | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype. Do not set this in production, substantial memory and disk overhead will result. Use this only for log path and filter development. |
 | SC4S_IPV6_ENABLE                   | yes or no(default) | Enable dual-stack IPv6 listeners and health checks.                                                                                                                                                                                         |
 
-# Something to consider in this PR:
 # Undocumented but user-facing HEC tuning knobs missing from destinations.md: BATCH_LINES (5000), BATCH_BYTES (4096kb), BATCH_TIMEOUT, TIMEOUT, LOG_FIFO_SIZE, CONNECTION_CLOSE, HEADERS. The HTTP-compression note implicitly depends on the BATCH_* ones
 # We can add these, I checked and all of them exist, not 100% sure if we want to expose them to the customer though?
 
