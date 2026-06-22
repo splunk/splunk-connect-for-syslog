@@ -160,9 +160,6 @@ therefore an administrator must provide a means of log rotation to prune files a
 | SC4S_SOURCE_STORE_RAWMSG           | undefined or "no"  | Store unprocessed "on the wire" raw message in the RAWMSG macro for use with the "fallback" sourcetype. Do not set this in production, substantial memory and disk overhead will result. Use this only for log path and filter development. |
 | SC4S_IPV6_ENABLE                   | yes or no(default) | Enable dual-stack IPv6 listeners and health checks.                                                                                                                                                                                         |
 
-# Undocumented but user-facing HEC tuning knobs missing from destinations.md: BATCH_LINES (5000), BATCH_BYTES (4096kb), BATCH_TIMEOUT, TIMEOUT, LOG_FIFO_SIZE, CONNECTION_CLOSE, HEADERS. The HTTP-compression note implicitly depends on the BATCH_* ones
-# We can add these, I checked and all of them exist, not 100% sure if we want to expose them to the customer though?
-
 ## Configure your syslog source TLS certificate 
 
 1. Create the folder ``/opt/sc4s/tls`` .
