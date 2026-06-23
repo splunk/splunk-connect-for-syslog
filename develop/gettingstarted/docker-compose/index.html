@@ -11519,7 +11519,7 @@ and <a href="../../configuration/">detailed configuration</a>.</p>
 </code></pre></div></li>
 </ul>
 <p>Otherwise use <code>docker compose</code> with <code>-f</code> flag pointing to the compose file:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml<span class="w"> </span>up
 </code></pre></div></p>
 <h1 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h1>
 <p>If the container is run directly from the CLI, stop the container using the <code>docker stop &lt;containerID&gt;</code> command.</p>
@@ -11527,7 +11527,7 @@ and <a href="../../configuration/">detailed configuration</a>.</p>
 <p><div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>
 </code></pre></div>
 or </p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>/path/to/compose/file/docker-compose.yml<span class="w"> </span>down
 </code></pre></div>
 <h1 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h1>
 <p>SC4S performs automatic checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
@@ -11535,7 +11535,7 @@ configuration is correct. Once these checks are complete, verify that SC4S is pr
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
 <p>This should yield an event similar to the following when the startup process proceeds normally:</p>
-<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;4.xx.x&#39;</span>
 </code></pre></div>
 <p>If you do not see this, try the following steps to troubleshoot:</p>
 <ol>

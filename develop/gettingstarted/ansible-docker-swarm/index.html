@@ -11613,7 +11613,7 @@ To do this, execute the following search in Splunk:</p>
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>
 <p>You should see an event similar to the following:</p>
-<p><div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;3.28.1&#39;</span>
+<p><div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;4.xx.x&#39;</span>
 </code></pre></div>
 You can verify if all services in the Swarm cluster work by checking the <code>sc4s_container</code> in Splunk. Each service should have a different container ID. All other fields should be the same.</p>
 <p>The startup process should proceed normally without syntax errors. If it does not,

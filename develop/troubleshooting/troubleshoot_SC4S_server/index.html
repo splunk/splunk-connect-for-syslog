@@ -12006,8 +12006,9 @@ Make changes to <code>/etc/sysctl.conf</code>, changing receive buffer values to
 net.core.rmem_max = 17039360 
 </code></pre></div>
 Run the following commands to implement your changes:
-<div class="highlight"><pre><span></span><code>sysctl -p restart SC4S 
+<div class="highlight"><pre><span></span><code>sudo sysctl -p
 </code></pre></div></p>
+<p>Restart SC4S.</p>
 <h2 id="issue-invalid-sc4s-tls-listener">Issue: Invalid SC4S TLS listener<a class="headerlink" href="#issue-invalid-sc4s-tls-listener" title="Permanent link">&para;</a></h2>
 <p>To verify the correct configuration of the TLS server use the following command. Replace the IP, FQDN, and port as appropriate:</p>
 <div class="highlight"><pre><span></span><code>&lt;podman<span class="p">|</span>docker&gt;<span class="w"> </span>run<span class="w"> </span>-ti<span class="w"> </span>drwetter/testssl.sh<span class="w"> </span>--severity<span class="w"> </span>MEDIUM<span class="w"> </span>--ip<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>selfsigned.example.com:6510

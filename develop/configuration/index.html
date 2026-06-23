@@ -12064,13 +12064,13 @@ an extended outage to the SC4S destination HEC endpoints. See the <a href="#esti
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE</td>
-<td>bytes (10241024)</td>
-<td>The worker&rsquo;s memory buffer size in bytes, used with reliable disk buffering.</td>
+<td>bytes (varies, default: 16384000 / number of workers)</td>
+<td>The worker&rsquo;s memory buffer size in bytes <strong>per worker</strong>, used with reliable disk buffering.</td>
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE</td>
-<td>bytes (53687091200)</td>
-<td>Size of local disk buffering bytes, the default is 50 GB per worker.</td>
+<td>bytes (varies based on disk size, default: (total disk size - 5GB) / number of workers)</td>
+<td>Size of local disk buffer bytes <strong>per worker</strong>, the default is calculated based on total disk size.</td>
 </tr>
 <tr>
 <td>SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DIR</td>
@@ -12119,12 +12119,12 @@ therefore an administrator must provide a means of log rotation to prune files a
 <tbody>
 <tr>
 <td>SC4S_ARCHIVE_GLOBAL</td>
-<td>yes or undefined</td>
+<td>yes or undefined(default)</td>
 <td>Enable archiving of all vendor_products.</td>
 </tr>
 <tr>
 <td>SC4S_DEST_&lt;VENDOR_PRODUCT&gt;_ARCHIVE</td>
-<td>yes(default) or undefined</td>
+<td>yes or undefined(default)</td>
 <td>Enables selective archiving by vendor product.</td>
 </tr>
 </tbody>
@@ -12156,7 +12156,7 @@ therefore an administrator must provide a means of log rotation to prune files a
 </tr>
 <tr>
 <td>SC4S_SOURCE_TLS_OPTIONS</td>
-<td><code>no-sslv2</code></td>
+<td><code>no-sslv2, no-sslv3, no-tlsv1</code></td>
 <td>Comma-separated list of the following options: <code>no-sslv2, no-sslv3, no-tlsv1, no-tlsv11, no-tlsv12, none</code>.  See syslog-ng docs for the latest list and default values.</td>
 </tr>
 <tr>
@@ -12211,32 +12211,32 @@ therefore an administrator must provide a means of log rotation to prune files a
 </tr>
 <tr>
 <td>SC4S_SOURCE_UDP_SO_RCVBUFF</td>
-<td>17039360</td>
+<td>-1 (default net.core.rmem_default value)</td>
 <td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/quickstart_guide/#sc4s-setup">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_TCP_SO_RCVBUFF</td>
-<td>17039360</td>
+<td>-1 (default net.core.rmem_default value)</td>
 <td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/quickstart_guide/#sc4s-setup">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_TLS_SO_RCVBUFF</td>
-<td>17039360</td>
+<td>-1 (default net.core.rmem_default value)</td>
 <td>Server buffer size in bytes. Make sure that the host OS kernel is configured <a href="../gettingstarted/quickstart_guide/#sc4s-setup">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC5426_SO_RCVBUFF</td>
-<td>17039360</td>
+<td>-1 (default net.core.rmem_default value)</td>
 <td>Server buffer size in bytes for syslog over UDP. Make sure that the host OS kernel is configured <a href="../gettingstarted/quickstart_guide/#sc4s-setup">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC6587_SO_RCVBUFF</td>
-<td>17039360</td>
+<td>-1 (default net.core.rmem_default value)</td>
 <td>Server buffer size in bytes for syslog over TCP. Make sure that the host OS kernel is configured <a href="../gettingstarted/quickstart_guide/#sc4s-setup">similarly</a>.</td>
 </tr>
 <tr>
 <td>SC4S_SOURCE_RFC5425_SO_RCVBUFF</td>
-<td>17039360</td>
+<td>-1 (default net.core.rmem_default value)</td>
 <td>Server buffer size in bytes for syslog over TLS. Make sure that the host OS kernel is configured <a href="../gettingstarted/quickstart_guide/#sc4s-setup">similarly</a>.</td>
 </tr>
 <tr>
