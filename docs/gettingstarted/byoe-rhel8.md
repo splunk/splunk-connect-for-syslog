@@ -37,7 +37,7 @@ maintained by the One Identity team.
 
 1. Install CentOS or RHEL 9.5. See your OS documentation for instructions.
 
-2. Enable EPEL (Centos 8).
+2. Enable EPEL (CentOS 8).
 
 ```bash
 dnf install 'dnf-command(copr)' -y
@@ -54,7 +54,7 @@ sudo systemctl stop syslog-ng
 sudo systemctl disable syslog-ng
 ```        
 
-4. Download the latest `bare_metal.tar` from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng`. This step unpacks a tarball with the SC4S version of the syslog-ng config files in the standard
+4. Download the latest `baremetal.tar` from [releases](https://github.com/splunk/splunk-connect-for-syslog/releases) on github and untar the package in `/etc/syslog-ng`. This step unpacks a tarball with the SC4S version of the syslog-ng config files in the standard
 `/etc/syslog-ng` location, and will overwrite existing content. Make sure that any previous configurations of syslog-ng are saved
 prior to executing the download step.
 

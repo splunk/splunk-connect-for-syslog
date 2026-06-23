@@ -64,7 +64,7 @@ docker compose up
 
 Otherwise use `docker compose` with `-f` flag pointing to the compose file:
 ```bash
-docker compose up -f /path/to/compose/file/docker-compose.yml
+docker compose -f /path/to/compose/file/docker-compose.yml up
 ```
 
 # Stop SC4S
@@ -79,7 +79,7 @@ docker compose down
 or 
 
 ```bash
-docker compose down -f /path/to/compose/file/docker-compose.yml
+docker compose -f /path/to/compose/file/docker-compose.yml down
 ```
 # Validate your configuration
 
@@ -93,7 +93,7 @@ index=* sourcetype=sc4s:events "starting up"
 This should yield an event similar to the following when the startup process proceeds normally:
 
 ```ini
-syslog-ng starting up; version='3.28.1'
+syslog-ng starting up; version='4.xx.x'
 ```
 
 If you do not see this, try the following steps to troubleshoot:
