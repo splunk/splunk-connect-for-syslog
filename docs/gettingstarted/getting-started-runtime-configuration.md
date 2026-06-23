@@ -72,5 +72,5 @@ Check your Podman or Docker documentation to see which operating systems are sup
 | (Deprecated) [Bring your own Environment](byoe-rhel8.md)          | RHEL or CentOS 8.1 & 8.2 (best option)                                              |
 | [Offline Container Installation](docker-podman-offline.md)        |                                                                                     |
 | [Ansible+Docker Swarm](ansible-docker-swarm.md)                   |                                                                                     |
-| [Ansible+Podman](ansible-docker-swarm.md)                         |                                                                                     |
-| [Ansible+Docker](ansible-docker-swarm.md)                         |                                                                                     |
+| [Ansible+Podman/Docker](ansible-docker-podman.md)                         |                                                                                     |
+| [Ansible+mk8s](ansible-mk8s.md)                         |                                                                                     |

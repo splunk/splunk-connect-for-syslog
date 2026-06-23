@@ -101,7 +101,7 @@ index=* sourcetype=sc4s:events "starting up"
 When the startup process proceeds normally, you should see an event similar to the following:
 
 ```ini
-syslog-ng starting up; version='3.28.1'
+syslog-ng starting up; version='4.xx.x'
 ```
 
 If you do not see this, try the following steps to troubleshoot:

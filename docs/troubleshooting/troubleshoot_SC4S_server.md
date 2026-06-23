@@ -136,8 +136,10 @@ net.core.rmem_max = 17039360
 ```
 Run the following commands to implement your changes:
 ```
-sysctl -p restart SC4S 
+sudo sysctl -p
 ```
+
+Restart SC4S.
 
 ## Issue: Invalid SC4S TLS listener 
 

@@ -8,6 +8,7 @@ The same steps are thoroughly described in the [Splunk Setup](getting-started-sp
 1. Create the following default indexes that are used by SC4S:
     * `email`
     * `epav`
+    * `epintel`
     * `fireeye`
     * `gitops`
     * `infraops`
@@ -16,12 +17,14 @@ The same steps are thoroughly described in the [Splunk Setup](getting-started-sp
     * `netdns`
     * `netfw`
     * `netids`
-    * `netops`
-    * `netwaf`
-    * `netproxy`
     * `netipam`
-    * `oswinsec`
+    * `netlb`
+    * `netops`
+    * `netproxy`
+    * `netwaf`
     * `osnix`
+    * `oswinsec`
+    * `print`
     * `_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 
  2. Create a HEC token for SC4S. When filling out the form for the token, leave the “Selected Indexes” pane blank and specify that a

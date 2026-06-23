@@ -20,14 +20,13 @@ SC4S maps each sourcetype to the following indexes by default. You will also nee
 * `netdns`
 * `netfw`
 * `netids`
+* `netipam`
 * `netlb`
 * `netops`
-* `netwaf`
 * `netproxy`
-* `netipam`
-* `oswin`
-* `oswinsec`
+* `netwaf`
 * `osnix`
+* `oswinsec`
 * `print`
 * `_metrics` (Optional opt-in for SC4S operational metrics; ensure this is created as a metrics index)
 

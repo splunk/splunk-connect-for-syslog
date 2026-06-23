@@ -84,7 +84,7 @@ You can also read the logs using Wireshark from the .pcap file. From Wireshark g
     use `RAWMSG` in production.
 
     * You can enable the alternate destination `d_rawmsg` for one or more sourcetypes. This destination will write the raw messages to the
-    container directory `/var/syslog-ng/archive/rawmsg/<sourcetype>`, which is typically mapped locally to `/opt/sc4s/archive`. Within this directory, the logs are organized by host and time.
+    container directory `/var/lib/syslog-ng/archive/rawmsg/<sourcetype>`, which is typically mapped locally to `/opt/sc4s/archive`. Within this directory, the logs are organized by host and time.
 
 ## Run `exec` into the container (advanced task)
 
