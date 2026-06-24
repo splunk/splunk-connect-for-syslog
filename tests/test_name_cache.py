@@ -17,7 +17,7 @@ import pytest
 from .timeutils import time_operations
 from .sendmessage import sendsingle
 from .splunkutils import splunk_single
-from package.etc.pylib.parser_source_cache import ip2int, int2ip
+from package.shared.pylib.parser_source_cache import ip2int, int2ip
 from sqlitedict import SqliteDict
 
 env = Environment()

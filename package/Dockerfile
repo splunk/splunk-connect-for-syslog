@@ -85,12 +85,12 @@ RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15"
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
-COPY package/etc/conf.d /etc/syslog-ng/conf.d
-COPY package/etc/pylib /etc/syslog-ng/pylib
-COPY package/etc/context_templates /etc/syslog-ng/context_templates
-COPY package/etc/test_parsers /etc/syslog-ng/test_parsers
-COPY package/etc/local_config /etc/syslog-ng/local_config
-COPY package/etc/local_config /etc/syslog-ng/local_config
+COPY package/shared/addons /etc/syslog-ng/conf.d/conflib 
+COPY package/shared/conf.d /etc/syslog-ng/conf.d
+COPY package/shared/pylib /etc/syslog-ng/pylib
+COPY package/shared/context_templates /etc/syslog-ng/context_templates
+COPY package/shared/test_parsers /etc/syslog-ng/test_parsers
+COPY package/shared/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/healthcheck.py /
