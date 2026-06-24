@@ -7,7 +7,7 @@
 import pytest
 import socket
 
-from package.etc.pylib.parser_fix_dns import FixHostnameResolver, FixFQDNResolver
+from package.shared.pylib.parser_fix_dns import FixHostnameResolver, FixFQDNResolver
 
 
 class LogMessage:
