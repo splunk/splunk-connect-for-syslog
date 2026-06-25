@@ -269,6 +269,29 @@ apply_hardware_config() {
                 fi
             fi
             ;;
+
+        *)
+            # default case
+            
+            if [ "$protocol" = "udp" ] || [ "$protocol" = "both" ]; then
+                if [ "$expected_eps" -gt 10000 ]; then
+                    ADJUST_FETCH_LIMIT="yes"
+                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                    SC4S_ENABLE_EBPF="yes"
+                    SC4S_EBPF_NO_SOCKETS=8
+                    ADJUST_LISTEN_SOCKETS="yes"
+                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
+                    SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
+                fi
+            fi
+            if [ "$protocol" = "tcp" ] || [ "$protocol" = "both" ]; then
+                if [ "$expected_eps" -gt 20000 ]; then
+                    PARALLELIZE="yes"
+                    SC4S_PARALLELIZE_NO_PARTITION=4
+                    SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
+                fi
+            fi
+            ;;
     esac
 }
 

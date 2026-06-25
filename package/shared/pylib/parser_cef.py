@@ -21,7 +21,7 @@ class cef_kv(LogParser):
         try:
             data = log_message.get_as_str(".metadata.cef.ext", "")
 
-            rpairs = re.findall(r"([^=\s]+)=((?:\\=|[^=])+)(?:\s|$)", data)
+            rpairs = re.findall(r"([^=\s]+)=((?:[^=\\]|\\=?)+)(?:\s|$)", data)
             pairs = {}
             keys = []
             for p in rpairs:
