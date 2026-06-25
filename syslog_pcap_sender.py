@@ -254,7 +254,7 @@ class SyslogSender:
         duplicate_count = 0
 
         for stream_key, stream_data in streams.items():
-            src_ip, src_port, dst_ip, dst_port = stream_key
+            _, _, _, _ = stream_key
 
             # Determine framing type
             if self.framing == 'auto':
