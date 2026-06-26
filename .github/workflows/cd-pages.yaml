@@ -61,11 +61,13 @@ jobs:
         with:
           version: v4.2.2
       - name: Upload
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir /tmp/package
           mkdir /tmp/index
           mkdir /tmp/origin
-          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
+          echo $GITHUB_TOKEN | gh auth login --with-token
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $VERSION
           wget https://splunk.github.io/splunk-connect-for-syslog/index.yaml -P /tmp/origin
