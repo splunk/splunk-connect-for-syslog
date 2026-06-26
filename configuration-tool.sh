@@ -41,12 +41,12 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         -o|--output)
             if [[ -z "${2:-}" ]]; then
-                echo "Error: --output requires a filename argument."
-                echo "Usage: ./configuration-tool.sh -o <filename>"
+                echo "Error: --output requires a filename argument." >&2
+                echo "Usage: ./configuration-tool.sh -o <filename>" >&2
                 exit 1
             fi
             OUTPUT_FILE="$2"; shift 2;;
-        *) echo "Unknown option: $1. Use --help for usage."; exit 1;;
+        *) echo "Unknown option: $1. Use --help for usage." >&2; exit 1;;
     esac
 done
 
