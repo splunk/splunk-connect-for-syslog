@@ -193,7 +193,7 @@ if [[ -f "${SC4S_TLS}/trusted.pem" || -f "${SC4S_TLS}/ca.crt" ]]; then
 fi
 
 # Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]]*\)[^, ]]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 if [[ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
