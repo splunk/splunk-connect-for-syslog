@@ -75,28 +75,10 @@ class SyslogSender:
                 print("No TCP or UDP packets found in PCAP", file=sys.stderr)
                 sys.exit(1)
 
-    def _reassemble_tcp_streams(self):
+    def _sort_tcp_streams_by_sequence(self, streams):
         """
-        Reassemble TCP streams by grouping packets by connection and ordering by sequence number.
-        Returns a dict of {connection_tuple: reassembled_bytes}
+        Sort each stream by sequence number and concatenate
         """
-        streams = defaultdict(list)
-
-        for pkt in self.packets:
-            if TCP in pkt and IP in pkt and Raw in pkt:
-                src_ip = pkt[IP].src
-                dst_ip = pkt[IP].dst
-                src_port = pkt[TCP].sport
-                dst_port = pkt[TCP].dport
-                seq = pkt[TCP].seq
-                payload = bytes(pkt[Raw].load)
-
-                if len(payload) > 0:
-                    # Use unidirectional stream key (we want to follow one direction)
-                    stream_key = (src_ip, src_port, dst_ip, dst_port)
-                    streams[stream_key].append((seq, payload))
-
-        # Sort each stream by sequence number and concatenate
         reassembled = {}
         for stream_key, segments in streams.items():
             # Sort by sequence number
@@ -125,6 +107,30 @@ class SyslogSender:
             if len(result) > 0:
                 reassembled[stream_key] = bytes(result)
 
+        return reassembled
+
+    def _reassemble_tcp_streams(self):
+        """
+        Reassemble TCP streams by grouping packets by connection and ordering by sequence number.
+        Returns a dict of {connection_tuple: reassembled_bytes}
+        """
+        streams = defaultdict(list)
+
+        for pkt in self.packets:
+            if TCP in pkt and IP in pkt and Raw in pkt:
+                src_ip = pkt[IP].src
+                dst_ip = pkt[IP].dst
+                src_port = pkt[TCP].sport
+                dst_port = pkt[TCP].dport
+                seq = pkt[TCP].seq
+                payload = bytes(pkt[Raw].load)
+
+                if len(payload) > 0:
+                    # Use unidirectional stream key (we want to follow one direction)
+                    stream_key = (src_ip, src_port, dst_ip, dst_port)
+                    streams[stream_key].append((seq, payload))
+
+        reassembled = self._sort_tcp_streams_by_sequence(streams)
         return reassembled
 
     def _detect_framing_type(self, data):
@@ -234,28 +240,7 @@ class SyslogSender:
         else:
             return self._extract_udp_payloads()
 
-    def _extract_tcp_payloads(self):
-        """
-        Extract payloads from TCP by reassembling streams and parsing framing.
-        """
-        print("  Reassembling TCP streams...")
-
-        # Reassemble TCP streams
-        streams = self._reassemble_tcp_streams()
-
-        if len(streams) == 0:
-            print("No TCP streams with payload found", file=sys.stderr)
-            sys.exit(1)
-
-        print(f"  Found {len(streams)} TCP stream(s)")
-
-        # Process each stream
-        seen_payloads = set()
-        duplicate_count = 0
-
-        for stream_key, stream_data in streams.items():
-            _, _, _, _ = stream_key
-
+    def _process_tcp_payload(self, stream_data, seen_payloads, duplicate_count):
             # Determine framing type
             if self.framing == 'auto':
                 framing_type = self._detect_framing_type(stream_data)
@@ -277,6 +262,30 @@ class SyslogSender:
                         self.payloads.append(msg)
                     else:
                         duplicate_count += 1
+            
+            return seen_payloads, duplicate_count
+
+    def _extract_tcp_payloads(self):
+        """
+        Extract payloads from TCP by reassembling streams and parsing framing.
+        """
+        print("  Reassembling TCP streams...")
+
+        # Reassemble TCP streams
+        streams = self._reassemble_tcp_streams()
+
+        if len(streams) == 0:
+            print("No TCP streams with payload found", file=sys.stderr)
+            sys.exit(1)
+
+        print(f"  Found {len(streams)} TCP stream(s)")
+
+        # Process each stream
+        seen_payloads = set()
+        duplicate_count = 0
+
+        for _, stream_data in streams.items():
+            seen_payloads, duplicate_count = self._process_tcp_payload(stream_data, seen_payloads, duplicate_count)
 
         if self.no_dedup:
             print(f"\nExtracted {len(self.payloads)} syslog messages (including duplicates)")
@@ -290,6 +299,23 @@ class SyslogSender:
             sys.exit(1)
 
         return self.payloads
+
+    def _process_udp_pkt(self, pkt, seen_payloads, packets_with_payload, duplicate_count):
+        payload = bytes(pkt[Raw].load)
+        packets_with_payload += 1
+
+        if payload and len(payload) > 0:
+            if self.no_dedup:
+                self.payloads.append(payload)
+            else:
+                if payload not in seen_payloads:
+                    seen_payloads.add(payload)
+                    self.payloads.append(payload)
+                else:
+                    duplicate_count += 1
+
+        return seen_payloads, packets_with_payload, duplicate_count
+
 
     def _extract_udp_payloads(self):
         """
@@ -306,18 +332,7 @@ class SyslogSender:
             if not(UDP in pkt and Raw in pkt):
               continue
 
-            payload = bytes(pkt[Raw].load)
-            packets_with_payload += 1
-
-            if payload and len(payload) > 0:
-                if self.no_dedup:
-                    self.payloads.append(payload)
-                else:
-                    if payload not in seen_payloads:
-                        seen_payloads.add(payload)
-                        self.payloads.append(payload)
-                    else:
-                        duplicate_count += 1
+            seen_payloads, packets_with_payload, duplicate_count = self._process_udp_pkt(pkt, seen_payloads, packets_with_payload, duplicate_count)
 
         if self.no_dedup:
             print(f"Extracted {len(self.payloads)} syslog messages (including duplicates)")
