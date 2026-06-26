@@ -29,7 +29,8 @@ on:
       - "develop"
       - "next*"
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   meta:
@@ -114,6 +115,7 @@ jobs:
     needs:
       - meta
     permissions:
+      contents: read
       packages: write
     steps:
       # To use this repository's private action,

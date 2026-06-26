@@ -5,7 +5,8 @@ on:
   pull_request_target:
     types: [opened, closed, synchronize]
 
-permissions: read-all
+permissions:
+  contents: read
 
 # contributor-assistant/github-action@v2.6.1 (latest available as of 2024-09)
 # still ships with Node.js 20, which GitHub is deprecating. Force the runner
