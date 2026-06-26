@@ -29,9 +29,6 @@ on:
       - "develop"
       - "next*"
 
-permissions:
-  contents: read
-
 jobs:
   meta:
     runs-on: ubuntu-latest
@@ -471,6 +468,7 @@ jobs:
       - test-healthcheck-unit-tests
       - test-ebpf
     permissions:
+      contents: read
       contents: write
     steps:
       - uses: actions/checkout@v7
