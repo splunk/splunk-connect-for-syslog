@@ -132,6 +132,7 @@ read_hec_url() {
             printf "${YELLOW}Example: https://splunk.example.com:8088${NC}\n"
         fi
     done
+    return 0
 }
 
 # Prompt for HEC token with validation, retries until valid
@@ -148,6 +149,7 @@ read_hec_token() {
             printf "${RED}Invalid token format. Expected a UUID (e.g., 12345678-1234-1234-1234-123456789abc).${NC}\n"
         fi
     done
+    return 0
 }
 
 # Prompt for a numeric value with validation; echoes the result for capture via $()
@@ -188,6 +190,7 @@ ask_yes_no() {
             * ) echo "Please answer yes or no.";;
         esac
     done
+    return 0
 }
 
 # Function to apply hardware-based configuration
@@ -293,6 +296,7 @@ apply_hardware_config() {
             fi
             ;;
     esac
+    return 0
 }
 
 # Mode selection
