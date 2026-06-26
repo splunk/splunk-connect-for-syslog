@@ -95,13 +95,13 @@ def search_docs(query: str) -> list[str]:
 
 
 @mcp.tool
-def sc4s_health() -> dict:
+def health() -> dict:
     """Check the health status of a running SC4S instance."""
     return _sc4s_request("get", "/health", timeout=10)
 
 
 @mcp.tool
-def sc4s_set_env(env_file_content: str) -> dict:
+def set_env(env_file_content: str) -> dict:
     """Upload a new env_file to the running SC4S instance. Provide the full env_file content as a string. SC4S will backup the current env_file, apply the new one, and restart syslog-ng."""
     return _sc4s_request(
         "post",
@@ -112,13 +112,13 @@ def sc4s_set_env(env_file_content: str) -> dict:
 
 
 @mcp.tool
-def sc4s_get_env() -> dict:
+def get_env() -> dict:
     """Read the current env_file from the running SC4S instance."""
     return _sc4s_request("get", "/config/env", timeout=10)
 
 
 @mcp.tool
-def sc4s_add_parser(filename: str, content: str) -> dict:
+def add_parser(filename: str, content: str) -> dict:
     """Upload a new parser .conf file to the running SC4S instance. SC4S will validate the syntax and restart syslog-ng. If syntax check fails, the parser is rolled back."""
     if not filename.endswith(".conf"):
         filename += ".conf"
@@ -131,18 +131,18 @@ def sc4s_add_parser(filename: str, content: str) -> dict:
 
 
 @mcp.tool
-def sc4s_delete_parser(name: str) -> dict:
+def delete_parser(name: str) -> dict:
     """Delete a custom parser from the running SC4S instance. SC4S will validate the config after removal and restart syslog-ng. If validation fails, the parser is restored."""
     return _sc4s_request("delete", f"/config/parser/{name}", timeout=30)
 
 
 @mcp.tool
-def sc4s_list_custom_parsers() -> dict:
+def list_custom_parsers() -> dict:
     """List all custom parsers currently deployed on the running SC4S instance."""
     return _sc4s_request("get", "/config/parsers", timeout=10)
 
 
 @mcp.tool
-def sc4s_get_custom_parser(name: str) -> dict:
+def get_custom_parser(name: str) -> dict:
     """Read the content of a custom parser deployed on the running SC4S instance."""
     return _sc4s_request("get", f"/config/parser/{name}", timeout=10)
