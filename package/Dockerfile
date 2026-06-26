@@ -82,7 +82,9 @@ RUN python3 -m venv /var/lib/python-venv \
 
 # Patch axosyslog Python dependencies for vulnerabilities
 RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" \
-    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15"
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "cryptography>=48.0.1" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "tornado>=6.5.6"
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/shared/addons /etc/syslog-ng/conf.d/conflib 
