@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
+function join_by {
+  local d=$1; shift
+  local f=$1; shift
+  printf %s "$f" "${@/#/$d}"
+  return 0
+}
 
 # Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
