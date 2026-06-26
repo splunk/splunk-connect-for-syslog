@@ -244,7 +244,7 @@ certificates by default.
 
 ## Prepare your SC4S instance
 
-Some MCP management tools (e.g. `sc4s_set_env`, `sc4s_get_env`)
+Some MCP management tools (e.g. `set_env`, `get_env`)
 need to read and write SC4S's `env_file` at runtime. The `--env-file`
 Docker/Podman flag alone is **not sufficient**: it only injects variables at
 startup and does not make the file visible inside the container.
@@ -322,7 +322,7 @@ Omit the `headers` block when the server is running without
 1. Confirm the container is running: `docker ps` or `podman ps`.
 2. Confirm the MCP client sees the server. Most clients list available
    MCP servers in a dedicated panel or on startup.
-3. From the assistant, call the `sc4s_health` tool. A healthy instance
+3. From the assistant, call the `health` tool. A healthy instance
    returns a status payload from the SC4S management API. An error like
    `"SC4S instance unreachable at http://..."` means the MCP server
    could reach out but SC4S is not answering. Check `SC4S_API_URL`, the

@@ -53,7 +53,7 @@ Typical flow after invocation:
 2. It calls `list_vendor_parsers` / `get_parser` to learn existing
    conventions for the same vendor (if any).
 3. It drafts a new `.conf` parser and the corresponding unit tests.
-4. With your approval, it uploads the parser via `sc4s_add_parser`.
+4. With your approval, it uploads the parser via `add_parser`.
 
 ### Troubleshoot SC4S workflow
 
@@ -71,11 +71,11 @@ Parameters:
 
 Diagnostic steps seeded by the prompt:
 
-1. Call `sc4s_health` to check the instance status.
-2. Call `sc4s_get_env` to review the current configuration.
-3. Call `sc4s_list_custom_parsers` to list deployed custom parsers.
+1. Call `health` to check the instance status.
+2. Call `get_env` to review the current configuration.
+3. Call `list_custom_parsers` to list deployed custom parsers.
 4. Propose specific fixes.
-5. Apply configuration changes via `sc4s_set_env` only after explaining
+5. Apply configuration changes via `set_env` only after explaining
    the reasoning.
 
 ## Combining tools, resources, and prompts
@@ -88,7 +88,7 @@ adding support for a new vendor might look like this:
 2. The assistant pulls context from `sc4s://docs/creating_parsers` and
    calls read-only tools (`list_vendors`, `list_vendor_parsers`,
    `get_parser`) to inspect existing work.
-3. After you review the draft, the assistant calls `sc4s_add_parser`
+3. After you review the draft, the assistant calls `add_parser`
    to deploy it.
 4. If the SC4S management API rejects the parser, the change is rolled
    back automatically and the assistant iterates.
