@@ -29,11 +29,7 @@ on:
       - "develop"
       - "next*"
 
-permissions:
-  actions: read
-  contents: write
-  deployments: write
-  packages: write
+permissions: read-all
 
 jobs:
   meta:
@@ -117,6 +113,8 @@ jobs:
     name: Build Action
     needs:
       - meta
+    permissions:
+      packages: write
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -470,6 +468,8 @@ jobs:
       - test-healthcheck
       - test-healthcheck-unit-tests
       - test-ebpf
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
         with:
