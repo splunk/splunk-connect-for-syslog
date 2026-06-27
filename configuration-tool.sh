@@ -207,92 +207,76 @@ apply_hardware_config() {
         "16vCPUs")
             # 16 vCPUs, 64 GB RAM
             
-            if [[ "$protocol" = "udp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 35000 ]]; then
-                    ADJUST_FETCH_LIMIT="yes"
-                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
-                    SC4S_ENABLE_EBPF="yes"
-                    SC4S_EBPF_NO_SOCKETS=16
-                    ADJUST_LISTEN_SOCKETS="yes"
-                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=64
-                    SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
-                fi
+            if [[ ( "$protocol" = "udp" || "$protocol" = "both" ) && "$expected_eps" -gt 35000 ]]; then
+                ADJUST_FETCH_LIMIT="yes"
+                SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                SC4S_ENABLE_EBPF="yes"
+                SC4S_EBPF_NO_SOCKETS=16
+                ADJUST_LISTEN_SOCKETS="yes"
+                SC4S_SOURCE_LISTEN_UDP_SOCKETS=64
+                SC4S_SOURCE_UDP_SO_RCVBUFF=536870912
             fi
-            if [[ "$protocol" = "tcp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 50000 ]]; then
-                    PARALLELIZE="yes"
-                    SC4S_PARALLELIZE_NO_PARTITION=8
-                    SC4S_SOURCE_TCP_SO_RCVBUFF=536870912
-                fi
+            if [[ ( "$protocol" = "tcp" || "$protocol" = "both" ) && "$expected_eps" -gt 50000 ]]; then
+                PARALLELIZE="yes"
+                SC4S_PARALLELIZE_NO_PARTITION=8
+                SC4S_SOURCE_TCP_SO_RCVBUFF=536870912
             fi
             ;;
             
         "8vCPUs")
             # 8 vCPUs, 32 GB RAM
             
-            if [[ "$protocol" = "udp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 25000 ]]; then
-                    ADJUST_FETCH_LIMIT="yes"
-                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
-                    SC4S_ENABLE_EBPF="yes"
-                    SC4S_EBPF_NO_SOCKETS=16
-                    ADJUST_LISTEN_SOCKETS="yes"
-                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
-                    SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
-                fi
+            if [[ ( "$protocol" = "udp" || "$protocol" = "both" ) && "$expected_eps" -gt 25000 ]]; then
+                ADJUST_FETCH_LIMIT="yes"
+                SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                SC4S_ENABLE_EBPF="yes"
+                SC4S_EBPF_NO_SOCKETS=16
+                ADJUST_LISTEN_SOCKETS="yes"
+                SC4S_SOURCE_LISTEN_UDP_SOCKETS=32
+                SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
             fi
-            if [[ "$protocol" = "tcp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 30000 ]]; then
-                    PARALLELIZE="yes"
-                    SC4S_PARALLELIZE_NO_PARTITION=8
-                    SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
-                fi
+            if [[ ( "$protocol" = "tcp" || "$protocol" = "both" ) && "$expected_eps" -gt 30000 ]]; then
+                PARALLELIZE="yes"
+                SC4S_PARALLELIZE_NO_PARTITION=8
+                SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
             fi
             ;;
             
         "4vCPUs")
             # 4 vCPUs, 16 GB RAM
             
-            if [[ "$protocol" = "udp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 10000 ]]; then
-                    ADJUST_FETCH_LIMIT="yes"
-                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
-                    SC4S_ENABLE_EBPF="yes"
-                    SC4S_EBPF_NO_SOCKETS=8
-                    ADJUST_LISTEN_SOCKETS="yes"
-                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
-                    SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
-                fi
+            if [[ ( "$protocol" = "udp" || "$protocol" = "both" ) && "$expected_eps" -gt 10000 ]]; then
+                ADJUST_FETCH_LIMIT="yes"
+                SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                SC4S_ENABLE_EBPF="yes"
+                SC4S_EBPF_NO_SOCKETS=8
+                ADJUST_LISTEN_SOCKETS="yes"
+                SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
+                SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
             fi
-            if [[ "$protocol" = "tcp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 20000 ]]; then
-                    PARALLELIZE="yes"
-                    SC4S_PARALLELIZE_NO_PARTITION=4
-                    SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
-                fi
+            if [[ ( "$protocol" = "tcp" || "$protocol" = "both" ) && "$expected_eps" -gt 20000 ]]; then
+                PARALLELIZE="yes"
+                SC4S_PARALLELIZE_NO_PARTITION=4
+                SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
             fi
             ;;
 
         *)
             # default case
-            
-            if [[ "$protocol" = "udp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 10000 ]]; then
-                    ADJUST_FETCH_LIMIT="yes"
-                    SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
-                    SC4S_ENABLE_EBPF="yes"
-                    SC4S_EBPF_NO_SOCKETS=8
-                    ADJUST_LISTEN_SOCKETS="yes"
-                    SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
-                    SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
-                fi
+
+            if [[ ( "$protocol" = "udp" || "$protocol" = "both" ) && "$expected_eps" -gt 10000 ]]; then
+                ADJUST_FETCH_LIMIT="yes"
+                SC4S_SOURCE_UDP_FETCH_LIMIT=1000000
+                SC4S_ENABLE_EBPF="yes"
+                SC4S_EBPF_NO_SOCKETS=8
+                ADJUST_LISTEN_SOCKETS="yes"
+                SC4S_SOURCE_LISTEN_UDP_SOCKETS=16
+                SC4S_SOURCE_UDP_SO_RCVBUFF=268435456
             fi
-            if [[ "$protocol" = "tcp" || "$protocol" = "both" ]]; then
-                if [[ "$expected_eps" -gt 20000 ]]; then
-                    PARALLELIZE="yes"
-                    SC4S_PARALLELIZE_NO_PARTITION=4
-                    SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
-                fi
+            if [[ ( "$protocol" = "tcp" || "$protocol" = "both" ) && "$expected_eps" -gt 20000 ]]; then
+                PARALLELIZE="yes"
+                SC4S_PARALLELIZE_NO_PARTITION=4
+                SC4S_SOURCE_TCP_SO_RCVBUFF=268435456
             fi
             ;;
     esac

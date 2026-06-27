@@ -62,6 +62,7 @@ hup_handler() {
     echo Reloading syslog-ng...
     kill -SIGHUP ${pid}
   fi
+  return 0
 }
 
 # SIGQUIT(3) - used on process to quit and dump core
@@ -71,6 +72,7 @@ quit_handler() {
     kill -SIGQUIT ${pid}
     wait ${pid}
   fi
+  return 0
 }
 
 # SIGABRT(6) - abort signal
