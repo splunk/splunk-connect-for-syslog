@@ -191,16 +191,17 @@ persistence:
 
 podAnnotations: {}
 
-# securityContext settings. Both default to an empty context, which preserves the
-# default behavior of running SC4S as root (recommended for existing deployments
-# and standard runtimes).
+# securityContext settings. Both default to an empty context, which preserves
+# the default behavior of running SC4S as root (recommended for existing
+# deployments and standard runtimes).
 #
 # To run SC4S as the unprivileged "syslog" user (UID/GID 1024) baked into the
 # image - required for hardened environments such as RKE2/OpenShift or any
 # cluster that enforces the "restricted" Pod Security Standard -- uncomment the
 # preset below AND move the listeners above 1024 via sc4s.listenPorts (e.g.
 # 5514/5601). A non-root process cannot bind ports below 1024 in Kubernetes.
-# The Service still exposes 514/601 externally and maps them to the container ports.
+# The Service still exposes 514/601 externally and maps them to the
+# container ports.
 podSecurityContext:
   {}
   # runAsNonRoot: true

@@ -75,6 +75,52 @@ class SyslogSender:
                 print("No TCP or UDP packets found in PCAP", file=sys.stderr)
                 sys.exit(1)
 
+    @staticmethod
+    def _is_segment_seen(seq, seg_end, seen_ranges):
+        """
+        Return True if [seq, seg_end) is fully contained in already-seen data
+        (i.e. a retransmission).
+        """
+        for seen_start, seen_end in seen_ranges:
+            if seq >= seen_start and seg_end <= seen_end:
+                return True
+        return False
+
+    def _dedupe_stream_segments(self, segments):
+        """
+        Concatenate sorted segments, skipping retransmissions that are fully
+        contained in already-seen data. Returns the reassembled bytes.
+        """
+        result = bytearray()
+        seen_ranges = []
+
+        for seq, payload in segments:
+            # Check if this segment overlaps with already processed data
+            seg_end = seq + len(payload)
+            if self._is_segment_seen(seq, seg_end, seen_ranges):
+                continue
+            result.extend(payload)
+            seen_ranges.append((seq, seg_end))
+
+        return bytes(result)
+
+    def _sort_tcp_streams_by_sequence(self, streams):
+        """
+        Sort each stream by sequence number and concatenate
+        """
+        reassembled = {}
+        for stream_key, segments in streams.items():
+            # Sort by sequence number
+            segments.sort(key=lambda x: x[0])
+
+            # Deduplicate overlapping segments (retransmissions)
+            result = self._dedupe_stream_segments(segments)
+
+            if len(result) > 0:
+                reassembled[stream_key] = result
+
+        return reassembled
+
     def _reassemble_tcp_streams(self):
         """
         Reassemble TCP streams by grouping packets by connection and ordering by sequence number.
@@ -96,35 +142,7 @@ class SyslogSender:
                     stream_key = (src_ip, src_port, dst_ip, dst_port)
                     streams[stream_key].append((seq, payload))
 
-        # Sort each stream by sequence number and concatenate
-        reassembled = {}
-        for stream_key, segments in streams.items():
-            # Sort by sequence number
-            segments.sort(key=lambda x: x[0])
-
-            # Deduplicate overlapping segments (retransmissions)
-            # Track the next expected byte position
-            result = bytearray()
-            seen_ranges = []
-
-            for seq, payload in segments:
-                # Check if this segment overlaps with already processed data
-                seg_end = seq + len(payload)
-                is_duplicate = False
-
-                for seen_start, seen_end in seen_ranges:
-                    if seq >= seen_start and seg_end <= seen_end:
-                        # Fully contained in already seen data (retransmission)
-                        is_duplicate = True
-                        break
-
-                if not is_duplicate:
-                    result.extend(payload)
-                    seen_ranges.append((seq, seg_end))
-
-            if len(result) > 0:
-                reassembled[stream_key] = bytes(result)
-
+        reassembled = self._sort_tcp_streams_by_sequence(streams)
         return reassembled
 
     def _detect_framing_type(self, data):
@@ -148,6 +166,42 @@ class SyslogSender:
         # Default to newline if unclear
         return 'newline'
 
+    @staticmethod
+    def _skip_octet_whitespace(data, pos):
+        """
+        Advance past leading whitespace and return the new position.
+        """
+        data_len = len(data)
+        while pos < data_len and data[pos:pos + 1] in (b' ', b'\n', b'\r', b'\t'):
+            pos += 1
+        return pos
+
+    @staticmethod
+    def _read_octet_length(data, pos):
+        """
+        Read the leading length field (digits) starting at pos.
+        Returns (msg_length, new_pos), or (None, pos) if no valid length is found.
+        """
+        data_len = len(data)
+        length_start = pos
+        while pos < data_len and data[pos:pos + 1].isdigit():
+            pos += 1
+
+        if pos == length_start:
+            # No length found, might be corrupted or end of stream
+            return None, pos
+
+        try:
+            msg_length = int(data[length_start:pos])
+        except ValueError:
+            return None, pos
+
+        # Skip the space after length
+        if pos < data_len and data[pos:pos + 1] == b' ':
+            pos += 1
+
+        return msg_length, pos
+
     def _parse_octet_counting(self, data):
         """
         Parse syslog messages using octet-counting framing (RFC 6587).
@@ -158,30 +212,14 @@ class SyslogSender:
         data_len = len(data)
 
         while pos < data_len:
-            # Skip whitespace
-            while pos < data_len and data[pos:pos + 1] in (b' ', b'\n', b'\r', b'\t'):
-                pos += 1
-
+            pos = self._skip_octet_whitespace(data, pos)
             if pos >= data_len:
                 break
 
             # Read the length (digits until space)
-            length_start = pos
-            while pos < data_len and data[pos:pos + 1].isdigit():
-                pos += 1
-
-            if pos == length_start:
-                # No length found, might be corrupted or end of stream
+            msg_length, pos = self._read_octet_length(data, pos)
+            if msg_length is None:
                 break
-
-            try:
-                msg_length = int(data[length_start:pos])
-            except ValueError:
-                break
-
-            # Skip the space after length
-            if pos < data_len and data[pos:pos + 1] == b' ':
-                pos += 1
 
             # Read the message
             if pos + msg_length <= data_len:
@@ -234,28 +272,7 @@ class SyslogSender:
         else:
             return self._extract_udp_payloads()
 
-    def _extract_tcp_payloads(self):
-        """
-        Extract payloads from TCP by reassembling streams and parsing framing.
-        """
-        print("  Reassembling TCP streams...")
-
-        # Reassemble TCP streams
-        streams = self._reassemble_tcp_streams()
-
-        if len(streams) == 0:
-            print("No TCP streams with payload found", file=sys.stderr)
-            sys.exit(1)
-
-        print(f"  Found {len(streams)} TCP stream(s)")
-
-        # Process each stream
-        seen_payloads = set()
-        duplicate_count = 0
-
-        for stream_key, stream_data in streams.items():
-            src_ip, src_port, dst_ip, dst_port = stream_key
-
+    def _process_tcp_payload(self, stream_data, seen_payloads, duplicate_count):
             # Determine framing type
             if self.framing == 'auto':
                 framing_type = self._detect_framing_type(stream_data)
@@ -277,6 +294,30 @@ class SyslogSender:
                         self.payloads.append(msg)
                     else:
                         duplicate_count += 1
+            
+            return seen_payloads, duplicate_count
+
+    def _extract_tcp_payloads(self):
+        """
+        Extract payloads from TCP by reassembling streams and parsing framing.
+        """
+        print("  Reassembling TCP streams...")
+
+        # Reassemble TCP streams
+        streams = self._reassemble_tcp_streams()
+
+        if len(streams) == 0:
+            print("No TCP streams with payload found", file=sys.stderr)
+            sys.exit(1)
+
+        print(f"  Found {len(streams)} TCP stream(s)")
+
+        # Process each stream
+        seen_payloads = set()
+        duplicate_count = 0
+
+        for _, stream_data in streams.items():
+            seen_payloads, duplicate_count = self._process_tcp_payload(stream_data, seen_payloads, duplicate_count)
 
         if self.no_dedup:
             print(f"\nExtracted {len(self.payloads)} syslog messages (including duplicates)")
@@ -291,34 +332,45 @@ class SyslogSender:
 
         return self.payloads
 
-    def _extract_udp_payloads(self):
-        """
-        Extract payloads from UDP packets (one message per packet).
-        """
-        if self.no_dedup:
-            print("  (Deduplication disabled - all payloads will be sent)")
+    def _process_udp_pkt(self, pkt, seen_payloads, packets_with_payload, duplicate_count):
+        payload = bytes(pkt[Raw].load)
+        packets_with_payload += 1
 
+        if payload and len(payload) > 0:
+            if self.no_dedup:
+                self.payloads.append(payload)
+            else:
+                if payload not in seen_payloads:
+                    seen_payloads.add(payload)
+                    self.payloads.append(payload)
+                else:
+                    duplicate_count += 1
+
+        return seen_payloads, packets_with_payload, duplicate_count
+
+
+    def _collect_udp_payloads(self):
+        """
+        Iterate UDP packets and collect payloads.
+        Returns (packets_with_payload, duplicate_count).
+        """
         seen_payloads = set()
         packets_with_payload = 0
         duplicate_count = 0
 
         for pkt in self.packets:
-            if not(UDP in pkt and Raw in pkt):
-              continue
+            if not (UDP in pkt and Raw in pkt):
+                continue
 
-            payload = bytes(pkt[Raw].load)
-            packets_with_payload += 1
+            seen_payloads, packets_with_payload, duplicate_count = self._process_udp_pkt(
+                pkt, seen_payloads, packets_with_payload, duplicate_count)
 
-            if payload and len(payload) > 0:
-                if self.no_dedup:
-                    self.payloads.append(payload)
-                else:
-                    if payload not in seen_payloads:
-                        seen_payloads.add(payload)
-                        self.payloads.append(payload)
-                    else:
-                        duplicate_count += 1
+        return packets_with_payload, duplicate_count
 
+    def _print_udp_filtering_details(self, packets_with_payload, duplicate_count):
+        """
+        Print the UDP extraction summary and filtering breakdown.
+        """
         if self.no_dedup:
             print(f"Extracted {len(self.payloads)} syslog messages (including duplicates)")
         else:
@@ -334,6 +386,17 @@ class SyslogSender:
                 print(f"    - {packets_without_payload} UDP packets without payload")
             if duplicate_count > 0 and not self.no_dedup:
                 print(f"    - {duplicate_count} duplicate payloads (deduplicated)")
+
+    def _extract_udp_payloads(self):
+        """
+        Extract payloads from UDP packets (one message per packet).
+        """
+        if self.no_dedup:
+            print("  (Deduplication disabled - all payloads will be sent)")
+
+        packets_with_payload, duplicate_count = self._collect_udp_payloads()
+
+        self._print_udp_filtering_details(packets_with_payload, duplicate_count)
 
         if len(self.payloads) == 0:
             print("No syslog payloads found in packets", file=sys.stderr)
@@ -360,6 +423,89 @@ class SyslogSender:
         if len(self.payloads) > count:
             print(f"  ... and {len(self.payloads) - count} more messages")
 
+    def _frame_tcp_message(self, msg):
+        """
+        Frame a single message for TCP per RFC 6587, using the detected framing.
+        """
+        # Decode message
+        if isinstance(msg, bytes):
+            msg_str = msg.decode('utf-8', errors='ignore')
+        else:
+            msg_str = str(msg)
+
+        # Remove existing framing (newlines, length prefixes)
+        msg_str = msg_str.strip()
+
+        # Frame according to RFC 6587 using the same framing as input
+        if self.detected_framing == 'octet-counting':
+            # Octet counting: LENGTH SPACE MSG
+            msg_bytes = msg_str.encode('utf-8')
+            return f"{len(msg_bytes)} ".encode('utf-8') + msg_bytes
+        # Non-transparent framing: MSG NEWLINE
+        return f"{msg_str}\n".encode('utf-8')
+
+    def _frame_udp_message(self, msg):
+        """
+        Frame a single message for UDP (raw bytes / newline framing).
+        """
+        # UDP syslog typically uses newline framing or just raw message
+        if isinstance(msg, bytes):
+            return msg
+        return str(msg).encode('utf-8')
+
+    def _report_send_progress(self, index):
+        """
+        Print a progress line every 100 messages and on the final message.
+        """
+        if (index + 1) % 100 == 0 or (index + 1) == len(self.payloads):
+            print(f"Sent {index + 1}/{len(self.payloads)} messages...")
+
+    def _send_payloads(self, send_func, delay):
+        """
+        Send all payloads via send_func, handling progress, delay and per-message
+        errors. Returns (sent_count, failed_count).
+        """
+        sent_count = 0
+        failed_count = 0
+
+        for i, msg in enumerate(self.payloads):
+            try:
+                send_func(msg)
+                sent_count += 1
+
+                # Progress indicator
+                self._report_send_progress(i)
+
+                # Optional delay between messages
+                if delay > 0:
+                    time.sleep(delay)
+
+            except Exception as e:
+                print(f"Warning: Failed to send message {i + 1}: {e}", file=sys.stderr)
+                failed_count += 1
+
+        return sent_count, failed_count
+
+    def _print_send_summary(self, label, sent_count, failed_count):
+        """
+        Print the post-send summary block shared by TCP and UDP.
+        """
+        print(f"\n{label} Send Complete:")
+        print(f"Sent:   {sent_count}/{len(self.payloads)}")
+        if failed_count > 0:
+            print(f"Failed: {failed_count}")
+
+    def _bind_tcp_source(self, sock):
+        """
+        Bind the TCP socket to the configured source IP, if any.
+        """
+        if self.src_ip:
+            try:
+                sock.bind((self.src_ip, 0))
+                print(f"Bound to source IP: {self.src_ip}")
+            except Exception as e:
+                print(f"Warning: Could not bind to {self.src_ip}: {e}")
+
     def send_tcp(self, delay=0):
         """
         Send syslog messages over TCP with fresh connection using detected framing
@@ -371,61 +517,15 @@ class SyslogSender:
             sock.settimeout(10)
 
             # Bind to specific source IP if specified
-            if self.src_ip:
-                try:
-                    sock.bind((self.src_ip, 0))
-                    print(f"Bound to source IP: {self.src_ip}")
-                except Exception as e:
-                    print(f"Warning: Could not bind to {self.src_ip}: {e}")
+            self._bind_tcp_source(sock)
 
             sock.connect((self.dest_ip, self.dest_port))
             print("TCP connection established")
 
-            sent_count = 0
-            failed_count = 0
+            sent_count, failed_count = self._send_payloads(
+                lambda msg: sock.sendall(self._frame_tcp_message(msg)), delay)
 
-            # Determine which framing to use (use detected framing from PCAP)
-            use_octet_counting = (self.detected_framing == 'octet-counting')
-
-            for i, msg in enumerate(self.payloads):
-                try:
-                    # Decode message
-                    if isinstance(msg, bytes):
-                        msg_str = msg.decode('utf-8', errors='ignore')
-                    else:
-                        msg_str = str(msg)
-
-                    # Remove existing framing (newlines, length prefixes)
-                    msg_str = msg_str.strip()
-
-                    # Frame according to RFC 6587 using the same framing as input
-                    if use_octet_counting:
-                        # Octet counting: LENGTH SPACE MSG
-                        msg_bytes = msg_str.encode('utf-8')
-                        framed = f"{len(msg_bytes)} ".encode('utf-8') + msg_bytes
-                    else:
-                        # Non-transparent framing: MSG NEWLINE
-                        framed = f"{msg_str}\n".encode('utf-8')
-
-                    sock.sendall(framed)
-                    sent_count += 1
-
-                    # Progress indicator
-                    if (i + 1) % 100 == 0 or (i + 1) == len(self.payloads):
-                        print(f"Sent {i + 1}/{len(self.payloads)} messages...")
-
-                    # Optional delay between messages
-                    if delay > 0:
-                        time.sleep(delay)
-
-                except Exception as e:
-                    print(f"Warning: Failed to send message {i + 1}: {e}", file=sys.stderr)
-                    failed_count += 1
-
-            print("\nTCP Send Complete:")
-            print(f"Sent:   {sent_count}/{len(self.payloads)}")
-            if failed_count > 0:
-                print(f"Failed: {failed_count}")
+            self._print_send_summary("TCP", sent_count, failed_count)
 
             return sent_count > 0
 
@@ -443,6 +543,19 @@ class SyslogSender:
             sock.close()
             print("Connection closed")
 
+    def _bind_udp_source(self, sock):
+        """
+        Bind the UDP socket to the configured source IP/port, if any.
+        """
+        if self.src_ip or self.src_port:
+            bind_ip = self.src_ip or '0.0.0.0'
+            bind_port = self.src_port or 0
+            try:
+                sock.bind((bind_ip, bind_port))
+                print(f"Bound to {bind_ip}:{bind_port if bind_port else 'auto'}")
+            except Exception as e:
+                print(f"Warning: Could not bind: {e}")
+
     def send_udp(self, delay=0):
         """
         Send syslog messages over UDP
@@ -454,46 +567,13 @@ class SyslogSender:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
             # Bind to specific source IP/port if specified
-            if self.src_ip or self.src_port:
-                bind_ip = self.src_ip or '0.0.0.0'
-                bind_port = self.src_port or 0
-                try:
-                    sock.bind((bind_ip, bind_port))
-                    print(f"Bound to {bind_ip}:{bind_port if bind_port else 'auto'}")
-                except Exception as e:
-                    print(f"Warning: Could not bind: {e}")
+            self._bind_udp_source(sock)
 
-            sent_count = 0
-            failed_count = 0
+            sent_count, failed_count = self._send_payloads(
+                lambda msg: sock.sendto(self._frame_udp_message(msg), (self.dest_ip, self.dest_port)),
+                delay)
 
-            for i, msg in enumerate(self.payloads):
-                try:
-                    # UDP syslog typically uses newline framing or just raw message
-                    if isinstance(msg, bytes):
-                        msg_bytes = msg
-                    else:
-                        msg_bytes = str(msg).encode('utf-8')
-
-                    # Send datagram
-                    sock.sendto(msg_bytes, (self.dest_ip, self.dest_port))
-                    sent_count += 1
-
-                    # Progress indicator
-                    if (i + 1) % 100 == 0 or (i + 1) == len(self.payloads):
-                        print(f"Sent {i + 1}/{len(self.payloads)} messages...")
-
-                    # Optional delay between messages
-                    if delay > 0:
-                        time.sleep(delay)
-
-                except Exception as e:
-                    print(f"Warning: Failed to send message {i + 1}: {e}", file=sys.stderr)
-                    failed_count += 1
-
-            print("\nUDP Send Complete:")
-            print(f"Sent:   {sent_count}/{len(self.payloads)}")
-            if failed_count > 0:
-                print(f"Failed: {failed_count}")
+            self._print_send_summary("UDP", sent_count, failed_count)
 
             return sent_count > 0
 

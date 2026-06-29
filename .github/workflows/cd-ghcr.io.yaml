@@ -41,7 +41,7 @@ jobs:
           submodules: false
       - name: Setup regctl
         run: |
-          curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
+          curl --proto "=https" --tlsv1.2 -sSf -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@v4
