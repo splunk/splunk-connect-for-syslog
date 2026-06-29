@@ -11433,7 +11433,12 @@
 <p>Before you begin you also need to have <code>kubectl</code> installed.</p>
 <h1 id="prepare-your-initial-configuration">Prepare your initial configuration<a class="headerlink" href="#prepare-your-initial-configuration" title="Permanent link">&para;</a></h1>
 <ol>
-<li>First create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</li>
+<li>First create the <code>sc4s</code> namespace that the rest of the resources will be deployed into:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>sc4s
+</code></pre></div>
+<ol start="2">
+<li>Create a file named <code>/opt/sc4s/env_file</code> and add the following environment variables and values:</li>
 </ol>
 <p><div class="highlight"><pre><span></span><code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=https://xxx.xxx.xxx.xxx:8088
 SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
@@ -11443,7 +11448,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=xxxxxxxxxxxxxxxxxx
 Then create a configmap with variables provided in the file
 <div class="highlight"><pre><span></span><code>kubectl create configmap sc4s-config --from-env-file=/opt/sc4s/env_file -n sc4s
 </code></pre></div></p>
-<ol start="2">
+<ol start="3">
 <li>Create a deployment configuration file based on this:
 <div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
@@ -11484,6 +11489,10 @@ Then create a configmap with variables provided in the file
 <span class="w">            </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2000m&quot;</span>
 <span class="w">            </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2Gi&quot;</span>
 
+<span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SC4S_RUNTIME_ENV</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;k8s&quot;</span>
+
 <span class="w">        </span><span class="nt">envFrom</span><span class="p">:</span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">configMapRef</span><span class="p">:</span>
 <span class="w">              </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sc4s-config</span>
@@ -11491,7 +11500,7 @@ Then create a configmap with variables provided in the file
 <span class="w">        </span><span class="c1"># Uncomment only if local parser used</span>
 <span class="w">        </span><span class="c1"># volumeMounts:</span>
 <span class="w">        </span><span class="c1"># - name: local-filter-config</span>
-<span class="w">        </span><span class="c1">#   mountPath: /etc/syslog-ng/conf.d/local/config/app_parsers</span>
+<span class="w">        </span><span class="c1">#   mountPath: /etc/syslog-ng/conf.d/configmap/config/app_parsers</span>
 <span class="w">        </span><span class="c1">#   readOnly: true</span>
 
 <span class="nn">---</span>
@@ -11534,11 +11543,11 @@ Then create a configmap with variables provided in the file
 </ol>
 <p>Please note that this file may need to be modified based on your requirements, such as the ports being used.
 You can view the default range of ports opened by the nodePort <a href="https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport">here</a>.</p>
-<ol start="3">
-<li>(Optioinal) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:</li>
+<ol start="4">
+<li>(Optional) To use local filters you have to load them into a configmap, and uncomment parts of the deployment file related to them:</li>
 </ol>
-<div class="highlight"><pre><span></span><code>kubectl create configmap sc4s-local-filter-config \                  
-  --from-file=/opt/sc4s/local/config/app_parsers  -n sc4s
+<div class="highlight"><pre><span></span><code>kubectl create configmap sc4s-local-filter-config \
+  --from-file=/opt/sc4s/local/config/app_parsers -n sc4s
 </code></pre></div>
 <p>This loads files from app_parsers directory only, <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#create-configmaps-from-files">here</a> is the documentation explaining other use cases.</p>
 <h1 id="deploy-sc4s-with-your-configuration">Deploy SC4S with your configuration<a class="headerlink" href="#deploy-sc4s-with-your-configuration" title="Permanent link">&para;</a></h1>
@@ -11575,12 +11584,9 @@ You can view the default range of ports opened by the nodePort <a href="https://
 <p>If the pod does not start you can debug it with this command:
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span><span class="o">{</span>your_pod_name<span class="o">}</span><span class="w"> </span>-n<span class="w"> </span>sc4s
 </code></pre></div></p>
-<ol start="3">
-<li>You can use following commands to check if SC4S deployment and NodePort service is running.</li>
-</ol>
 <h1 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h1>
 <p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
-configuration is correct. Once the checks are complete, validate that SC4S properly communicate with Splunk.
+configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk.
 To do this, execute the following search in Splunk:</p>
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
 </code></pre></div>

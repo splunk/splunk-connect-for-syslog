@@ -10880,10 +10880,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#adding-parser-to-sc4s-lite-package" class="md-nav__link">
+  <a href="#adding-parser-to-sc4s-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding parser to SC4S Lite package
+        Adding parser to SC4S package
       
     </span>
   </a>
@@ -11559,10 +11559,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#adding-parser-to-sc4s-lite-package" class="md-nav__link">
+  <a href="#adding-parser-to-sc4s-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adding parser to SC4S Lite package
+        Adding parser to SC4S package
       
     </span>
   </a>
@@ -11608,7 +11608,7 @@ poetry install
 </code></pre></div>
 <h2 id="parsers">Parsers<a class="headerlink" href="#parsers" title="Permanent link">&para;</a></h2>
 <h3 id="naming-conventions-and-project-structure">Naming conventions and project structure<a class="headerlink" href="#naming-conventions-and-project-structure" title="Permanent link">&para;</a></h3>
-<p>Parsers are .conf files with the naming convention: <code>app-type-vendor_product.conf</code>. Parsers that are part of the repository can be found at <code>package/etc/conf.d/conflib</code> or <code>package/lite/etc/addons</code> for Lite package. </p>
+<p>Parsers are .conf files with the naming convention: <code>app-type-vendor_product.conf</code>. Parsers that are part of the repository can be found at <code>package/shared/conf.d/conflib</code> and <code>package/shared/addons</code>. </p>
 <p>Remember that adding your parser to the main or lite package in the repo requires building a new image for it to become available to your SC4S instance. If you want to add locally new parser, you can add it to <code>/opt/sc4s/local</code> directory on your existing SC4S installation.</p>
 <h3 id="parser-structure">Parser structure<a class="headerlink" href="#parser-structure" title="Permanent link">&para;</a></h3>
 <p>The SC4S parser consists of <code>application</code> and <code>block parser</code> blocks. The <code>application</code> part uses filter clause to specify what logs will be parsed by the <code>block parser</code> block. Example of such parser is shown below:</p>
@@ -11639,8 +11639,8 @@ application app-syslog-vmware_cb-protect[sc4s-syslog] {
 <p>The application filter will match all messages that start with the string <code>Carbon Black App Control event:</code>, and those events will be parsed by <code>block parser app-syslog-vmware_cb-protect()</code>. This parser then will route the message to index: <code>epintel</code>, set the sourcetype, source, vendor and product fields, and use the specified template.</p>
 <p><img alt="" src="../resources/images/parser_dev_basic_output.png" /></p>
 <p>To learn more about creating filters and parse blocks see pages: <a href="filter_message/">Filter Messages</a> and <a href="parse_message/">Parse Messages</a>.</p>
-<h3 id="adding-parser-to-sc4s-lite-package">Adding parser to SC4S Lite package<a class="headerlink" href="#adding-parser-to-sc4s-lite-package" title="Permanent link">&para;</a></h3>
-<p>For SC4S lite, parsers are grouped into <code>addons</code>. Create a folder (if it does not already exist) in <code>package/lite/etc/addons</code> with the name of vendor. In this folder, also create an <code>addon_metadata.yaml</code> file with vendor name:</p>
+<h3 id="adding-parser-to-sc4s-package">Adding parser to SC4S package<a class="headerlink" href="#adding-parser-to-sc4s-package" title="Permanent link">&para;</a></h3>
+<p>Both the main and lite packages use the shared parser structure under <code>package/shared/addons</code>. To add a parser, create a vendor-specific directory (if it does not already exist) and add an <code>addon_metadata.yaml</code> file containing the vendor name:</p>
 <div class="highlight"><pre><span></span><code>---
 name: &quot;&lt;vendor_name&gt;&quot;
 </code></pre></div>

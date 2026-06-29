@@ -11460,7 +11460,7 @@ maintained by the One Identity team. </p>
 <p>Install CentOS or RHEL 9.5. See your OS documentation for instructions.</p>
 </li>
 <li>
-<p>Enable EPEL (Centos 8).</p>
+<p>Enable EPEL (CentOS 8).</p>
 </li>
 </ol>
 <div class="highlight"><pre><span></span><code>dnf<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;dnf-command(copr)&#39;</span><span class="w"> </span>-y
@@ -11476,7 +11476,7 @@ listen on the same ports as SC4S. You can also configure SC4S to provide local l
 sudo<span class="w"> </span>systemctl<span class="w"> </span>disable<span class="w"> </span>syslog-ng
 </code></pre></div>
 <ol start="4">
-<li>Download the latest <code>bare_metal.tar</code> from <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">releases</a> on github and untar the package in <code>/etc/syslog-ng</code>. This step unpacks a tarball with the SC4S version of the syslog-ng config files in the standard
+<li>Download the latest <code>baremetal.tar</code> from <a href="https://github.com/splunk/splunk-connect-for-syslog/releases">releases</a> on github and untar the package in <code>/etc/syslog-ng</code>. This step unpacks a tarball with the SC4S version of the syslog-ng config files in the standard
 <code>/etc/syslog-ng</code> location, and will overwrite existing content. Make sure that any previous configurations of syslog-ng are saved
 prior to executing the download step.</li>
 </ol>
