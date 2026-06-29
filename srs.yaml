@@ -1,8 +1,8 @@
 # SRS configuration file
 # Generated from .fossa.yml
 #
-
+---
 scan:
   scanners:
-  - vuln
-  - license
+    - vuln
+    - license

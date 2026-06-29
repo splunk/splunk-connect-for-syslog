@@ -29,12 +29,6 @@ on:
       - "develop"
       - "next*"
 
-permissions:
-  actions: read
-  contents: write
-  deployments: write
-  packages: write
-
 jobs:
   meta:
     runs-on: ubuntu-latest
@@ -46,6 +40,8 @@ jobs:
       container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
       container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
       matrix_supportedSplunk: ${{ steps.matrix.outputs.supportedSplunk }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -117,6 +113,9 @@ jobs:
     name: Build Action
     needs:
       - meta
+    permissions:
+      contents: read
+      packages: write
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -470,6 +469,8 @@ jobs:
       - test-healthcheck
       - test-healthcheck-unit-tests
       - test-ebpf
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v7
         with:

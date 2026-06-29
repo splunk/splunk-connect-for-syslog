@@ -58,7 +58,8 @@ RUN apk add --no-cache --upgrade \
     --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
     curl \
     libpq \
-    postgresql-libs
+    postgresql-libs \
+    socat
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -82,7 +83,9 @@ RUN python3 -m venv /var/lib/python-venv \
 
 # Patch axosyslog Python dependencies for vulnerabilities
 RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" \
-    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15"
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "cryptography>=48.0.1" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "tornado>=6.5.6"
 
 COPY package/etc/syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
 COPY package/shared/addons /etc/syslog-ng/conf.d/conflib 
@@ -100,7 +103,8 @@ COPY package/sbin/source_ports_validator.py /
 # entrypoint creates/updates at startup, enabling non-root runtimes without
 # breaking the default root runtime.
 RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log /home/syslog \
-    && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out /var/log/syslog-ng.err /home/syslog \
+    && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out \
+    /var/log/syslog-ng.err /home/syslog \
     && chmod -R g+rwX /etc/syslog-ng /var/lib/syslog-ng \
     && chmod g+rw /var/log/syslog-ng.out /var/log/syslog-ng.err
 

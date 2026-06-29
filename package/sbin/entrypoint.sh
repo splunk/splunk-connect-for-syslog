@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-function join_by { local d=$1; shift; local f=$1; shift; printf %s "$f" "${@/#/$d}"; }
+function join_by {
+  local d=$1; shift
+  local f=$1; shift
+  printf %s "$f" "${@/#/$d}"
+  return 0
+}
 
 # Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
@@ -36,12 +41,12 @@ export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
 
 # Set list with alternate destinations than HEC
 export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
-[ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ] && unset SC4S_DESTS_FILTERED_ALTERNATES
+[[ -z "$SC4S_DESTS_FILTERED_ALTERNATES" ]] && unset SC4S_DESTS_FILTERED_ALTERNATES
 
 # SIGTERM(15) - requests termination (default signal for kill)
 term_handler() {
 # SIGTERM on valid PID; return exit code 0 (clean exit)
-  if [ $pid -ne 0 ]; then
+  if [[ $pid -ne 0 ]]; then
     echo Terminating syslog-ng...
     kill -SIGTERM ${pid}
     wait ${pid}
@@ -53,25 +58,27 @@ term_handler() {
 
 # SIGHUP(1) - used to reload configs or restart processes
 hup_handler() {
-  if [ $pid -ne 0 ]; then
+  if [[ $pid -ne 0 ]]; then
     echo Reloading syslog-ng...
     kill -SIGHUP ${pid}
   fi
+  return 0
 }
 
 # SIGQUIT(3) - used on process to quit and dump core
 quit_handler() {
-  if [ $pid -ne 0 ]; then
+  if [[ $pid -ne 0 ]]; then
     echo Quitting syslog-ng...
     kill -SIGQUIT ${pid}
     wait ${pid}
   fi
+  return 0
 }
 
 # SIGABRT(6) - abort signal
 abrt_handler() {
 # SIGABRT on valid PID
-  if [ $pid -ne 0 ]; then
+  if [[ $pid -ne 0 ]]; then
     echo Aborting syslog-ng...
     kill -SIGABRT ${pid}
     wait ${pid}
@@ -83,7 +90,7 @@ abrt_handler() {
 
 # SIGINT(2) - interrupts the process (ex. Ctrl+C)
 int_handler() {
-  if [ $pid -ne 0 ]; then
+  if [[ $pid -ne 0 ]]; then
     echo Interupting syslog-ng...
     kill -SIGINT ${pid}
     wait ${pid}
@@ -114,7 +121,7 @@ cp -f $SC4S_ETC/context_templates/* $SC4S_ETC/conf.d/local/context
 
 # Copying the config files from sc4s repository to sc4s local directory
 # check if runtime environment is k8s
-if [ "$SC4S_RUNTIME_ENV" == "k8s" ]
+if [[ "$SC4S_RUNTIME_ENV" == "k8s" ]]
 then
   # create directories if they don't exist
   mkdir -p $SC4S_ETC/conf.d/configmap/context/
@@ -137,7 +144,7 @@ if [[ -f $SC4S_ETC/syslog-ng.conf.jinja ]]; then
 fi
 
 # Adds examples of different parsers to sc4s local dirctory
-if [ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]
+if [[ "$TEST_SC4S_ACTIVATE_EXAMPLES" == "yes" ]]
 then
   for file in $SC4S_ETC/conf.d/local/context/*.example ; do cp --verbose -n $file ${file%.example}; done
   cp -f $SC4S_ETC/test_parsers/* $SC4S_ETC/conf.d/local/config/app_parsers/
@@ -146,11 +153,11 @@ for file in $SC4S_ETC/conf.d/local/context/*.example ; do touch ${file%.example}
 touch $SC4S_ETC/conf.d/local/context/splunk_metadata.csv
 
 # Generating and storing TLS Certificate
-if [ "$SC4S_SOURCE_TLS_SELFSIGNED" == "yes" ]
+if [[ "$SC4S_SOURCE_TLS_SELFSIGNED" == "yes" ]]
 then
   mkdir -p $SC4S_TLS || true
   KEY=${SC4S_TLS}/server.pem
-  if [ ! -f "$KEY" ]; then
+  if [[ ! -f "$KEY" ]]; then
     openssl req -nodes -x509 -newkey rsa:4096 -keyout ${SC4S_TLS}/ca.key -out ${SC4S_TLS}/ca.crt -subj "/C=US/ST=ANY/L=ANY/O=SC4S Self Signer/OU=Splunk/CN=example.com"
     openssl req -nodes -newkey rsa:2048 -keyout ${SC4S_TLS}/server.key -out ${SC4S_TLS}/server.csr -subj "/C=US/ST=ANY/L=ANY/O=SC4S Self Signed Instance/OU=Splunk/CN=example.com"
     openssl x509 -req -in ${SC4S_TLS}/server.csr -CA ${SC4S_TLS}/ca.crt -CAkey ${SC4S_TLS}/ca.key -CAcreateserial -out ${SC4S_TLS}/server.pem
@@ -172,14 +179,14 @@ fi
 # system trust directory, which is only available to root. When running as a
 # non-root user this step is skipped with a warning; mount trusted CA material
 # directly to the destination instead (e.g. SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT).
-if [ -f "${SC4S_TLS}/trusted.pem" ] || [ -f "${SC4S_TLS}/ca.crt" ]; then
-  if [ -w "${CA_TRUST_DIR}" ]; then
-    if [ "$IS_ALPINE" = true ]; then
-      [ -f "${SC4S_TLS}/trusted.pem" ] && cp "${SC4S_TLS}/trusted.pem" "${CA_TRUST_DIR}/trusted.crt"
-      [ -f "${SC4S_TLS}/ca.crt" ] && cp "${SC4S_TLS}/ca.crt" "${CA_TRUST_DIR}/"
+if [[ -f "${SC4S_TLS}/trusted.pem" || -f "${SC4S_TLS}/ca.crt" ]]; then
+  if [[ -w "${CA_TRUST_DIR}" ]]; then
+    if [[ "$IS_ALPINE" = true ]]; then
+      [[ -f "${SC4S_TLS}/trusted.pem" ]] && cp "${SC4S_TLS}/trusted.pem" "${CA_TRUST_DIR}/trusted.crt"
+      [[ -f "${SC4S_TLS}/ca.crt" ]] && cp "${SC4S_TLS}/ca.crt" "${CA_TRUST_DIR}/"
     else
-      [ -f "${SC4S_TLS}/trusted.pem" ] && cp "${SC4S_TLS}/trusted.pem" "${CA_TRUST_DIR}/"
-      [ -f "${SC4S_TLS}/ca.crt" ] && cp "${SC4S_TLS}/ca.crt" "${CA_TRUST_DIR}/"
+      [[ -f "${SC4S_TLS}/trusted.pem" ]] && cp "${SC4S_TLS}/trusted.pem" "${CA_TRUST_DIR}/"
+      [[ -f "${SC4S_TLS}/ca.crt" ]] && cp "${SC4S_TLS}/ca.crt" "${CA_TRUST_DIR}/"
     fi
     ${CA_TRUST_CMD}
   else
@@ -189,12 +196,12 @@ fi
 
 # Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
 SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
-if [ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]
+if [[ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
-  if [ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]; then export NO_VERIFY=-k ; fi
+  if [[ "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY}" == "no" ]]; then export NO_VERIFY=-k ; fi
 
-  if [ -n "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}" ]; then
+  if [[ -n "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}" ]]; then
     export HEC_TLS_OPTS="--cert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/cert.pem  --key ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/key.pem --cacert ${SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT}/ca_cert.pem";
   else
     export HEC_TLS_OPTS="";
@@ -222,7 +229,7 @@ then
 fi
 
 # Clearing the local db that stores ip host pairs
-if [ "${SC4S_CLEAR_NAME_CACHE}" == "yes" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "1" ] || [ "${SC4S_CLEAR_NAME_CACHE}" == "true" ]
+if [[ "${SC4S_CLEAR_NAME_CACHE}" == "yes" || "${SC4S_CLEAR_NAME_CACHE}" == "1" || "${SC4S_CLEAR_NAME_CACHE}" == "true" ]]
 then 
   rm -f $SC4S_VAR/hostip.sqlite
   echo "hostip.sqlite file deleted at $SC4S_VAR"
@@ -240,7 +247,7 @@ python3 /source_ports_validator.py
 syslog-ng --no-caps --preprocess-into=- | grep vendor_product | grep set | grep -v 'set(.\$' | sed 's/^ *//' | grep 'value("fields.sc4s_vendor_product"' | grep -v "\`vendor_product\`" | sed s/^set\(// | cut -d',' -f1 | sed 's/\"//g' >/tmp/keys
 syslog-ng --no-caps --preprocess-into=- | grep 'meta_key(.' | sed 's/^ *meta_key(.//' | sed "s/')//" >>/tmp/keys
 rm -f $SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example >/dev/null || true
-for fn in `cat /tmp/keys | sort | uniq`; do
+for fn in $(sort -u /tmp/keys); do
     echo "${fn},index,setme" >>$SC4S_ETC/conf.d/local/context/splunk_metadata.csv.example
 done
 
@@ -255,7 +262,7 @@ nohup gunicorn -b 0.0.0.0:$SC4S_LISTEN_STATUS_PORT healthcheck:app &
 
 # Generating syslog configuration and export it to tmp file
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
-if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+if [[ "${SC4S_DEBUG_CONTAINER}" == "yes" ]]
 then
   syslog-ng --no-caps --preprocess-into=/tmp/syslog-ng.conf
   printenv >/tmp/env_file
@@ -264,9 +271,9 @@ fi
 
 # Check syntax of syslog configuration
 syslog-ng -s --no-caps
-if [ $? != 0 ]
+if [[ $? != 0 ]]
 then
-  if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+  if [[ "${SC4S_DEBUG_CONTAINER}" == "yes" ]]
   then
     tail -f /dev/null
   else
@@ -278,7 +285,7 @@ fi
 while :
 do
   echo starting syslog-ng
-  if [ "${SC4S_DEBUG_LOGS}" == "yes" ]; then
+  if [[ "${SC4S_DEBUG_LOGS}" == "yes" ]]; then
     echo debug mode enabled
     "${SC4S_SBIN}"/syslog-ng -d -v -e "${SC4S_CONTAINER_OPTS}" -F "${@}" &
   else
@@ -286,7 +293,7 @@ do
   fi
   pid="$!"
   sleep 2
-  if [ "${SC4S_DEBUG_CONTAINER}" == "yes" ]
+  if [[ "${SC4S_DEBUG_CONTAINER}" == "yes" ]]
   then
     echo "Container debug enabled; waiting forever. Errors will not cause container to stop..."
     tail -f /dev/null
@@ -299,7 +306,7 @@ do
     wait ${pid}
     exit_code=$?
     # 147 - SIGSTOP(19), 143 - SIGTERM(15), 134 - SIGABRT(6), 130 - SIGINT(2)
-    if [ $exit_code == 147  ] || [ $exit_code == 143 ] || [ $exit_code == 134 ] || [ $exit_code == 130 ]
+    if [[ $exit_code == 147  || $exit_code == 143 || $exit_code == 134 || $exit_code == 130 ]]
     then
       exit $exit_code
     else
