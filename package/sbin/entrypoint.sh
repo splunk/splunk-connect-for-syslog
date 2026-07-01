@@ -289,7 +289,7 @@ fi
 # Save initial env_file keys so we can detect removals across syslog-ng restarts.
 # When the env_file is updated (e.g. via MCP) and a variable is removed, we unset it
 # before re-sourcing so it doesn't persist from Docker's initial --env-file or a prior iteration.
-if [ -f /opt/sc4s/env_file ]; then
+if [[ -f /opt/sc4s/env_file ]]; then
   grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
     | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_prev_env_keys
 else
@@ -302,7 +302,7 @@ do
   # Unset env variables that were removed from env_file since the last iteration.
   # This ensures features can be disabled by simply deleting the line from env_file,
   # even if Docker's --env-file originally set the variable at container start.
-  if [ -f /opt/sc4s/env_file ]; then
+  if [[ -f /opt/sc4s/env_file ]]; then
     grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
       | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_curr_env_keys
 
@@ -321,7 +321,7 @@ do
   else
     # env_file was deleted -- unset all previously tracked keys
     while IFS= read -r key; do
-      [ -z "$key" ] && continue
+      [[ -z "$key" ]] && continue
       unset "$key"
     done < /tmp/sc4s_prev_env_keys
     : > /tmp/sc4s_prev_env_keys
