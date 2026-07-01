@@ -8,9 +8,10 @@
   "baseBranches": ["develop"],
   "prConcurrentLimit": 20,
   "prHourlyLimit": 4,
-  "reviewers": ["cwadhwani-splunk"],
+  "reviewers": ["sbylica-splunk"],
   "lockFileMaintenance": { "enabled": true },
   "labels": ["dependencies"],
+  "pinDigests": true,
   "vulnerabilityAlerts": {
     "labels": ["dependencies", "security"]
   }
