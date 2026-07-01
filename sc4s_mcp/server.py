@@ -11,6 +11,7 @@ from utils.transport import TransportMode, resolve_transport
 
 import resources.docs  # noqa: F401
 import tools.configuration_tools  # noqa: F401
+import tools.configurator_tools  # noqa: F401
 import tools.metadata_tools  # noqa: F401
 import prompts.workflows  # noqa: F401
 
