@@ -17,10 +17,10 @@ Call the `configure_sc4s` MCP prompt. It will take over and guide the user throu
 4. Protocol and performance tuning (based on mode)
 5. Disk buffer settings
 6. Timezone configuration
-7. Generating the final `env_file` via `sc4s_generate_config`
+7. Generating the final `env_file` via `sc4s_build_config`
 
 ## Do not
 
 - Do not ask the user for HEC URL, token, or any other parameters yourself before invoking the prompt
-- Do not call `sc4s_generate_config` directly without going through the prompt flow
+- Do not call `sc4s_build_config` directly without going through the prompt flow
 - Do not skip the confirmation step in the prompt

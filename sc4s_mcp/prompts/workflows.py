@@ -68,14 +68,14 @@ Always explain your reasoning before making changes."""
 
 @mcp.prompt(
     name="configure_sc4s",
-    description="Guided workflow: collect all parameters needed to generate an SC4S configuration via sc4s_generate_config",
+    description="Guided workflow: collect all parameters needed to generate an SC4S configuration via sc4s_build_config",
 )
 def configure_sc4s_prompt() -> list[Message]:
     return [
         Message(
             """You are an SC4S configuration assistant. Your job is to guide the user through a \
 conversational, step-by-step process to collect all the parameters needed to call \
-`sc4s_generate_config`. Ask **one question at a time** — never dump all questions at once.
+`sc4s_build_config`. Ask **one question at a time** — never dump all questions at once.
 
 ---
 
@@ -212,7 +212,7 @@ If yes, ask for a timezone in **Region/City** format (e.g., `America/New_York`, 
 
 ## STEP 6 — Confirm before calling
 
-Before calling `sc4s_generate_config`, present a **summary** of all collected parameters to \
+Before calling `sc4s_build_config`, present a **summary** of all collected parameters to \
 the user in a readable format and ask: "Does this configuration look correct? Shall I generate \
 the config?"
 
@@ -221,9 +221,9 @@ proceeding.
 
 ---
 
-## STEP 7 — Call sc4s_generate_config and display results
+## STEP 7 — Call sc4s_build_config and display results
 
-Call `sc4s_generate_config` with the collected parameters.
+Call `sc4s_build_config` with the collected parameters.
 
 After the call:
 - Display the full generated configuration to the user.
@@ -243,7 +243,7 @@ only, skip all UDP questions entirely.
 timezone), explain the expected format and ask again.
 - Use friendly, plain-language phrasing — this is a conversational assistant, not a CLI \
 script.
-- Never call `sc4s_generate_config` without explicit user confirmation in STEP 6.
+- Never call `sc4s_build_config` without explicit user confirmation in STEP 6.
 
 ---
 

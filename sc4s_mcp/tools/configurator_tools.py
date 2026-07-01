@@ -15,7 +15,7 @@ _HEC_TOKEN_RE = re.compile(
 
 
 @mcp.tool
-def sc4s_generate_config(
+def sc4s_build_config(
     hec_url: str,
     hec_token: str,
     tls_verify: str = "yes",
@@ -41,11 +41,9 @@ def sc4s_generate_config(
     diskbuff_membufsize: int = 0,
     diskbuff_diskbufsize: int = 0,
 ) -> str:
-    """Generate an SC4S env_file configuration using the configuration-tool.sh script.
-
-    Calls configuration-tool.sh in non-interactive mode and returns the generated
-    configuration as a string. The caller can then save the result to an env_file or
-    pass it directly to sc4s_set_env.
+    """Generates a new SC4S env_file from scratch by running the configuration script
+    with the provided parameters. Use this when setting up SC4S for the first time
+    or creating a new configuration file.
 
     Args:
         hec_url: Splunk HEC URL, e.g. https://splunk.example.com:8088 (required).

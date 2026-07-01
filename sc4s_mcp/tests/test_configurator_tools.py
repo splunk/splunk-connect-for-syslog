@@ -1,7 +1,7 @@
 import subprocess
 from unittest.mock import MagicMock, patch
 
-from tools.configurator_tools import sc4s_generate_config
+from tools.configurator_tools import sc4s_build_config
 
 
 VALID_URL = "https://splunk.example.com:8088"
@@ -40,7 +40,7 @@ def test_generate_config_valid_inputs(mock_run):
     """Valid hec_url and hec_token should call subprocess and return its stdout."""
     mock_run.return_value = _make_proc()
 
-    result = sc4s_generate_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
+    result = sc4s_build_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
 
     mock_run.assert_called_once()
     assert result == SAMPLE_CONFIG
@@ -51,7 +51,7 @@ def test_generate_config_passes_env_vars(mock_run):
     """Env vars should be forwarded to the subprocess correctly."""
     mock_run.return_value = _make_proc()
 
-    sc4s_generate_config(
+    sc4s_build_config(
         hec_url=VALID_URL,
         hec_token=VALID_TOKEN,
         tls_verify="no",
@@ -78,7 +78,7 @@ def test_generate_config_hardware_mode(mock_run):
     """Hardware mode should include SC4S_HARDWARE and SC4S_MODE=hardware in env."""
     mock_run.return_value = _make_proc()
 
-    sc4s_generate_config(
+    sc4s_build_config(
         hec_url=VALID_URL,
         hec_token=VALID_TOKEN,
         mode="hardware",
@@ -98,7 +98,7 @@ def test_generate_config_tuning_overrides_included(mock_run):
     """Non-zero tuning overrides should be forwarded as env vars."""
     mock_run.return_value = _make_proc()
 
-    sc4s_generate_config(
+    sc4s_build_config(
         hec_url=VALID_URL,
         hec_token=VALID_TOKEN,
         source_udp_fetch_limit=500000,
@@ -124,7 +124,7 @@ def test_generate_config_zero_overrides_not_forwarded(mock_run):
     """Zero-value overrides should NOT be included in the subprocess env."""
     mock_run.return_value = _make_proc()
 
-    sc4s_generate_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
+    sc4s_build_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
 
     _, kwargs = mock_run.call_args
     env = kwargs["env"]
@@ -141,7 +141,7 @@ def test_generate_config_zero_overrides_not_forwarded(mock_run):
 @patch("tools.configurator_tools.subprocess.run")
 def test_invalid_hec_url_returns_error(mock_run):
     """An invalid HEC URL should return an error without calling subprocess."""
-    result = sc4s_generate_config(hec_url="not-a-url", hec_token=VALID_TOKEN)
+    result = sc4s_build_config(hec_url="not-a-url", hec_token=VALID_TOKEN)
 
     mock_run.assert_not_called()
     assert result.startswith("Error:")
@@ -151,7 +151,7 @@ def test_invalid_hec_url_returns_error(mock_run):
 @patch("tools.configurator_tools.subprocess.run")
 def test_invalid_hec_url_missing_scheme_returns_error(mock_run):
     """A URL without http/https scheme should return an error without calling subprocess."""
-    result = sc4s_generate_config(
+    result = sc4s_build_config(
         hec_url="splunk.example.com:8088", hec_token=VALID_TOKEN
     )
 
@@ -162,7 +162,7 @@ def test_invalid_hec_url_missing_scheme_returns_error(mock_run):
 @patch("tools.configurator_tools.subprocess.run")
 def test_invalid_hec_token_returns_error(mock_run):
     """A non-UUID HEC token should return an error without calling subprocess."""
-    result = sc4s_generate_config(hec_url=VALID_URL, hec_token="not-a-uuid")
+    result = sc4s_build_config(hec_url=VALID_URL, hec_token="not-a-uuid")
 
     mock_run.assert_not_called()
     assert result.startswith("Error:")
@@ -172,7 +172,7 @@ def test_invalid_hec_token_returns_error(mock_run):
 @patch("tools.configurator_tools.subprocess.run")
 def test_invalid_hec_token_partial_uuid_returns_error(mock_run):
     """A partial UUID should return an error without calling subprocess."""
-    result = sc4s_generate_config(hec_url=VALID_URL, hec_token="12345678-1234-1234")
+    result = sc4s_build_config(hec_url=VALID_URL, hec_token="12345678-1234-1234")
 
     mock_run.assert_not_called()
     assert result.startswith("Error:")
@@ -190,7 +190,7 @@ def test_script_nonzero_exit_returns_error(mock_run):
         stdout="", returncode=1, stderr="SC4S_HEC_URL is required"
     )
 
-    result = sc4s_generate_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
+    result = sc4s_build_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
 
     assert result.startswith("Error:")
     assert "1" in result  # exit code
@@ -199,7 +199,7 @@ def test_script_nonzero_exit_returns_error(mock_run):
 @patch("tools.configurator_tools.subprocess.run", side_effect=FileNotFoundError)
 def test_script_not_found_returns_error(mock_run):
     """Missing script file should return a descriptive error."""
-    result = sc4s_generate_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
+    result = sc4s_build_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
 
     assert result.startswith("Error:")
     assert "not found" in result
@@ -211,7 +211,7 @@ def test_script_not_found_returns_error(mock_run):
 )
 def test_script_timeout_returns_error(mock_run):
     """Subprocess timeout should return a descriptive error."""
-    result = sc4s_generate_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
+    result = sc4s_build_config(hec_url=VALID_URL, hec_token=VALID_TOKEN)
 
     assert result.startswith("Error:")
     assert "timed out" in result
