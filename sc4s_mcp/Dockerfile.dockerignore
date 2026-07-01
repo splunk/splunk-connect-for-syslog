@@ -13,5 +13,8 @@
 !docs/
 !package/shared/addons/
 !.agents/skills/parser-creator/
+!.agents/skills/sc4s-configurator/
+!.agents/skills/configurator-prompt-sync/
+!configuration-tool.sh
 **/__pycache__
 **/*.pyc
