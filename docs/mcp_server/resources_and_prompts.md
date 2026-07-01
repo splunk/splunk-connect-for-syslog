@@ -71,7 +71,7 @@ Parameters:
 
 Diagnostic steps seeded by the prompt:
 
-1. Call `health` to check the instance status.
+1. Call `sc4s_health` to check the instance status.
 2. Call `get_env` to review the current configuration.
 3. Call `list_custom_parsers` to list deployed custom parsers.
 4. Propose specific fixes.
