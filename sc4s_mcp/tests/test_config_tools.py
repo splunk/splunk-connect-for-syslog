@@ -64,7 +64,7 @@ def test_list_vendors(mock_repo_root, tmp_path):
 
 @patch("tools.configuration_tools.REPO_ROOT")
 def test_list_all_parsers(mock_repo_root, tmp_path):
-    addons_dir = tmp_path / "package" / "lite" / "etc" / "addons"
+    addons_dir = tmp_path / "package" / "shared" / "addons"
     (addons_dir / "cisco").mkdir(parents=True)
     (addons_dir / "cisco" / "cisco_asa.conf").write_text("parser")
     (addons_dir / "juniper").mkdir(parents=True)
@@ -84,7 +84,7 @@ def test_list_all_parsers(mock_repo_root, tmp_path):
 
 @patch("tools.configuration_tools.REPO_ROOT")
 def test_list_vendor_parsers(mock_repo_root, tmp_path):
-    addons_dir = tmp_path / "package" / "lite" / "etc" / "addons"
+    addons_dir = tmp_path / "package" / "shared" / "addons"
     (addons_dir / "cisco").mkdir(parents=True)
     (addons_dir / "cisco" / "cisco_asa.conf").write_text(
         "# cisco_asa parser\nvendor: cisco"
@@ -101,7 +101,7 @@ def test_list_vendor_parsers(mock_repo_root, tmp_path):
 
 @patch("tools.configuration_tools.REPO_ROOT")
 def test_list_vendor_parsers_no_match(mock_repo_root, tmp_path):
-    addons_dir = tmp_path / "package" / "lite" / "etc" / "addons"
+    addons_dir = tmp_path / "package" / "shared" / "addons"
     addons_dir.mkdir(parents=True)
     (addons_dir / "cisco_asa.conf").write_text("cisco parser")
 
@@ -113,7 +113,7 @@ def test_list_vendor_parsers_no_match(mock_repo_root, tmp_path):
 
 @patch("tools.configuration_tools.REPO_ROOT")
 def test_get_parser_found(mock_repo_root, tmp_path):
-    addons_dir = tmp_path / "package" / "lite" / "etc" / "addons"
+    addons_dir = tmp_path / "package" / "shared" / "addons"
     addons_dir.mkdir(parents=True)
     (addons_dir / "cisco_asa.conf").write_text("block parser cisco_asa {}")
 
@@ -126,7 +126,7 @@ def test_get_parser_found(mock_repo_root, tmp_path):
 
 @patch("tools.configuration_tools.REPO_ROOT")
 def test_get_parser_by_stem(mock_repo_root, tmp_path):
-    addons_dir = tmp_path / "package" / "lite" / "etc" / "addons"
+    addons_dir = tmp_path / "package" / "shared" / "addons"
     addons_dir.mkdir(parents=True)
     (addons_dir / "cisco_asa.conf").write_text("block parser cisco_asa {}")
 
@@ -138,7 +138,7 @@ def test_get_parser_by_stem(mock_repo_root, tmp_path):
 
 @patch("tools.configuration_tools.REPO_ROOT")
 def test_get_parser_not_found(mock_repo_root, tmp_path):
-    addons_dir = tmp_path / "package" / "lite" / "etc" / "addons"
+    addons_dir = tmp_path / "package" / "shared" / "addons"
     addons_dir.mkdir(parents=True)
 
     with patch("tools.configuration_tools.REPO_ROOT", tmp_path):

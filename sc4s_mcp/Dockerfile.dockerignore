@@ -11,7 +11,7 @@
 !sc4s_mcp/prompts/
 !sc4s_mcp/utils/
 !docs/
-!package/lite/etc/addons/
+!package/shared/addons/
 !.agents/skills/parser-creator/
 **/__pycache__
 **/*.pyc
