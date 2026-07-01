@@ -35,14 +35,14 @@ def list_vendors() -> list[str]:
 @mcp.tool
 def list_all_parsers() -> list[str]:
     """Lists all parsers, based on the .conf files in addon directory."""
-    addons_dir = REPO_ROOT / "package" / "lite" / "etc" / "addons"
+    addons_dir = REPO_ROOT / "package" / "shared" / "addons"
     return [str(f.relative_to(REPO_ROOT)) for f in addons_dir.rglob("*.conf")]
 
 
 @mcp.tool
 def list_vendor_parsers(vendor: str) -> list[str]:
     """Lists parsers for given vendor, based on the parsers in addon directory."""
-    addons_dir = REPO_ROOT / "package" / "lite" / "etc" / "addons"
+    addons_dir = REPO_ROOT / "package" / "shared" / "addons"
     results = []
     vendor_pattern = re.compile(rf"\b{re.escape(vendor)}\b", re.IGNORECASE)
 
@@ -60,7 +60,7 @@ def list_vendor_parsers(vendor: str) -> list[str]:
 @mcp.tool
 def get_parser(parser_name: str) -> dict:
     """Get parser content by filename from addon library. Returns a dict with 'found', 'path', and 'content' keys."""
-    addons_dir = REPO_ROOT / "package" / "lite" / "etc" / "addons"
+    addons_dir = REPO_ROOT / "package" / "shared" / "addons"
     for conf_file in addons_dir.rglob("*.conf"):
         if conf_file.name == parser_name or conf_file.stem == parser_name:
             return {
