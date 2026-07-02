@@ -1,3 +1,5 @@
+import re
+
 try:
     from syslogng import LogParser
 except Exception:
@@ -8,30 +10,15 @@ except Exception:
 
 alert_text_key = ".values.AlertText"
 
-
-def _split_alert_text(text):
-    """Split AlertText into an optional leading sentence and the key/value body.
-
-    Linear-time replacement for the regex ``^(.*[.!?])?(.*:.*)``, which was
-    vulnerable to polynomial backtracking on inputs with no ``:``. Behaviour is
-    identical to the old regex (verified by fuzzing): the body must contain a
-    ``:``; the leading sentence greedily extends to the last ``.``/``!``/``?``
-    that occurs before the final ``:``.
-
-    Returns ``(sentence, body)`` on a match (``sentence`` may be ``None`` when
-    there is no leading sentence), or ``None`` when the text does not match.
-    """
-    last_colon = text.rfind(":")
-    if last_colon == -1:
-        return None
-    cut = -1
-    for i in range(last_colon - 1, -1, -1):
-        if text[i] in ".!?":
-            cut = i
-            break
-    if cut == -1:
-        return None, text
-    return text[: cut + 1], text[cut + 1 :]
+# Single-pass extraction of "key: value" pairs separated by "; ".
+#   key   = [^:;]+  -> up to the pair's colon
+#   value = [^;]*   -> up to the "; " separator (values keep their own ':',
+#                      e.g. timestamps like "5/3/2022 1:26:00 AM")
+# Both groups are negated character classes, so there is no backtracking: the
+# match is linear in the input length (clears SonarQube S5852). This replaces
+# the old ``^(.*[.!?])?(.*:.*)`` regex, whose greedy groups both backtracked and
+# also mis-split values that contained a '.' (e.g. FQDNs), crashing the parser.
+PAIR_RE = re.compile(r"([^:;]+):\s*([^;]*)")
 
 
 class alerttext_kv(LogParser):
@@ -39,20 +26,23 @@ class alerttext_kv(LogParser):
         return True
 
     def parse(self, log_message):
-        result = _split_alert_text(log_message.get_as_str(alert_text_key, ""))
-        if result is not None:
-            log_message[alert_text_key] = result[0]
-            text = result[1]
-        else:
-            text = log_message.get_as_str(alert_text_key, "")
-            log_message[alert_text_key] = ""
+        text = log_message.get_as_str(alert_text_key, "")
+        pairs = [
+            (m.group(1).strip(), m.group(2).strip()) for m in PAIR_RE.finditer(text)
+        ]
 
-        pairs = text.split("; ")
+        sentence = ""
+        if pairs:
+            first_key = pairs[0][0]
+            # Any leading prose (e.g. "Activity still in process.") is glued to
+            # the first key; split it off at the last sentence terminator.
+            cut = max(first_key.rfind("."), first_key.rfind("!"), first_key.rfind("?"))
+            if cut != -1:
+                sentence = first_key[: cut + 1]
+                pairs[0] = (first_key[cut + 1 :].strip(), pairs[0][1])
 
-        if len(pairs) == 0:
-            return False
-        for p in pairs:
-            k, v = p.split(": ")
+        log_message[alert_text_key] = sentence
+        for k, v in pairs:
             cleank = k.replace(" ", "_").replace(".", "_")
-            log_message[f".values.AlertTextValues.{cleank}"] = v.strip()
+            log_message[f".values.AlertTextValues.{cleank}"] = v
         return True
