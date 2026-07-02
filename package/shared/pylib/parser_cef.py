@@ -35,7 +35,9 @@ def _parse_cef_ext(data):
         while p < n and data[p] != "=" and not data[p].isspace():
             p += 1
         if p == start or p >= n or data[p] != "=":
-            p = start + 1  # not a valid "key=" here; advance and retry
+            if p >= n:
+                break  # no '=' anywhere ahead; nothing more to find
+            p = p + 1  # skip the space or bare '='
             continue
         key = data[start:p]
         p += 1  # skip '='
@@ -81,11 +83,7 @@ class cef_kv(LogParser):
         try:
             data = log_message.get_as_str(".metadata.cef.ext", "")
 
-<<<<<<< Updated upstream
-            rpairs = re.findall(r"([^=\s]+)=((?:\\=|[^=])+)(?:\s|$)", data)
-=======
             rpairs = _parse_cef_ext(data)
->>>>>>> Stashed changes
             pairs = {}
             keys = []
             for p in rpairs:
