@@ -95,7 +95,7 @@ def search_docs(query: str) -> list[str]:
 
 
 @mcp.tool
-def health() -> dict:
+def sc4s_health() -> dict:
     """Check the health status of a running SC4S instance."""
     return _sc4s_request("get", "/health", timeout=10)
 

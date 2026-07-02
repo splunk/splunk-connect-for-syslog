@@ -55,7 +55,7 @@ def troubleshoot_prompt(symptom: str) -> list[Message]:
 {ts_content}
 
 ## Diagnostic Steps
-1. First call `health` to check the instance status.
+1. First call `sc4s_health` to check the instance status.
 2. Call `get_env` to review the current configuration.
 3. Call `list_custom_parsers` to see deployed custom parsers.
 4. Based on findings, suggest specific fixes.

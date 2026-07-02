@@ -7,7 +7,7 @@ from tools.configuration_tools import (
     list_vendor_parsers,
     get_parser,
     search_docs,
-    health,
+    sc4s_health,
     set_env,
     get_env,
     add_parser,
@@ -187,8 +187,8 @@ def test_search_docs_invalid_regex():
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_health(mock_req):
-    health()
+def test_sc4s_health(mock_req):
+    sc4s_health()
     mock_req.assert_called_once_with("get", "/health", timeout=10)
 
 

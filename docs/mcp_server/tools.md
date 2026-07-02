@@ -45,7 +45,7 @@ instead of a failure inside your SC4S container.
 
 | Tool | Description |
 |---|---|
-| `health()` | Returns the health payload from the SC4S management API. Use this first when troubleshooting. |
+| `sc4s_health()` | Returns the health payload from the SC4S management API. Use this first when troubleshooting. |
 | `get_env()` | Reads the current `env_file` from the running SC4S instance. |
 | `set_env(env_file_content)` | Uploads a new `env_file`. The SC4S API backs up the previous file, applies the new one, and restarts `syslog-ng`. On validation failure the previous file is restored. |
 
