@@ -46,17 +46,17 @@ instead of a failure inside your SC4S container.
 | Tool | Description |
 |---|---|
 | `sc4s_health()` | Returns the health payload from the SC4S management API. Use this first when troubleshooting. |
-| `sc4s_get_env()` | Reads the current `env_file` from the running SC4S instance. |
-| `sc4s_set_env(env_file_content)` | Uploads a new `env_file`. The SC4S API backs up the previous file, applies the new one, and restarts `syslog-ng`. On validation failure the previous file is restored. |
+| `get_env()` | Reads the current `env_file` from the running SC4S instance. |
+| `set_env(env_file_content)` | Uploads a new `env_file`. The SC4S API backs up the previous file, applies the new one, and restarts `syslog-ng`. On validation failure the previous file is restored. |
 
 ### Custom parsers
 
 | Tool | Description |
 |---|---|
-| `sc4s_list_custom_parsers()` | Lists all custom parsers currently deployed on the SC4S instance. |
-| `sc4s_get_custom_parser(name)` | Reads the content of a deployed custom parser. |
-| `sc4s_add_parser(filename, content)` | Uploads a new `.conf` parser. The `.conf` extension is added if missing. SC4S validates syntax and restarts `syslog-ng`; invalid parsers are rolled back. |
-| `sc4s_delete_parser(name)` | Deletes a custom parser. SC4S re-validates the remaining configuration and restarts `syslog-ng`; if validation fails, the parser is restored. |
+| `list_custom_parsers()` | Lists all custom parsers currently deployed on the SC4S instance. |
+| `get_custom_parser(name)` | Reads the content of a deployed custom parser. |
+| `add_parser(filename, content)` | Uploads a new `.conf` parser. The `.conf` extension is added if missing. SC4S validates syntax and restarts `syslog-ng`; invalid parsers are rolled back. |
+| `delete_parser(name)` | Deletes a custom parser. SC4S re-validates the remaining configuration and restarts `syslog-ng`; if validation fails, the parser is restored. |
 
 ### Splunk metadata (`splunk_metadata.csv`)
 
@@ -65,9 +65,9 @@ These tools manage per-vendor/product overrides that SC4S sends to Splunk
 
 | Tool | Description                                                                                                                                                                                            |
 |---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `sc4s_get_splunk_metadata()` | Reads `splunk_metadata.csv` entries. Each entry is `{ key, metadata, value }`, where `metadata` is one of `index, source, sourcetype, host, sc4s_template` and `key` is a `vendor_product` identifier. |
-| `sc4s_set_splunk_metadata(entries)` | Overwrites `splunk_metadata.csv` with the provided list. SC4S restarts after applying. Example entry: `{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}`.                        |
-| `sc4s_delete_splunk_metadata()` | Clears all Splunk metadata overrides. SC4S restarts after clearing.                                                                                                                                    |
+| `get_splunk_metadata()` | Reads `splunk_metadata.csv` entries. Each entry is `{ key, metadata, value }`, where `metadata` is one of `index, source, sourcetype, host, sc4s_template` and `key` is a `vendor_product` identifier. |
+| `set_splunk_metadata(entries)` | Overwrites `splunk_metadata.csv` with the provided list. SC4S restarts after applying. Example entry: `{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}`.                        |
+| `delete_splunk_metadata()` | Clears all Splunk metadata overrides. SC4S restarts after clearing.                                                                                                                                    |
 
 ### Compliance metadata (`compliance_meta_by_source`)
 
@@ -77,9 +77,9 @@ host, IP, or subnet matching.
 
 | Tool | Description |
 |---|---|
-| `sc4s_get_compliance_overrides()` | Reads both the `.conf` filter definitions (`conf_content`) and the CSV rows (`csv_content`). |
-| `sc4s_set_compliance_override(conf_content, csv_content)` | Overwrites both files. `csv_content` is a list of `{filter_name, field_name, value}` dicts, where `field_name` must be `.splunk.index`, `.splunk.source`, `.splunk.sourcetype`, or `fields.<name>`. SC4S restarts after applying. |
-| `sc4s_delete_compliance_override()` | Clears both files, removing all compliance overrides. SC4S restarts after clearing. |
+| `get_compliance_overrides()` | Reads both the `.conf` filter definitions (`conf_content`) and the CSV rows (`csv_content`). |
+| `set_compliance_override(conf_content, csv_content)` | Overwrites both files. `csv_content` is a list of `{filter_name, field_name, value}` dicts, where `field_name` must be `.splunk.index`, `.splunk.source`, `.splunk.sourcetype`, or `fields.<name>`. SC4S restarts after applying. |
+| `delete_compliance_override()` | Clears both files, removing all compliance overrides. SC4S restarts after clearing. |
 
 Example `conf_content`:
 

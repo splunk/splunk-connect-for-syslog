@@ -56,10 +56,10 @@ def troubleshoot_prompt(symptom: str) -> list[Message]:
 
 ## Diagnostic Steps
 1. First call `sc4s_health` to check the instance status.
-2. Call `sc4s_get_env` to review the current configuration.
-3. Call `sc4s_list_custom_parsers` to see deployed custom parsers.
+2. Call `get_env` to review the current configuration.
+3. Call `list_custom_parsers` to see deployed custom parsers.
 4. Based on findings, suggest specific fixes.
-5. If config changes are needed, use `sc4s_set_env` to apply them.
+5. If config changes are needed, use `set_env` to apply them.
 
 Always explain your reasoning before making changes."""
         ),
