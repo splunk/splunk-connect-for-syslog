@@ -24,8 +24,9 @@ def _parse_cef_ext(data):
     matches = list(_CEF_KEY_RE.finditer(data))
     pairs = []
     for i, m in enumerate(matches):
+        value_start = m.end()
         value_end = matches[i + 1].start() if i + 1 < len(matches) else len(data)
-        value = data[m.end() : value_end]
+        value = data[value_start : value_end]
         if value:
             pairs.append((m.group(1), value))
     return pairs
