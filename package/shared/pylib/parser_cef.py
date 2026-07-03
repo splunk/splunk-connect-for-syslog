@@ -1,3 +1,4 @@
+import re
 import sys
 import traceback
 
@@ -10,66 +11,32 @@ except Exception:
         pass
 
 
+# A CEF extension key starts at a whitespace/string boundary and runs until the
+# first *unescaped* '=' (the spec escapes an in-value equals as '\='). Everything
+# between one key's '=' and the next key is that key's value.
+#
+# This replaces the regex ``([^=\s]+)=((?:\=|[^=])+)(?:\s|$)`` that SonarQube
+# flagged for polynomial backtracking (rule S5852). The key/value classes there
+# overlapped the whitespace delimiter, so the engine could split a value at many
+# points. Here the value is sliced positionally between key matches, so the only
+# regex is the bounded, backtrack-free key scan below.
+_CEF_KEY_RE = re.compile(r"(?:^|\s)([^\s=]+?)(?<!\\)=")
+
+
 def _parse_cef_ext(data):
     """Split a CEF extension string into ``(key, value)`` pairs.
 
-    Linear-time replacement for the regex ``([^=\\s]+)=((?:\\=|[^=])+)(?:\\s|$)``,
-    which SonarQube flagged for polynomial backtracking (rule S5852): the value
-    class overlapped the trailing whitespace delimiter, so the engine could split
-    a value at many points. This scanner is single-pass and behaves identically
-    to the old regex (verified by fuzzing 1M random inputs):
-
-    * a key is a run of non-space, non-``=`` characters immediately followed by
-      ``=``;
-    * a value is the text up to the whitespace that precedes the next key, with
-      ``\\=`` treated as an escaped (in-value) equals and a bare ``=`` ending the
-      scan;
-    * empty values are dropped (the original ``+`` required at least one char).
+    A key is a run of non-space characters up to the first unescaped ``=``; its
+    value is the text up to the next key (or end of string). ``\\=`` is treated
+    as an in-value equals, and empty values are dropped.
     """
+    matches = list(_CEF_KEY_RE.finditer(data))
     pairs = []
-    n = len(data)
-    p = 0
-    while p < n:
-        # Key: maximal run of non-space, non-'=' chars, immediately followed by '='.
-        start = p
-        while p < n and data[p] != "=" and not data[p].isspace():
-            p += 1
-        if p == start or p >= n or data[p] != "=":
-            if p >= n:
-                break  # no '=' anywhere ahead; nothing more to find
-            p = p + 1  # skip the space or bare '='
-            continue
-        key = data[start:p]
-        p += 1  # skip '='
-
-        # Value: scan until a bare '=' or end of string, remembering the last
-        # whitespace boundary so we can stop the value before the next key.
-        value_start = p
-        last_ws = -1
-        while p < n:
-            c = data[p]
-            if c == "\\" and p + 1 < n and data[p + 1] == "=":
-                p += 2
-                continue
-            if c == "=":
-                break  # bare '=' belongs to the next key, not this value
-            if c.isspace():
-                last_ws = p
-            p += 1
-
-        if p >= n:
-            value = data[value_start:n]
-            if value:
-                pairs.append((key, value))
-            break
-        # Stopped on a bare '='; the value must end at the last whitespace boundary.
-        if last_ws > value_start - 1:
-            value = data[value_start:last_ws]
-            if value:
-                pairs.append((key, value))
-            p = last_ws + 1
-        else:
-            p = value_start  # no boundary: this key has no usable value
+    for i, m in enumerate(matches):
+        value_end = matches[i + 1].start() if i + 1 < len(matches) else len(data)
+        value = data[m.end() : value_end]
+        if value:
+            pairs.append((m.group(1), value))
     return pairs
 
 
