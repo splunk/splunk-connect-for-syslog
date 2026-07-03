@@ -11,15 +11,6 @@ except Exception:
         pass
 
 
-# A CEF extension key starts at a whitespace/string boundary and runs until the
-# first *unescaped* '=' (the spec escapes an in-value equals as '\='). Everything
-# between one key's '=' and the next key is that key's value.
-#
-# This replaces the regex ``([^=\s]+)=((?:\=|[^=])+)(?:\s|$)`` that SonarQube
-# flagged for polynomial backtracking (rule S5852). The key/value classes there
-# overlapped the whitespace delimiter, so the engine could split a value at many
-# points. Here the value is sliced positionally between key matches, so the only
-# regex is the bounded, backtrack-free key scan below.
 _CEF_KEY_RE = re.compile(r"(?:^|\s)([^\s=]+?)(?<!\\)=")
 
 
