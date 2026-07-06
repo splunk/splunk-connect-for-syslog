@@ -47,6 +47,12 @@ jobs:
           tar rvf /tmp/baremetal.tar -C . pyproject.toml
           tar rvf /tmp/baremetal.tar -C . poetry.lock
           tar rvf /tmp/baremetal.tar -C package/sbin .
+          tar rvf /tmp/baremetal.tar --transform 's,^\.,conf.d,' -C package/shared/conf.d .
+          tar rvf /tmp/baremetal.tar --transform 's,^\.,conf.d/conflib,' -C package/shared/addons .
+          tar rvf /tmp/baremetal.tar -C package/shared pylib
+          tar rvf /tmp/baremetal.tar -C package/shared context_templates
+          tar rvf /tmp/baremetal.tar -C package/shared local_config
+          tar rvf /tmp/baremetal.tar -C package/shared test_parsers
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
       - name: Release
         uses: softprops/action-gh-release@v3
