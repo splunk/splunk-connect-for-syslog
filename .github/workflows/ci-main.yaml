@@ -29,6 +29,10 @@ on:
       - "develop"
       - "next*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   meta:
     runs-on: ubuntu-latest
@@ -492,3 +496,9 @@ jobs:
             conventional-changelog-conventionalcommits@6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+      - name: Fast-forward develop to main
+        if: steps.version.outputs.new_release_published == 'true'
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN_ADMIN }}@github.com/${{ github.repository }}
+          git fetch origin main
+          git push origin origin/main:refs/heads/develop
