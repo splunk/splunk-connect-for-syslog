@@ -4,10 +4,14 @@ import logging
 from pathlib import Path
 import subprocess
 import shutil
+import time
 
 from constants import BACKUP_FILE, ENV_FILE
 
 logger = logging.getLogger(__name__)
+
+RESTART_TIMEOUT_SECONDS = 30
+RESTART_POLL_INTERVAL_SECONDS = 0.5
 
 
 def build_env_from_file():
@@ -26,8 +30,40 @@ def build_env_from_file():
     return env
 
 
+def _get_syslog_ng_pids() -> set[int]:
+    result = subprocess.run(
+        ["pgrep", "-x", "syslog-ng"],
+        capture_output=True,
+        text=True,
+        timeout=1,
+    )
+    if result.returncode == 1:
+        return set()
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"failed to find syslog-ng processes: {result.stderr.strip()}"
+        )
+
+    return {int(pid) for pid in result.stdout.split()}
+
+
+def _syslog_ng_is_healthy() -> bool:
+    try:
+        result = subprocess.run(
+            ["syslog-ng-ctl", "healthcheck", "--timeout", "1"],
+            capture_output=True,
+            text=True,
+            timeout=2,
+        )
+    except subprocess.TimeoutExpired:
+        return False
+
+    return result.returncode == 0
+
+
 def restart_syslog_ng():
-    """Kill syslog-ng; the entrypoint while loop will restart it automatically."""
+    """Restart syslog-ng and wait for its replacement to become healthy."""
+    previous_pids = _get_syslog_ng_pids()
     result = subprocess.run(
         ["pkill", "syslog-ng"],
         capture_output=True,
@@ -36,6 +72,23 @@ def restart_syslog_ng():
     )
     if result.returncode != 0:
         raise RuntimeError(f"syslog-ng restart failed: {result.stderr.strip()}")
+
+    deadline = time.time() + RESTART_TIMEOUT_SECONDS
+    while time.time() < deadline:
+        current_pids = _get_syslog_ng_pids()
+        if current_pids - previous_pids and _syslog_ng_is_healthy():
+            if time.time() < deadline:
+                return
+            break
+
+        remaining = deadline - time.time()
+        if remaining <= 0:
+            break
+        time.sleep(min(RESTART_POLL_INTERVAL_SECONDS, remaining))
+
+    raise RuntimeError(
+        f"syslog-ng restart timed out after {RESTART_TIMEOUT_SECONDS} seconds"
+    )
 
 
 def rollback_env():
