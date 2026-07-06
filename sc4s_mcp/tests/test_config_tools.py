@@ -8,12 +8,12 @@ from tools.configuration_tools import (
     get_parser,
     search_docs,
     sc4s_health,
-    sc4s_set_env,
-    sc4s_get_env,
-    sc4s_add_parser,
-    sc4s_delete_parser,
-    sc4s_list_custom_parsers,
-    sc4s_get_custom_parser,
+    set_env,
+    get_env,
+    add_parser,
+    delete_parser,
+    list_custom_parsers,
+    get_custom_parser,
 )
 
 
@@ -193,14 +193,14 @@ def test_sc4s_health(mock_req):
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_get_env(mock_req):
-    sc4s_get_env()
+def test_get_env(mock_req):
+    get_env()
     mock_req.assert_called_once_with("get", "/config/env", timeout=10)
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_set_env(mock_req):
-    sc4s_set_env("SC4S_VAR=value\n")
+def test_set_env(mock_req):
+    set_env("SC4S_VAR=value\n")
     mock_req.assert_called_once_with(
         "post",
         "/config/env",
@@ -210,8 +210,8 @@ def test_sc4s_set_env(mock_req):
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_add_parser(mock_req):
-    sc4s_add_parser("my_parser.conf", "block parser my_parser {}")
+def test_add_parser(mock_req):
+    add_parser("my_parser.conf", "block parser my_parser {}")
     mock_req.assert_called_once_with(
         "post",
         "/config/parser",
@@ -221,25 +221,25 @@ def test_sc4s_add_parser(mock_req):
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_add_parser_auto_suffix(mock_req):
-    sc4s_add_parser("my_parser", "content")
+def test_add_parser_auto_suffix(mock_req):
+    add_parser("my_parser", "content")
     args = mock_req.call_args
     assert args[1]["files"]["file"][0] == "my_parser.conf"
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_delete_parser(mock_req):
-    sc4s_delete_parser("my_parser")
+def test_delete_parser(mock_req):
+    delete_parser("my_parser")
     mock_req.assert_called_once_with("delete", "/config/parser/my_parser", timeout=30)
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_list_custom_parsers(mock_req):
-    sc4s_list_custom_parsers()
+def test_list_custom_parsers(mock_req):
+    list_custom_parsers()
     mock_req.assert_called_once_with("get", "/config/parsers", timeout=10)
 
 
 @patch("tools.configuration_tools._sc4s_request")
-def test_sc4s_get_custom_parser(mock_req):
-    sc4s_get_custom_parser("my_parser")
+def test_get_custom_parser(mock_req):
+    get_custom_parser("my_parser")
     mock_req.assert_called_once_with("get", "/config/parser/my_parser", timeout=10)
