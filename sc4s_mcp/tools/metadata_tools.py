@@ -11,7 +11,7 @@ CONTEXT_TEMPLATES = REPO_ROOT / "package" / "etc" / "context_templates"
 
 
 @mcp.tool
-def sc4s_get_splunk_metadata() -> dict:
+def get_splunk_metadata() -> dict:
     """Read Splunk metadata overrides from the running SC4S instance.
     Returns entries from splunk_metadata.csv with key, metadata, and value columns.
     The 'key' is a vendor_product identifier, 'metadata' is one of: index, source,
@@ -20,7 +20,7 @@ def sc4s_get_splunk_metadata() -> dict:
 
 
 @mcp.tool
-def sc4s_set_splunk_metadata(entries: list[dict]) -> dict:
+def set_splunk_metadata(entries: list[dict]) -> dict:
     """Overwrite the splunk_metadata.csv on the running SC4S instance. Restarts SC4S.
     Example: [{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}]"""
     return sc4s_request(
@@ -32,7 +32,7 @@ def sc4s_set_splunk_metadata(entries: list[dict]) -> dict:
 
 
 @mcp.tool
-def sc4s_delete_splunk_metadata() -> dict:
+def delete_splunk_metadata() -> dict:
     """Clear the splunk_metadata.csv on the running SC4S instance. SC4S restarts after clearing."""
     return sc4s_request("delete", "/config/metadata/splunk", timeout=30)
 
@@ -43,7 +43,7 @@ def sc4s_delete_splunk_metadata() -> dict:
 
 
 @mcp.tool
-def sc4s_get_compliance_overrides() -> dict:
+def get_compliance_overrides() -> dict:
     """Read compliance metadata overrides from the running SC4S instance.
     Returns the syslog-ng filter definitions (conf_content) and CSV rows (csv_content)
     with filter_name, field_name, and value. These overrides redirect events to different
@@ -52,7 +52,7 @@ def sc4s_get_compliance_overrides() -> dict:
 
 
 @mcp.tool
-def sc4s_set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
+def set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
     """Overwrite the compliance_meta_by_source conf and CSV files instance.
     The provided content completely replaces both files. SC4S restarts after applying changes.
 
@@ -72,6 +72,6 @@ def sc4s_set_compliance_override(conf_content: str, csv_content: list[dict]) -> 
 
 
 @mcp.tool
-def sc4s_delete_compliance_override() -> dict:
+def delete_compliance_override() -> dict:
     """Clear both compliance_meta_by_source files (conf and CSV), removing all compliance overrides. SC4S restarts after clearing."""
     return sc4s_request("delete", "/config/metadata/compliance", timeout=30)

@@ -1,18 +1,18 @@
 from unittest.mock import patch
 
 from tools.metadata_tools import (
-    sc4s_delete_compliance_override,
-    sc4s_delete_splunk_metadata,
-    sc4s_get_compliance_overrides,
-    sc4s_get_splunk_metadata,
-    sc4s_set_compliance_override,
-    sc4s_set_splunk_metadata,
+    delete_compliance_override,
+    delete_splunk_metadata,
+    get_compliance_overrides,
+    get_splunk_metadata,
+    set_compliance_override,
+    set_splunk_metadata,
 )
 
 
 @patch("tools.metadata_tools.sc4s_request")
-def test_sc4s_get_splunk_metadata(mock_sc4s_request):
-    sc4s_get_splunk_metadata()
+def test_get_splunk_metadata(mock_sc4s_request):
+    get_splunk_metadata()
 
     mock_sc4s_request.assert_called_once_with(
         "get", "/config/metadata/splunk", timeout=30
@@ -20,9 +20,9 @@ def test_sc4s_get_splunk_metadata(mock_sc4s_request):
 
 
 @patch("tools.metadata_tools.sc4s_request")
-def test_sc4s_set_splunk_metadata(mock_sc4s_request):
+def test_set_splunk_metadata(mock_sc4s_request):
     entries = [{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}]
-    sc4s_set_splunk_metadata(entries)
+    set_splunk_metadata(entries)
 
     mock_sc4s_request.assert_called_once_with(
         "post", "/config/metadata/splunk", json={"entries": entries}, timeout=30
@@ -30,8 +30,8 @@ def test_sc4s_set_splunk_metadata(mock_sc4s_request):
 
 
 @patch("tools.metadata_tools.sc4s_request")
-def test_sc4s_delete_splunk_metadata(mock_sc4s_request):
-    sc4s_delete_splunk_metadata()
+def test_delete_splunk_metadata(mock_sc4s_request):
+    delete_splunk_metadata()
 
     mock_sc4s_request.assert_called_once_with(
         "delete", "/config/metadata/splunk", timeout=30
@@ -39,8 +39,8 @@ def test_sc4s_delete_splunk_metadata(mock_sc4s_request):
 
 
 @patch("tools.metadata_tools.sc4s_request")
-def test_sc4s_get_compliance_overrides(mock_sc4s_request):
-    sc4s_get_compliance_overrides()
+def test_get_compliance_overrides(mock_sc4s_request):
+    get_compliance_overrides()
 
     mock_sc4s_request.assert_called_once_with(
         "get", "/config/metadata/compliance", timeout=10
@@ -48,12 +48,12 @@ def test_sc4s_get_compliance_overrides(mock_sc4s_request):
 
 
 @patch("tools.metadata_tools.sc4s_request")
-def test_sc4s_set_compliance_override(mock_sc4s_request):
+def test_set_compliance_override(mock_sc4s_request):
     conf = 'filter f_pci_zone { host("pci-*" type(glob)) };'
     csv = [
         {"filter_name": "f_pci_zone", "field_name": ".splunk.index", "value": "pci_idx"}
     ]
-    sc4s_set_compliance_override(conf, csv)
+    set_compliance_override(conf, csv)
 
     mock_sc4s_request.assert_called_once_with(
         "post",
@@ -64,8 +64,8 @@ def test_sc4s_set_compliance_override(mock_sc4s_request):
 
 
 @patch("tools.metadata_tools.sc4s_request")
-def test_sc4s_delete_compliance_override(mock_sc4s_request):
-    sc4s_delete_compliance_override()
+def test_delete_compliance_override(mock_sc4s_request):
+    delete_compliance_override()
 
     mock_sc4s_request.assert_called_once_with(
         "delete", "/config/metadata/compliance", timeout=30
