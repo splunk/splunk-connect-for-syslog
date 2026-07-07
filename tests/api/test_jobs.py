@@ -74,6 +74,25 @@ def test_unknown_job_returns_none():
     assert manager.get_job("missing") is None
 
 
+def test_get_job_dict_serializes_under_lock():
+    executor = DeferredExecutor()
+    manager = JobManager(executor=executor)
+    job = manager.run_update(lambda: {"status": "updated"})
+
+    assert manager.get_job_dict(job.job_id) == {
+        "job_id": job.job_id,
+        "status": "in_progress",
+    }
+
+    executor.run_next()
+    assert manager.get_job_dict(job.job_id) == {
+        "job_id": job.job_id,
+        "status": "success",
+        "result": {"status": "updated"},
+    }
+    assert manager.get_job_dict("missing") is None
+
+
 def test_history_is_limited_to_latest_records():
     executor = DeferredExecutor()
     manager = JobManager(max_history=2, executor=executor)

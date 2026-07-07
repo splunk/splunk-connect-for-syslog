@@ -77,4 +77,7 @@ def test_executor_submission_failure_returns_500():
     response = app.test_client().post("/submit")
 
     assert response.status_code == 500
-    assert response.get_json()["message"] == "Job submission failed"
+    body = response.get_json()
+    assert body["message"] == "Job submission failed"
+    assert body["job_id"]
+    assert body["url"] == f"/jobs/{body['job_id']}"

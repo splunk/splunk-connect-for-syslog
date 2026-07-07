@@ -84,6 +84,12 @@ class JobManager:
         with self._lock:
             return self._jobs.get(job_id)
 
+    def get_job_dict(self, job_id: str) -> dict | None:
+        """Serialize a job while holding the lock to avoid torn reads."""
+        with self._lock:
+            job = self._jobs.get(job_id)
+            return job.to_dict() if job is not None else None
+
     def _run(self, job: UpdateJob, work: Callable[[], dict]):
         try:
             result = work()
