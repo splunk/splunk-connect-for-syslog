@@ -499,6 +499,8 @@ jobs:
         if: steps.version.outputs.new_release_published == 'true'
         run: |
           git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN_ADMIN }}@github.com/${{ github.repository }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git fetch origin develop ${{ github.ref_name }}
           git checkout develop
           if git merge-base --is-ancestor develop origin/${{ github.ref_name }}; then
