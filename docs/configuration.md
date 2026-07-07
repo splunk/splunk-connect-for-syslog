@@ -70,6 +70,34 @@ sudo systemctl restart sc4s
 
 The MCP server's configuration and metadata tools also require `SC4S_API_MANAGEMENT_ENABLED=true` on the SC4S side; without it, those tools will receive HTTP 404 responses from the SC4S API.
 
+### Asynchronous configuration jobs
+
+Configuration-changing POST and DELETE requests validate their input and then
+return `202 Accepted` with a job ID. The `Location` header points to
+`/jobs/<job_id>`:
+
+```json
+{"status": "success", "job_id": "c91e0d50-0f84-4aec-9788-86133e0da8e5"}
+```
+
+Poll the location until the job changes from `in_progress` to `success` or
+`failed`. Successful jobs include the operation's original response under
+`result`; failed jobs include an `error` message.
+
+Only one configuration job runs at a time. A valid request received while a
+job is running returns `409 Conflict` and identifies the active job:
+
+```json
+{
+  "status": "error",
+  "message": "Another configuration job is in progress",
+  "active_job": {
+    "job_id": "c91e0d50-0f84-4aec-9788-86133e0da8e5",
+    "url": "/jobs/c91e0d50-0f84-4aec-9788-86133e0da8e5"
+  }
+}
+```
+
 ## SC4S management API TLS
 
 The management API supports optional TLS. When enabled, the API serves
@@ -468,7 +496,6 @@ This feature can be used with `SC4S_PARALLELIZE_NO_PARTITION`.
 |----------|---------------|-------------|
 | SC4S_ENABLE_PARALLELIZE=yes  | yes or no(default) | Use parallelize to leverage multithreading when consuming from a single TCP connection. |
 |SC4S_PARALLELIZE_NO_PARTITION=4 | Integer | Set the number of threads to use, the default value is 4. |
-
 
 
 

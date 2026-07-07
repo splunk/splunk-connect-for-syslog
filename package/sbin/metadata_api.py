@@ -12,6 +12,7 @@ from constants import (
     SPLUNK_METADATA_CSV,
     SPLUNK_METADATA_FIELDS,
 )
+from job_api import submit_job
 from utils import apply_with_rollback, read_three_col_csv
 
 
@@ -63,12 +64,13 @@ def set_splunk_metadata():
     for entry in entries:
         writer.writerow([entry["key"], entry["metadata"], entry["value"]])
 
-    try:
-        apply_with_rollback({SPLUNK_METADATA_CSV: buf.getvalue()})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    files_to_write = {SPLUNK_METADATA_CSV: buf.getvalue()}
 
-    return jsonify({"status": "metadata updated successfully", "entries": entries}), 200
+    def apply_metadata():
+        apply_with_rollback(files_to_write)
+        return {"status": "metadata updated successfully", "entries": entries}
+
+    return submit_job(apply_metadata)
 
 
 @metadata_bp.route("/config/metadata/splunk", methods=["DELETE"])
@@ -78,12 +80,11 @@ def delete_splunk_metadata():
             {"status": "error", "message": "splunk_metadata.csv not found"}
         ), 404
 
-    try:
+    def clear_metadata():
         apply_with_rollback({SPLUNK_METADATA_CSV: ""})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return {"status": "splunk_metadata.csv cleared successfully"}
 
-    return jsonify({"status": "splunk_metadata.csv cleared successfully"}), 200
+    return submit_job(clear_metadata)
 
 
 # ---------------------------------------------------------------------------
@@ -159,12 +160,11 @@ def set_compliance():
             writer.writerow([entry["filter_name"], entry["field_name"], entry["value"]])
         files_to_write[COMPLIANCE_CSV] = buf.getvalue()
 
-    try:
+    def apply_compliance():
         apply_with_rollback(files_to_write)
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return {"status": "compliance metadata updated successfully"}
 
-    return jsonify({"status": "compliance metadata updated successfully"}), 200
+    return submit_job(apply_compliance)
 
 
 @metadata_bp.route("/config/metadata/compliance", methods=["DELETE"])
@@ -180,9 +180,8 @@ def delete_compliance():
     if COMPLIANCE_CSV.exists():
         files_to_write[COMPLIANCE_CSV] = ""
 
-    try:
+    def clear_compliance():
         apply_with_rollback(files_to_write)
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return {"status": "compliance metadata cleared successfully"}
 
-    return jsonify({"status": "compliance metadata cleared successfully"}), 200
+    return submit_job(clear_compliance)

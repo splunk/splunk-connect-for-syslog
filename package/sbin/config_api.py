@@ -4,6 +4,7 @@ from flask_wtf.csrf import CSRFProtect
 from flask import Blueprint, jsonify, request
 
 from constants import ENV_FILE, PARSERS_DIR
+from job_api import submit_job
 from utils import apply_with_rollback
 
 logger = logging.getLogger(__name__)
@@ -35,12 +36,13 @@ def set_env():
     if not file.filename:
         return jsonify({"status": "error", "message": "empty file"}), 400
 
-    try:
-        apply_with_rollback({ENV_FILE: file.read().decode("utf-8")})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    content = file.read().decode("utf-8")
 
-    return jsonify({"status": "env_file updated successfully"}), 200
+    def apply_env():
+        apply_with_rollback({ENV_FILE: content})
+        return {"status": "env_file updated successfully"}
+
+    return submit_job(apply_env)
 
 
 @csrf.exempt
@@ -54,15 +56,13 @@ def add_parser():
         return jsonify({"status": "error", "message": "file must be a .conf file"}), 400
 
     parser_path = PARSERS_DIR / file.filename
+    content = file.read().decode("utf-8")
 
-    try:
-        apply_with_rollback({parser_path: file.read().decode("utf-8")})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    def apply_parser():
+        apply_with_rollback({parser_path: content})
+        return {"status": "parser added successfully", "path": str(parser_path)}
 
-    return jsonify(
-        {"status": "parser added successfully", "path": str(parser_path)}
-    ), 200
+    return submit_job(apply_parser)
 
 
 @config_bp.route("/config/parser/<name>", methods=["GET"])
@@ -92,12 +92,11 @@ def delete_parser(name):
     if not parser_path.exists():
         return jsonify({"status": "error", "message": "parser not found"}), 404
 
-    try:
+    def remove_parser():
         apply_with_rollback({parser_path: None})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return {"status": "parser deleted successfully"}
 
-    return jsonify({"status": "parser deleted successfully"}), 200
+    return submit_job(remove_parser)
 
 
 @config_bp.route("/config/parsers", methods=["GET"])
