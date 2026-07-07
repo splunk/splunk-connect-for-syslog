@@ -12,7 +12,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/2966/>                                                                 |
-| Product Manual | <http://www.websense.com/content/support/library/web/v85/siem/siem.pdf>                                                        |
+| Product Manual | none                                        |
 
 ## Sourcetypes
 

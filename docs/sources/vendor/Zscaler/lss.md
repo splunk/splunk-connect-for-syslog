@@ -14,7 +14,7 @@ the IP or host name of the SC4S instance and port 514
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/3865/>                                                                 |
-| Product Manual | <https://community.zscaler.com/t/zscaler-splunk-app-design-and-installation-documentation/4728>                                                      |
+| Product Manual | <https://help.zscaler.com/>                                                      |
 
 ## Sourcetypes
 

@@ -10,7 +10,7 @@
 | Ref               | Link                                                                    |
 |-------------------|-------------------------------------------------------------------------|
 | Splunk Add-on     | <https://splunkbase.splunk.com/app/3852/>                                 |
-| JunOS TechLibrary | <https://docs.pulsesecure.net/WebHelp/Content/PCS/PCS_AdminGuide_8.2/Configuring%20Syslog.htm> |
+| JunOS TechLibrary | <https://help.ivanti.com/ps/legacy/PCS/9.1Rx/9.1R11/ps-pcs-sa-9.1r11.5-admin-guide.pdf> |
 
 ## Sourcetypes
 
