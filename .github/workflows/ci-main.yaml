@@ -460,6 +460,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    concurrency:
+      group: release-${{ github.ref_name }}
+      cancel-in-progress: false
     needs:
       - meta
       - build_action
@@ -492,3 +495,15 @@ jobs:
             conventional-changelog-conventionalcommits@6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN_ADMIN }}
+      - name: Fast-forward develop to release branch
+        if: steps.version.outputs.new_release_published == 'true'
+        run: |
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN_ADMIN }}@github.com/${{ github.repository }}
+          git fetch origin develop ${{ github.ref_name }}
+          git checkout develop
+          if git merge-base --is-ancestor develop origin/${{ github.ref_name }}; then
+            git merge --ff-only origin/${{ github.ref_name }}
+          else
+            git merge --no-edit -m "chore: merge ${{ github.ref_name }} into develop after release [skip ci]" origin/${{ github.ref_name }}
+          fi
+          git push origin develop
