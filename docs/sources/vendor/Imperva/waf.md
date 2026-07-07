@@ -10,7 +10,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/2874/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/7034/>                                                                 |
 | Product Manual | none |
 
 ## Sourcetypes

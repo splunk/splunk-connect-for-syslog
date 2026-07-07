@@ -9,7 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/1527/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/5613/>                                                                 |
 | Product Manual | <https://docs.netgate.com/pfsense/en/latest/monitoring/copying-logs-to-a-remote-host-with-syslog.html?highlight=syslog> |
 
 ## Sourcetypes
