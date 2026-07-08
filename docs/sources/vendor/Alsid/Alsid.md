@@ -12,7 +12,7 @@ is obsolete.
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/5173/                                    |
+| Splunk Add-on  | https://splunkbase.splunk.com/app/4060/                                    |
 | Product Manual | unknown   |
 
 

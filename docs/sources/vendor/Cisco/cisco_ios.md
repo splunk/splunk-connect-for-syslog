@@ -20,7 +20,7 @@ Cisco Network Products of multiple types share common logging characteristics th
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/1467/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/7538/>                                                                 |
 | IOS Manual     | <https://www.cisco.com/c/en/us/td/docs/switches/lan/catalyst2960/software/release/12-2_55_se/configuration/guide/scg_2960/swlog.html> |
 | NX-OS Manual   | <https://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus9000/sw/6-x/system_management/configuration/guide/b_Cisco_Nexus_9000_Series_NX-OS_System_Management_Configuration_Guide/sm_5syslog.html>|
 | Cisco ACI      | <https://community.cisco.com/legacyfs/online/attachments/document/technote-aci-syslog_external-v1.pdf> |

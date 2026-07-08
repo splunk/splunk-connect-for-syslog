@@ -10,7 +10,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | https://splunkbase.splunk.com/app/3776                                                               |
+| Splunk Add-on  | https://splunkbase.splunk.com/app/6183                                                               |
 | Product Manual | https://campus.barracuda.com/product/webapplicationfirewall/doc/92767349/exporting-log-formats/ |
 
 ## Sourcetypes

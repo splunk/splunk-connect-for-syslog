@@ -9,7 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | <https://splunkbase.splunk.com/app/1936/>                                                            |
+| Splunk Add-on CEF | <https://splunkbase.splunk.com/app/7668/>                                                            |
 
 ## Sourcetypes
 

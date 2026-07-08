@@ -9,7 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | <https://github.com/splunk/splunk-add-on-for-cef/downloads/>                                                              |
+| Splunk Add-on CEF | <https://github.com/splunk/splunk-add-on-for-cef>                                                              |
 
 ## Sourcetypes
 
