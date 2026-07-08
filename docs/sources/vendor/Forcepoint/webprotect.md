@@ -12,7 +12,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/2966/>                                                                 |
-| Product Manual | none                                        |
+| Product Manual | <https://help.forcepoint.com/websec/en-us/on-prem/85/siem/08FA8E31-21B6-4155-BAA5-F7D7275B65E8.html>                                        |
 
 ## Sourcetypes
 
