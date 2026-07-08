@@ -1,4 +1,4 @@
-# Copyright 2019 Splunk, Inc.
+# Copyright 2026 Splunk, Inc.
 #
 # Use of this source code is governed by a BSD-2-clause-style
 # license that can be found in the LICENSE-BSD2 file or at
@@ -8,7 +8,7 @@
 Unit tests for the baremetal tar package contents.
 
 These tests verify that the baremetal.tar produced by cd-baremtal.yaml contains
-all required paths and mirrors the layout used by the OCI container (package/Dockerfile).
+all required paths used by the OCI container (package/Dockerfile).
 
 No Docker, Splunk, or network access required — runs anywhere with Python + GNU tar.
 """
@@ -22,19 +22,19 @@ import pytest
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Directories syslog-ng.conf @include patterns resolve to (non-local/ ones must ship in the tar).
-# Derived directly from package/etc/syslog-ng.conf — if the file changes, update this list.
+# if the file changes, update this list.
 SYSLOG_NG_REQUIRED_DIRS = [
-    "conf.d/sc4slib",
     "conf.d/conflib",
-    "conf.d/enrich",
-    "conf.d/plugin",
-    "conf.d/sources",
     "conf.d/destinations",
+    "conf.d/enrich",
     "conf.d/log_paths/0",
     "conf.d/log_paths/2",
+    "conf.d/plugin",
+    "conf.d/sc4slib",
+    "conf.d/sources",
 ]
 
-# Files that must exist at the root of the extracted tar (i.e. in /etc/syslog-ng on a real install).
+# Files that must exist at the root of the extracted tar (i.e. in /etc/syslog-ng).
 REQUIRED_TOP_LEVEL_FILES = [
     "syslog-ng.conf",
     "VERSION",
@@ -98,10 +98,7 @@ def _collect_source_files(src_dir: str) -> set:
     }
 
 
-# ---------------------------------------------------------------------------
 # Fixtures — build once per test session
-# ---------------------------------------------------------------------------
-
 @pytest.fixture(scope="module")
 def baremetal_tar(tmp_path_factory):
     if not is_gnu_tar():
@@ -132,13 +129,10 @@ def tar_paths(baremetal_tar):
         return {m.name for m in tf.getmembers()}
 
 
-# ---------------------------------------------------------------------------
-# 1. Size sanity — catches a completely empty / near-empty package
-# ---------------------------------------------------------------------------
-
+# 1. Size sanity test — catches a completely empty package
 def test_tar_size_indicates_parsers_are_present(baremetal_tar):
     """
-    The broken v3.45.0 release was ~160-200KB because all parsers were missing.
+    Because all parsers were missing.
     A correct package must be larger than 500KB.
     """
     size = os.path.getsize(baremetal_tar)
@@ -148,10 +142,7 @@ def test_tar_size_indicates_parsers_are_present(baremetal_tar):
     )
 
 
-# ---------------------------------------------------------------------------
 # 2. Required top-level files — things syslog-ng and the entrypoint need at boot
-# ---------------------------------------------------------------------------
-
 @pytest.mark.parametrize("filename", REQUIRED_TOP_LEVEL_FILES)
 def test_required_file_present_after_extraction(extracted_tar, filename):
     """Each of these files is referenced by entrypoint.sh or syslog-ng.conf at startup."""
@@ -170,10 +161,7 @@ def test_required_directory_present_after_extraction(extracted_tar, dirname):
     )
 
 
-# ---------------------------------------------------------------------------
 # 3. syslog-ng.conf @include coverage — every non-local include dir must exist
-# ---------------------------------------------------------------------------
-
 @pytest.mark.parametrize("required_dir", SYSLOG_NG_REQUIRED_DIRS)
 def test_syslog_ng_include_dir_exists(extracted_tar, required_dir):
     """
@@ -209,10 +197,7 @@ def test_syslog_ng_include_dirs_are_not_empty(extracted_tar):
     )
 
 
-# ---------------------------------------------------------------------------
-# 4. Addon parity — every addon in shared/addons must land in conf.d/conflib
-# ---------------------------------------------------------------------------
-
+# 4. Addon test — every addon in shared/addons must land in conf.d/conflib
 def test_every_addon_dir_present_in_conflib(extracted_tar):
     """
     package/shared/addons/<vendor>/ must map to conf.d/conflib/<vendor>/ in the tar.
@@ -277,10 +262,7 @@ def test_conflib_has_expected_minimum_addon_count(extracted_tar):
     )
 
 
-# ---------------------------------------------------------------------------
-# 5. conf.d structure parity — shared/conf.d must mirror conf.d/ in the tar
-# ---------------------------------------------------------------------------
-
+# 5. shared/conf.d must mirror conf.d/ in the tar
 def test_conf_d_top_level_dirs_all_present(extracted_tar):
     """Every subdir of shared/conf.d must appear directly under conf.d/ in the tar."""
     conf_d_src = os.path.join(REPO_ROOT, "package", "shared", "conf.d")
@@ -316,10 +298,7 @@ def test_conf_d_conf_files_all_present(extracted_tar):
     )
 
 
-# ---------------------------------------------------------------------------
 # 6. shared/ subdirs land at the correct root paths (Dockerfile layout parity)
-# ---------------------------------------------------------------------------
-
 @pytest.mark.parametrize("shared_subdir,tar_root", [
     ("pylib",             "pylib"),
     ("context_templates", "context_templates"),
@@ -344,14 +323,11 @@ def test_shared_subdir_file_count_matches_source(extracted_tar, shared_subdir, t
     )
 
 
-# ---------------------------------------------------------------------------
-# 7. Regression guard — the v3.45.0 broken layout
-# ---------------------------------------------------------------------------
-
+# 7. Regression guard — broken layout
 @pytest.mark.parametrize("dirname", DIRS_THAT_MUST_NOT_BE_AT_ROOT)
 def test_parser_dirs_not_leaked_to_root(extracted_tar, dirname):
     """
-    In v3.45.0, shared/conf.d content landed at the top level (e.g. ./destinations, ./enrich)
+    Shared/conf.d content landed at the top level (e.g. ./destinations, ./enrich)
     because the --transform flag was missing. These dirs must only exist under conf.d/, never root.
     """
     leaked_path = os.path.join(extracted_tar, dirname)
@@ -362,10 +338,7 @@ def test_parser_dirs_not_leaked_to_root(extracted_tar, dirname):
     )
 
 
-# ---------------------------------------------------------------------------
 # 8. pylib integrity — Python modules that entrypoint.sh runs directly
-# ---------------------------------------------------------------------------
-
 @pytest.mark.parametrize("pyfile", [
     "parser_source_cache.py",  # called by entrypoint.sh on every startup
     "parser_vps_cache.py",
@@ -383,10 +356,7 @@ def test_critical_pylib_file_present(extracted_tar, pyfile):
     )
 
 
-# ---------------------------------------------------------------------------
 # 9. syslog-ng.conf references VERSION — VERSION must be a non-empty file
-# ---------------------------------------------------------------------------
-
 def test_version_file_is_not_empty(extracted_tar):
     version_path = os.path.join(extracted_tar, "VERSION")
     assert os.path.isfile(version_path), "VERSION file is missing"
@@ -397,10 +367,7 @@ def test_version_file_is_not_empty(extracted_tar):
     )
 
 
-# ---------------------------------------------------------------------------
-# 10. No duplicate entries in the tar (corrupt archive check)
-# ---------------------------------------------------------------------------
-
+# 10. No duplicate entries in the tar
 def test_no_duplicate_tar_entries(baremetal_tar):
     """Duplicate entries in a tar cause unpredictable extraction — last write wins."""
     with tarfile.open(baremetal_tar) as tf:
