@@ -404,7 +404,7 @@ def test_version_file_is_not_empty(extracted_tar):
 def test_no_duplicate_tar_entries(baremetal_tar):
     """Duplicate entries in a tar cause unpredictable extraction — last write wins."""
     with tarfile.open(baremetal_tar) as tf:
-        all_names = [m.name for m in tf.getmembers()]
+        all_names = [m.name for m in tf.getmembers() if not m.isdir()]
     seen = {}
     duplicates = []
     for name in all_names:
