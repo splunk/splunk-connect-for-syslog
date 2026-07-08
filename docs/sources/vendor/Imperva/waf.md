@@ -11,7 +11,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on  | <https://splunkbase.splunk.com/app/7034/>                                                                 |
-| Product Manual | none |
+| Product Manual | <https://www.imperva.com/docs/SB_Imperva_SecureSphere_CEF_guide.pdf> |
 
 ## Sourcetypes
 
