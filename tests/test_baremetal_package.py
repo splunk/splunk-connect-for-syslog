@@ -104,6 +104,10 @@ def baremetal_tar(tmp_path_factory):
     if not is_gnu_tar():
         pytest.skip("GNU tar required (CI runs Ubuntu; use Docker locally)")
 
+    existing = os.environ.get("BAREMETAL_TAR")
+    if existing:
+        return existing
+
     tar_path = str(tmp_path_factory.mktemp("baremetal") / "baremetal.tar")
     req_path = os.path.join(REPO_ROOT, "package", "etc", "requirements.txt")
     if not os.path.exists(req_path):
