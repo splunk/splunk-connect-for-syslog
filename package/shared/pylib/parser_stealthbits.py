@@ -23,6 +23,9 @@ class alerttext_kv(LogParser):
             (m.group(1).strip(), m.group(2).strip()) for m in PAIR_RE.finditer(text)
         ]
 
+        if not pairs:
+            return True
+
         sentence = ""
         if pairs:
             first_key = pairs[0][0]
