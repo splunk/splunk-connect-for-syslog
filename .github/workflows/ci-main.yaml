@@ -24,8 +24,6 @@ on:
       - "next*"
   pull_request:
     branches:
-      - "main"
-      - "releases/*"
       - "develop"
       - "next*"
 
