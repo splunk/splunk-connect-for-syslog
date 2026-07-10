@@ -36,7 +36,7 @@ jobs:
       matrix:
         container: [container3, container3lite]
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           submodules: false
       - name: Setup regctl
@@ -44,14 +44,14 @@ jobs:
           curl --proto "=https" --tlsv1.2 -sSf -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Docker meta
         id: docker_action_meta
-        uses: docker/metadata-action@v6
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ghcr.io/${{ github.repository }}/${{ matrix.container }}
           tags: |
