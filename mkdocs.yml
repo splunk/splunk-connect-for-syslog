@@ -66,6 +66,7 @@ nav:
           - mk8s: "gettingstarted/ansible-mk8s.md"
         - Cloud (Experimental):
           - EKS (Experimental): "gettingstarted/eks.md"
+          - ECS/Fargate (Experimental): "gettingstarted/ecs-fargate.md"
   - Sources:
       - Read First: "sources/index.md"
       - Message Formats: "sources/base"
