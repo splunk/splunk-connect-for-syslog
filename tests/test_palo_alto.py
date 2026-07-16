@@ -385,19 +385,13 @@ def test_palo_alto_globalprotect(
     orig_host = get_host_name()
     overwritten_host_name = get_host_name()
 
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    _, bsd, time, _, tzoffset, _, epoch = time_operations(dt)
-
-    # Tune time functions
-    time = dt.strftime("%Y/%m/%d %H:%M:%S.%f")[:-3]
-    tzoffset = tzoffset[0:3] + ":" + tzoffset[3:]
-    epoch = epoch[:-7]
+    bsd, time, orig_timestamp_str, epoch = get_panlc_times()
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ orig_host }} 1,{{ time }},XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,{{ time }},vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXX,0x8000000000000000,2023-11-09T16:39:17.223+01:00,,,,,,13,19,52,450,,{{ overwritten_host_name }},1'
+        '{{ mark }} {{ bsd }} {{ orig_host }} 1,{{ time }},XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,{{ time }},vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXX,0x8000000000000000,{{ high_res_time }},,,,,,13,19,52,450,,{{ overwritten_host_name }},1'
         + "\n"
     )
-    message = mt.render(mark="<111>", bsd=bsd, orig_host=orig_host, time=time, overwritten_host_name=overwritten_host_name)
+    message = mt.render(mark="<111>", bsd=bsd, orig_host=orig_host, time=time, overwritten_host_name=overwritten_host_name, high_res_time=orig_timestamp_str)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
