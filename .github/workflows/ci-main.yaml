@@ -240,7 +240,7 @@ jobs:
       - name: Run tests
         run: |
           python -m pip install --upgrade pip==26.0
-          pip3 install --require-hashes --only-binary :all: poetry
+          pip3 install --only-binary :all: poetry
           poetry install
           mkdir -p test-results || true
           poetry run pytest -v --tb=long \
@@ -295,7 +295,7 @@ jobs:
       - name: Run tests
         run: |
           python -m pip install --upgrade pip==26.0
-          pip3 install --require-hashes --only-binary :all: poetry
+          pip3 install --only-binary :all: poetry
           poetry install
           mkdir -p test-results || true
           poetry run pytest -v --tb=long \
@@ -351,7 +351,7 @@ jobs:
       - name: Run tests
         run: |
           python -m pip install --upgrade pip==26.0
-          pip3 install --require-hashes --only-binary :all: poetry
+          pip3 install --only-binary :all: poetry
           poetry install
           mkdir -p test-results || true
           poetry run pytest -v --tb=long \
@@ -392,7 +392,7 @@ jobs:
       - name: Install requests
         run: |
           python -m pip install --upgrade pip==26.0
-          pip3 install --require-hashes --only-binary :all: requests
+          pip3 install --only-binary :all: requests
       - name: Return status 'healthy'
         run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
 
@@ -412,7 +412,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip==26.0
-          pip3 install --require-hashes --only-binary :all: poetry
+          pip3 install --only-binary :all: poetry
           poetry install
       - name: Run tests
         run: poetry run pytest tests/test_healthcheck_unit_tests.py
@@ -448,7 +448,7 @@ jobs:
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip==26.0
-          pip3 install --require-hashes --only-binary :all: poetry
+          pip3 install --only-binary :all: poetry
           poetry install
       - name: Wait for SC4S to start
         run: sleep 45

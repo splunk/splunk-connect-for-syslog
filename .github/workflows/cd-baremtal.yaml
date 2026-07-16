@@ -40,7 +40,7 @@ jobs:
       - id: byoe
         name: Produce BYOE package
         run: |
-          pip3 install --require-hashes --only-binary :all: poetry
+          pip3 install --only-binary :all: poetry
           poetry self add poetry-plugin-export
           poetry export --without-hashes >package/etc/requirements.txt
           tar rvf /tmp/baremetal.tar -C package/etc .
