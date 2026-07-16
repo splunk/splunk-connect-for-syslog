@@ -344,9 +344,11 @@ ExecStart=/usr/bin/podman run \
         --name SC4S \
         --rm $SC4S_IMAGE
 ```
-# Change your status port
+# Change your status host and port
 
 Use `SC4S_LISTEN_STATUS_PORT` to change the "status" port used by the internal health check process. The default value is `8080`.
+
+Use `SC4S_LISTEN_STATUS_HOST` to change the network interface the internal health check process binds to. The default value is `0.0.0.0`, which binds to all interfaces so the health endpoint is reachable by container orchestrators (for example, Kubernetes liveness/readiness probes and Docker port mappings). If you only need local access, set this to `127.0.0.1` to restrict the endpoint to the local interface.
 
 # Parallelize
 Use the parallelize feature to manage TCP congestion when using single heavy-data streams.
