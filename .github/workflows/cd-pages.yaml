@@ -37,7 +37,7 @@ jobs:
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
           echo $VERSION
-          pip3 install poetry
+          pip3 install --only-binary :all: poetry
           poetry install
           poetry run mike deploy -p $VERSION
   helm:
