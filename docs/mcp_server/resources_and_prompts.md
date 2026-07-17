@@ -78,6 +78,31 @@ Diagnostic steps seeded by the prompt:
 5. Apply configuration changes via `set_env` only after explaining
    the reasoning.
 
+### Configure SC4S workflow
+
+Command: `configure_sc4s`
+
+Guided natural-language workflow for creating an SC4S `env_file` and
+optionally applying it to a running instance. It has no parameters: the
+assistant asks one question at a time for the Splunk HEC connection,
+protocol, custom or hardware-profile tuning, disk buffering, and timezone.
+
+The workflow calls `sc4s_build_config`, which runs the image's actual
+`configuration-tool.sh`; it does not reproduce the script's hardware tuning
+logic. The complete generated file, including the HEC token, is shown before
+any live operation.
+
+Generation does not change SC4S. If you opt in to application, the assistant:
+
+1. reads the current file with `get_env`;
+2. asks you to choose merge or replace;
+3. shows the exact unredacted final payload;
+4. asks for explicit confirmation immediately before `set_env`; and
+5. polls `get_job_status` until terminal `success` or `failed`.
+
+A retry after a conflicting active job requires a fresh state read, preview,
+and confirmation.
+
 ## Combining tools, resources, and prompts
 
 A typical interaction uses all three primitives together. For example,

@@ -15,11 +15,19 @@ streamable HTTP.
 SC4S MCP server is currently available only for Podman or Docker runtimes.
 
 * A running SC4S instance exposing the management REST API (default port
-  `8080`).
+  `8080`) is required for live inspection or application. Configuration
+  generation alone does not require a reachable SC4S instance.
 * Docker or Podman on the host where the MCP server will run.
 * An MCP-compatible AI assistant or agent that can connect to the server
   over `stdio` or streamable HTTP (for example: Cursor, Claude Desktop, or
   Visual Studio Code with an MCP extension).
+
+The MCP image includes Bash and the repository's actual
+`configuration-tool.sh`. The `sc4s_build_config` tool runs that bundled script
+locally to generate an `env_file`; it does not change the running instance.
+Live application uses the management API and therefore still requires both
+`SC4S_API_MANAGEMENT_ENABLED=true` and the writable `/opt/sc4s/env_file` bind
+mount described below.
 
 ## Prepare your SC4S instance
 

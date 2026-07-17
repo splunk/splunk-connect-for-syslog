@@ -1,12 +1,15 @@
 # Tools
 
 Tools are callable functions that the MCP client (and the AI assistant
-behind it) can invoke. The SC4S MCP server groups tools into three
+behind it) can invoke. The SC4S MCP server groups tools into four
 categories:
 
 * **Repository / documentation**: read-only, safe to call at any time.
   These tools only read content that is baked into the MCP container
   image.
+* **Configuration generation**: executes the copy of
+  `configuration-tool.sh` baked into the MCP image. It generates text
+  locally and does not contact or modify an SC4S instance.
 * **SC4S instance management**: thin wrappers over the SC4S management
   REST API. These tools can change SC4S configuration and trigger a
   `syslog-ng` restart **inside the SC4S container**.
@@ -33,6 +36,20 @@ outbound calls and cannot modify anything.
 | `get_parser(parser_name)` | Returns the content of a parser file. Accepts either the file name (`foo.conf`) or the stem (`foo`). Returns `{ "found": bool, "path": ..., "content": ... }`. |
 | `search_docs(query)` | Regex search across every markdown file under `docs/`. Returns `path:line: snippet` entries. |
 | `get_parser_creation_guide()` | Returns the full parser-creation guide (`SKILL.md` + testing reference). The assistant calls this automatically when a user asks to create a parser. |
+
+## Configuration generation
+
+`sc4s_build_config(...)` executes the actual `configuration-tool.sh` shipped
+in the MCP image in non-interactive mode and returns `{config, warnings}`. It
+accepts Splunk HEC settings plus custom or hardware-profile tuning options.
+The script remains the source of truth for defaults, hardware thresholds, and
+the emitted `env_file`; the MCP tool does not reconstruct that configuration
+in Python.
+
+This tool only generates content and does not modify SC4S. To apply its
+result, read the current file with `get_env`, choose merge or replace, preview
+the complete final file, confirm the exact payload, call `set_env`, and poll
+`get_job_status` until the job reaches `success` or `failed`.
 
 ## SC4S instance management tools
 
