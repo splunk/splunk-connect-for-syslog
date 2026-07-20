@@ -80,7 +80,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@8d47ed4feba9ad91d89330a05d54868801ee174d # v3.2.2
+        uses: splunk/addonfactory-test-matrix-action@ab67e10df9f62c343d2ce19e57454f1da8e4ef21 # v3.3.0
 
   security-fossa-scan:
     continue-on-error: true
