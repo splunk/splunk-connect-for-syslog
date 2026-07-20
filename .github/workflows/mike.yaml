@@ -25,7 +25,7 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@8bb1fe6d543b2233ef1856cd3b0181f5abbd4d6a # v2.1.2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.14" # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
