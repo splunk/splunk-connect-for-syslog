@@ -2,6 +2,7 @@ import sys
 import traceback
 import socket
 import struct
+import os
 from sqlitedict import SqliteDict
 
 import time
@@ -67,6 +68,11 @@ class vpsc_dest(LogDestination):
 
     def send(self, log_message):
         try:
+            if (
+                    os.getenv("SC4S_TEST_CACHE_DEST_FAILURE", "no").lower() == "yes"
+                    and log_message.get_as_str("PROGRAM", "") == "prg00000"
+            ):
+                raise RuntimeError("forced VPS cache destination failure")
             host = log_message.get_as_str("HOST", "")
             fields = {}
             fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
