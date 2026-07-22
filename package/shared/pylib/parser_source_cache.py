@@ -70,8 +70,8 @@ class psc_parse(LogParser):
             log_message["HOST"] = name
 
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            exc_type, exc_value = sys.exc_info()[:2]
+            lines = traceback.format_exception(exc_type, exc_value)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
         self.logger.debug("psc.parse complete")
@@ -84,8 +84,8 @@ class psc_dest(LogDestination):
         try:
             self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            exc_type, exc_value = sys.exc_info()[:2]
+            lines = traceback.format_exception(exc_type, exc_value)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
         return True
@@ -110,8 +110,8 @@ class psc_dest(LogDestination):
                 self.db[ip_int] = log_message["HOST"]
 
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
+            exc_type, exc_value = sys.exc_info()[:2]
+            lines = traceback.format_exception(exc_type, exc_value)
             self.logger.debug("".join("!! " + line for line in lines))
             return False
         self.logger.debug("psc.send complete")
