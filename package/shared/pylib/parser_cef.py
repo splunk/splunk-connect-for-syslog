@@ -66,9 +66,7 @@ class cef_kv(LogParser):
                 log_message[f".values.{kc}"] = v
 
         except Exception:
-            exc_type, exc_value = sys.exc_info()[:2]
-            lines = traceback.format_exception(exc_type, exc_value)
-            self.logger.debug("".join("!! " + line for line in lines))
+            self.logger.debug(traceback.format_exc())
             return False
 
         return True
