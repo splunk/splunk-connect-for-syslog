@@ -62,8 +62,8 @@ class vpsc_dest(LogDestination):
         self.db.close()
 
     def send(self, log_message):
+        host = log_message.get_as_str("HOST", "")
         try:
-            host = log_message.get_as_str("HOST", "")
             fields = {}
             fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
                 "fields.sc4s_vendor"
@@ -79,11 +79,13 @@ class vpsc_dest(LogDestination):
                     self.db[host] = fields
             else:
                 self.db[host] = fields
-
+        except KeyError:
+            self.logger.debug(f"vpsc.send key: ${host} not found")
+            return False
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False
-        self.logger.debug("psc.send complete")
+        self.logger.debug("vpsc.send complete")
         return True
 
     def flush(self):
