@@ -1,10 +1,7 @@
-import sys
 import traceback
 import socket
 import struct
 from sqlitedict import SqliteDict
-
-import time
 
 try:
     import syslogng
@@ -79,17 +76,24 @@ class psc_parse(LogParser):
 class psc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
+        self.db = None
+        return True
+
+    def open(self):
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=False)
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False
         return True
 
+    def close(self):
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+
     def deinit(self):
-        """Close the connection to the target service"""
-        self.db.commit()
-        self.db.close()
+        self.close()
 
     def send(self, log_message):
         ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
@@ -98,24 +102,29 @@ class psc_dest(LogDestination):
             self.logger.debug(
                 f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'
             )
-            if ip_int in self.db:
+            try:
                 current = self.db[ip_int]
+            except KeyError:
+                self.db[ip_int] = log_message["HOST"]
+            else:
                 if current != log_message["HOST"]:
                     self.db[ip_int] = log_message["HOST"]
-            else:
-                self.db[ip_int] = log_message["HOST"]
         except KeyError:
             self.logger.debug(f"psc.send key: ${ip_int} not found")
-            return False
+            return self.ERROR
         except Exception:
             self.logger.debug(traceback.format_exc())
-            return False
+            return self.ERROR
         self.logger.debug("psc.send complete")
-        return True
+        return self.QUEUED
 
     def flush(self):
-        self.db.commit()
-        return True
+        try:
+            self.db.commit()
+        except Exception:
+            self.logger.debug(traceback.format_exc())
+            return self.ERROR
+        return self.SUCCESS
 
 
 if __name__ == "__main__":

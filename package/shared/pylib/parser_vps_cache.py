@@ -1,10 +1,5 @@
-import sys
 import traceback
-import socket
-import struct
 from sqlitedict import SqliteDict
-
-import time
 
 try:
     import syslogng
@@ -49,17 +44,24 @@ class vpsc_parse(LogParser):
 class vpsc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
+        self.db = None
+        return True
+
+    def open(self):
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=False)
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False
         return True
 
+    def close(self):
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+
     def deinit(self):
-        """Close the connection to the target service"""
-        self.db.commit()
-        self.db.close()
+        self.close()
 
     def send(self, log_message):
         host = log_message.get_as_str("HOST", "")
@@ -73,21 +75,26 @@ class vpsc_dest(LogDestination):
             )
 
             self.logger.debug(f"vpsc.send host={host} fields={fields}")
-            if host in self.db:
+            try:
                 current = self.db[host]
+            except KeyError:
+                self.db[host] = fields
+            else:
                 if current != fields:
                     self.db[host] = fields
-            else:
-                self.db[host] = fields
         except KeyError:
             self.logger.debug(f"vpsc.send key: ${host} not found")
-            return False
+            return self.ERROR
         except Exception:
             self.logger.debug(traceback.format_exc())
-            return False
+            return self.ERROR
         self.logger.debug("vpsc.send complete")
-        return True
+        return self.QUEUED
 
     def flush(self):
-        self.db.commit()
-        return True
+        try:
+            self.db.commit()
+        except Exception:
+            self.logger.debug(traceback.format_exc())
+            return self.ERROR
+        return self.SUCCESS
