@@ -57,7 +57,7 @@ jobs:
       - name: Validate BYOE package
         run: |
           poetry install
-          BAREMETAL_TAR=/tmp/baremetal.tar poetry run pytest tests/test_baremetal_package.py -v
+          BAREMETAL_TAR=/tmp/baremetal.tar poetry run pytest tests/test_baremetal_package.py -v -m baremetal
       - name: Release
         uses: softprops/action-gh-release@v3
         with:
