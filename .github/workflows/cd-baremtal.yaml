@@ -56,8 +56,8 @@ jobs:
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
       - name: Validate BYOE package
         run: |
-          pip3 install pytest
-          BAREMETAL_TAR=/tmp/baremetal.tar pytest tests/test_baremetal_package.py -v
+          poetry install
+          BAREMETAL_TAR=/tmp/baremetal.tar poetry run pytest tests/test_baremetal_package.py -v
       - name: Release
         uses: softprops/action-gh-release@v3
         with:

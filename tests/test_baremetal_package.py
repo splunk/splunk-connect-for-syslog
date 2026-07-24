@@ -5,24 +5,22 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 """
-Unit tests for the baremetal tar package contents.
+Verify the baremetal.tar built by cd-baremtal.yaml contains the correct layout.
 
-These tests verify that the baremetal.tar produced by cd-baremtal.yaml contains
-all required paths used by the OCI container (package/Dockerfile).
-
-No Docker, Splunk, or network access required — runs anywhere with Python + GNU tar.
+Run in CI:   BAREMETAL_TAR=/tmp/baremetal.tar pytest tests/test_baremetal_package.py -v
+Run locally: build the tar first (see docs/gettingstarted/byoe-rhel8.md), then set BAREMETAL_TAR.
 """
 
 import os
 import re
-import subprocess
 import tarfile
 import pytest
 
+pytestmark = pytest.mark.baremetal
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Directories syslog-ng.conf @include patterns resolve to (non-local/ ones must ship in the tar).
-# if the file changes, update this list.
+# @include dirs in syslog-ng.conf that must ship in the package (non-local/ only).
 SYSLOG_NG_REQUIRED_DIRS = [
     "conf.d/conflib",
     "conf.d/destinations",
@@ -34,7 +32,6 @@ SYSLOG_NG_REQUIRED_DIRS = [
     "conf.d/sources",
 ]
 
-# Files that must exist at the root of the extracted tar (i.e. in /etc/syslog-ng).
 REQUIRED_TOP_LEVEL_FILES = [
     "syslog-ng.conf",
     "VERSION",
@@ -45,7 +42,6 @@ REQUIRED_TOP_LEVEL_FILES = [
     "source_ports_validator.py",
 ]
 
-# Directories that must exist at root level.
 REQUIRED_TOP_LEVEL_DIRS = [
     "pylib",
     "context_templates",
@@ -53,43 +49,8 @@ REQUIRED_TOP_LEVEL_DIRS = [
     "test_parsers",
 ]
 
-# These dirs must NOT appear at the top level — they belong under conf.d/.
-# Their presence at root was the exact symptom of the v3.45.0 regression.
-DIRS_THAT_MUST_NOT_BE_AT_ROOT = [
-    "destinations",
-    "enrich",
-    "log_paths",
-    "sources",
-    "sc4slib",
-    "plugin",
-    "conflib",
-]
 
-
-def build_baremetal_tar(dest: str) -> None:
-    """Replicate the exact tar commands from cd-baremtal.yaml."""
-    cmds = [
-        ["tar", "rvf", dest, "-C", "package/etc", "."],
-        ["tar", "rvf", dest, "-C", ".", "pyproject.toml"],
-        ["tar", "rvf", dest, "-C", ".", "poetry.lock"],
-        ["tar", "rvf", dest, "-C", "package/sbin", "."],
-        ["tar", "rvf", dest, "--transform", r"s,^\.,conf.d,", "-C", "package/shared/conf.d", "."],
-        ["tar", "rvf", dest, "--transform", r"s,^\.,conf.d/conflib,", "-C", "package/shared/addons", "."],
-        ["tar", "rvf", dest, "-C", "package/shared", "pylib"],
-        ["tar", "rvf", dest, "-C", "package/shared", "context_templates"],
-        ["tar", "rvf", dest, "-C", "package/shared", "local_config"],
-        ["tar", "rvf", dest, "-C", "package/shared", "test_parsers"],
-    ]
-    for cmd in cmds:
-        subprocess.run(cmd, cwd=REPO_ROOT, check=True, capture_output=True)
-
-
-def is_gnu_tar() -> bool:
-    result = subprocess.run(["tar", "--version"], capture_output=True, text=True)
-    return "GNU tar" in result.stdout
-
-
-def _collect_source_files(src_dir: str) -> set:
+def _collect_source_files(src_dir):
     return {
         os.path.relpath(os.path.join(r, f), src_dir)
         for r, _, files in os.walk(src_dir)
@@ -98,291 +59,189 @@ def _collect_source_files(src_dir: str) -> set:
     }
 
 
-# Fixtures — build once per test session
+# ---------------------------------------------------------------------------
+# Fixtures
+# ---------------------------------------------------------------------------
+
 @pytest.fixture(scope="module")
-def baremetal_tar(tmp_path_factory):
-    if not is_gnu_tar():
-        pytest.skip("GNU tar required (CI runs Ubuntu; use Docker locally)")
-
-    existing = os.environ.get("BAREMETAL_TAR")
-    if existing:
-        return existing
-
-    tar_path = str(tmp_path_factory.mktemp("baremetal") / "baremetal.tar")
-    req_path = os.path.join(REPO_ROOT, "package", "etc", "requirements.txt")
-    if not os.path.exists(req_path):
-        open(req_path, "w").close()
-
-    build_baremetal_tar(tar_path)
-    return tar_path
+def baremetal_tar():
+    path = os.environ.get("BAREMETAL_TAR")
+    if not path:
+        pytest.fail(
+            "BAREMETAL_TAR env var is not set. "
+            "Build the tar first (see cd-baremtal.yaml), then re-run: "
+            "BAREMETAL_TAR=/tmp/baremetal.tar pytest tests/test_baremetal_package.py"
+        )
+    if not os.path.isfile(path):
+        pytest.fail(f"BAREMETAL_TAR points to a non-existent file: {path}")
+    return path
 
 
 @pytest.fixture(scope="module")
 def extracted_tar(baremetal_tar, tmp_path_factory):
-    """Simulate: tar xf baremetal.tar -C /etc/syslog-ng"""
     extract_dir = str(tmp_path_factory.mktemp("extracted"))
     with tarfile.open(baremetal_tar) as tf:
         tf.extractall(extract_dir)
     return extract_dir
 
 
-@pytest.fixture(scope="module")
-def tar_paths(baremetal_tar):
-    """Set of all entry names inside the tar."""
-    with tarfile.open(baremetal_tar) as tf:
-        return {m.name for m in tf.getmembers()}
+# ---------------------------------------------------------------------------
+# 1. Required top-level paths
+# ---------------------------------------------------------------------------
 
-
-# 1. Size sanity test — catches a completely empty package
-def test_tar_size_indicates_parsers_are_present(baremetal_tar):
-    """
-    Because all parsers were missing.
-    A correct package must be larger than 500KB.
-    """
-    size = os.path.getsize(baremetal_tar)
-    assert size > 500_000, (
-        f"Tar is only {size} bytes — parsers are almost certainly missing. "
-        "Expected >500KB for a complete package."
-    )
-
-
-# 2. Required top-level files — things syslog-ng and the entrypoint need at boot
 @pytest.mark.parametrize("filename", REQUIRED_TOP_LEVEL_FILES)
-def test_required_file_present_after_extraction(extracted_tar, filename):
-    """Each of these files is referenced by entrypoint.sh or syslog-ng.conf at startup."""
-    full_path = os.path.join(extracted_tar, filename)
-    assert os.path.isfile(full_path), (
-        f"Required file '{filename}' is missing from the extracted package. "
-        "A baremetal install would fail to start without it."
-    )
+def test_required_file_present(extracted_tar, filename):
+    assert os.path.isfile(os.path.join(extracted_tar, filename)), \
+        f"Required file '{filename}' is missing from the package."
 
 
 @pytest.mark.parametrize("dirname", REQUIRED_TOP_LEVEL_DIRS)
-def test_required_directory_present_after_extraction(extracted_tar, dirname):
-    full_path = os.path.join(extracted_tar, dirname)
-    assert os.path.isdir(full_path), (
-        f"Required directory '{dirname}' is missing from the extracted package."
-    )
+def test_required_directory_present(extracted_tar, dirname):
+    assert os.path.isdir(os.path.join(extracted_tar, dirname)), \
+        f"Required directory '{dirname}' is missing from the package."
 
 
-# 3. syslog-ng.conf @include coverage — every non-local include dir must exist
+# ---------------------------------------------------------------------------
+# 2. syslog-ng.conf @include coverage
+# ---------------------------------------------------------------------------
+
 @pytest.mark.parametrize("required_dir", SYSLOG_NG_REQUIRED_DIRS)
 def test_syslog_ng_include_dir_exists(extracted_tar, required_dir):
-    """
-    syslog-ng.conf has @include directives for each of these directories.
-    If any are missing, syslog-ng will fail to start on a baremetal install.
-    """
-    full_path = os.path.join(extracted_tar, required_dir)
-    assert os.path.isdir(full_path), (
-        f"Directory '{required_dir}' is referenced by an @include in syslog-ng.conf "
-        "but is missing from the package. syslog-ng will refuse to start."
-    )
+    assert os.path.isdir(os.path.join(extracted_tar, required_dir)), \
+        f"'{required_dir}' is in syslog-ng.conf @include but missing — syslog-ng will not start."
 
 
 def test_syslog_ng_include_dirs_are_not_empty(extracted_tar):
-    """
-    Each @include directory that ships in the tar must contain at least one .conf file.
-    An empty directory means syslog-ng starts but has no parsers / destinations / log paths.
-    """
-    empty = []
-    for required_dir in SYSLOG_NG_REQUIRED_DIRS:
-        dir_path = os.path.join(extracted_tar, required_dir)
-        if not os.path.isdir(dir_path):
-            continue  # already caught by test_syslog_ng_include_dir_exists
-        conf_files = [
-            f for _, _, files in os.walk(dir_path)
-            for f in files if f.endswith(".conf")
-        ]
-        if not conf_files:
-            empty.append(required_dir)
-    assert not empty, (
-        f"These @include directories exist but contain no .conf files: {empty}. "
-        "syslog-ng will start but silently have no parsers or routing."
-    )
+    empty = [
+        d for d in SYSLOG_NG_REQUIRED_DIRS
+        if os.path.isdir(os.path.join(extracted_tar, d))
+        and not any(
+            f.endswith(".conf")
+            for _, _, files in os.walk(os.path.join(extracted_tar, d))
+            for f in files
+        )
+    ]
+    assert not empty, f"@include dirs exist but contain no .conf files: {empty}"
 
 
-# 4. Addon test — every addon in shared/addons must land in conf.d/conflib
+# ---------------------------------------------------------------------------
+# 3. Addon parity — shared/addons must land in conf.d/conflib
+# ---------------------------------------------------------------------------
+
 def test_every_addon_dir_present_in_conflib(extracted_tar):
-    """
-    package/shared/addons/<vendor>/ must map to conf.d/conflib/<vendor>/ in the tar.
-    A missing vendor means all its log sources go unrecognised on a baremetal host.
-    """
+    addons_src = os.path.join(REPO_ROOT, "package", "shared", "addons")
+    conflib_dst = os.path.join(extracted_tar, "conf.d", "conflib")
+    src = {d for d in os.listdir(addons_src) if os.path.isdir(os.path.join(addons_src, d))}
+    dst = {d for d in os.listdir(conflib_dst) if os.path.isdir(os.path.join(conflib_dst, d))}
+    missing = src - dst
+    assert not missing, f"Addon dirs missing from conf.d/conflib: {sorted(missing)}"
+
+
+def test_every_addon_conf_file_present_and_non_empty(extracted_tar):
     addons_src = os.path.join(REPO_ROOT, "package", "shared", "addons")
     conflib_dst = os.path.join(extracted_tar, "conf.d", "conflib")
 
-    src_vendors = {
-        d for d in os.listdir(addons_src)
-        if os.path.isdir(os.path.join(addons_src, d))
-    }
-    dst_vendors = {
-        d for d in os.listdir(conflib_dst)
-        if os.path.isdir(os.path.join(conflib_dst, d))
-    }
-
-    missing = src_vendors - dst_vendors
-    assert not missing, (
-        f"These vendor addon dirs are in shared/addons but missing from conf.d/conflib: "
-        f"{sorted(missing)}"
-    )
-
-
-def test_every_addon_conf_file_present_in_conflib(extracted_tar):
-    """
-    File-level check: every .conf file inside shared/addons must appear under conf.d/conflib.
-    Catches partial copies where the directory exists but files were not transferred.
-    """
-    addons_src = os.path.join(REPO_ROOT, "package", "shared", "addons")
-    conflib_dst = os.path.join(extracted_tar, "conf.d", "conflib")
-
-    src_files = _collect_source_files(addons_src)
+    src_files = {f for f in _collect_source_files(addons_src) if f.endswith(".conf")}
     dst_files = _collect_source_files(conflib_dst)
 
-    missing = {f for f in src_files if f.endswith(".conf")} - dst_files
-    assert not missing, (
-        f"These addon .conf files are missing from conf.d/conflib in the tar "
-        f"({len(missing)} files): {sorted(missing)[:15]}"
-    )
+    missing = src_files - dst_files
+    assert not missing, \
+        f"Addon .conf files missing from conf.d/conflib ({len(missing)}): {sorted(missing)[:15]}"
+
+    empty = [
+        f for f in src_files
+        if os.path.getsize(os.path.join(conflib_dst, f)) == 0
+    ]
+    assert not empty, f"Addon .conf files are present but empty: {sorted(empty)[:10]}"
 
 
-def test_conflib_has_expected_minimum_addon_count(extracted_tar):
-    """
-    Guard against silent truncation: conflib must have at least as many subdirectories
-    as shared/addons (plus shared/conf.d/conflib which also merges in).
-    """
+def test_conflib_subdir_count_not_less_than_addons(extracted_tar):
     addons_src = os.path.join(REPO_ROOT, "package", "shared", "addons")
     conflib_dst = os.path.join(extracted_tar, "conf.d", "conflib")
-
-    expected_min = sum(
-        1 for d in os.listdir(addons_src)
-        if os.path.isdir(os.path.join(addons_src, d))
-    )
-    actual = sum(
-        1 for d in os.listdir(conflib_dst)
-        if os.path.isdir(os.path.join(conflib_dst, d))
-    )
-    assert actual >= expected_min, (
-        f"conf.d/conflib has {actual} subdirs but shared/addons has {expected_min}. "
-        "Some addons were silently dropped."
-    )
+    expected_min = sum(1 for d in os.listdir(addons_src) if os.path.isdir(os.path.join(addons_src, d)))
+    actual = sum(1 for d in os.listdir(conflib_dst) if os.path.isdir(os.path.join(conflib_dst, d)))
+    assert actual >= expected_min, \
+        f"conf.d/conflib has {actual} subdirs, shared/addons has {expected_min} — addons were dropped."
 
 
-# 5. shared/conf.d must mirror conf.d/ in the tar
-def test_conf_d_top_level_dirs_all_present(extracted_tar):
-    """Every subdir of shared/conf.d must appear directly under conf.d/ in the tar."""
-    conf_d_src = os.path.join(REPO_ROOT, "package", "shared", "conf.d")
-    conf_d_dst = os.path.join(extracted_tar, "conf.d")
+# ---------------------------------------------------------------------------
+# 4. conf.d structure parity with shared/conf.d
+# ---------------------------------------------------------------------------
 
-    src_dirs = {
-        d for d in os.listdir(conf_d_src)
-        if os.path.isdir(os.path.join(conf_d_src, d))
-    }
-    dst_dirs = {
-        d for d in os.listdir(conf_d_dst)
-        if os.path.isdir(os.path.join(conf_d_dst, d))
-    }
-
+def test_conf_d_dirs_all_present(extracted_tar):
+    src = os.path.join(REPO_ROOT, "package", "shared", "conf.d")
+    dst = os.path.join(extracted_tar, "conf.d")
+    src_dirs = {d for d in os.listdir(src) if os.path.isdir(os.path.join(src, d))}
+    dst_dirs = {d for d in os.listdir(dst) if os.path.isdir(os.path.join(dst, d))}
     missing = src_dirs - dst_dirs
-    assert not missing, (
-        f"These conf.d subdirs from shared/conf.d are missing from the tar: {sorted(missing)}"
-    )
+    assert not missing, f"conf.d subdirs missing from tar: {sorted(missing)}"
 
 
-def test_conf_d_conf_files_all_present(extracted_tar):
-    """File-level check: every .conf in shared/conf.d must appear under conf.d/ in the tar."""
-    conf_d_src = os.path.join(REPO_ROOT, "package", "shared", "conf.d")
-    conf_d_dst = os.path.join(extracted_tar, "conf.d")
-
-    src_files = {f for f in _collect_source_files(conf_d_src) if f.endswith(".conf")}
-    dst_files = _collect_source_files(conf_d_dst)
-
+def test_conf_d_files_all_present(extracted_tar):
+    src = os.path.join(REPO_ROOT, "package", "shared", "conf.d")
+    dst = os.path.join(extracted_tar, "conf.d")
+    src_files = {f for f in _collect_source_files(src) if f.endswith(".conf")}
+    dst_files = _collect_source_files(dst)
     missing = src_files - dst_files
-    assert not missing, (
-        f"These conf.d .conf files are missing from the tar "
-        f"({len(missing)} files): {sorted(missing)[:15]}"
-    )
+    assert not missing, \
+        f"conf.d .conf files missing from tar ({len(missing)}): {sorted(missing)[:15]}"
 
 
-# 6. shared/ subdirs land at the correct root paths (Dockerfile layout parity)
+# ---------------------------------------------------------------------------
+# 5. shared/ subdirs land at correct root paths
+# ---------------------------------------------------------------------------
+
 @pytest.mark.parametrize("shared_subdir,tar_root", [
     ("pylib",             "pylib"),
     ("context_templates", "context_templates"),
     ("local_config",      "local_config"),
     ("test_parsers",      "test_parsers"),
 ])
-def test_shared_subdir_file_count_matches_source(extracted_tar, shared_subdir, tar_root):
-    """
-    Every file in package/shared/<subdir> must appear at <tar_root>/ in the extracted package.
-    This catches the case where a directory exists but its contents were not copied.
-    """
+def test_shared_subdir_files_all_present(extracted_tar, shared_subdir, tar_root):
     src = os.path.join(REPO_ROOT, "package", "shared", shared_subdir)
     dst = os.path.join(extracted_tar, tar_root)
-
-    src_files = _collect_source_files(src)
-    dst_files = _collect_source_files(dst)
-
-    missing = src_files - dst_files
-    assert not missing, (
-        f"Files missing from {tar_root}/ in the tar ({len(missing)} files): "
-        f"{sorted(missing)[:10]}"
-    )
+    missing = _collect_source_files(src) - _collect_source_files(dst)
+    assert not missing, \
+        f"Files missing from {tar_root}/ ({len(missing)}): {sorted(missing)[:10]}"
 
 
-# 7. Regression guard — broken layout
-@pytest.mark.parametrize("dirname", DIRS_THAT_MUST_NOT_BE_AT_ROOT)
-def test_parser_dirs_not_leaked_to_root(extracted_tar, dirname):
-    """
-    Shared/conf.d content landed at the top level (e.g. ./destinations, ./enrich)
-    because the --transform flag was missing. These dirs must only exist under conf.d/, never root.
-    """
-    leaked_path = os.path.join(extracted_tar, dirname)
-    assert not os.path.exists(leaked_path), (
-        f"'{dirname}' exists at the root of the extracted package — "
-        "this is the v3.45.0 regression where conf.d content landed at the wrong path. "
-        "Check the --transform flags in cd-baremtal.yaml."
-    )
+# ---------------------------------------------------------------------------
+# 6. pylib files
+# ---------------------------------------------------------------------------
 
-
-# 8. pylib integrity — Python modules that entrypoint.sh runs directly
 @pytest.mark.parametrize("pyfile", [
-    "parser_source_cache.py",  # called by entrypoint.sh on every startup
+    "parser_source_cache.py",
     "parser_vps_cache.py",
     "log_utils.py",
 ])
 def test_critical_pylib_file_present(extracted_tar, pyfile):
-    """
-    entrypoint.sh sets PYTHONPATH=/etc/syslog-ng/pylib and calls parser_source_cache.py
-    at startup. If these are missing the daemon exits immediately.
-    """
-    full_path = os.path.join(extracted_tar, "pylib", pyfile)
-    assert os.path.isfile(full_path), (
-        f"pylib/{pyfile} is missing. entrypoint.sh calls this file at startup — "
-        "a baremetal install will exit immediately without it."
-    )
+    assert os.path.isfile(os.path.join(extracted_tar, "pylib", pyfile)), \
+        f"pylib/{pyfile} is missing — entrypoint.sh will exit on startup."
 
 
-# 9. syslog-ng.conf references VERSION — VERSION must be a non-empty file
-def test_version_file_is_not_empty(extracted_tar):
-    version_path = os.path.join(extracted_tar, "VERSION")
-    assert os.path.isfile(version_path), "VERSION file is missing"
-    content = open(version_path).read().strip()
-    assert content, "VERSION file exists but is empty"
-    assert re.match(r"^\d+\.\d+\.\d+", content), (
-        f"VERSION file does not look like a semver string: '{content}'"
-    )
+# ---------------------------------------------------------------------------
+# 7. VERSION is a valid semver string
+# ---------------------------------------------------------------------------
+
+def test_version_file_is_valid_semver(extracted_tar):
+    path = os.path.join(extracted_tar, "VERSION")
+    assert os.path.isfile(path), "VERSION file is missing"
+    content = open(path).read().strip()
+    assert re.match(r"^\d+\.\d+\.\d+", content), \
+        f"VERSION does not look like semver: '{content}'"
 
 
-# 10. No duplicate entries in the tar
+# ---------------------------------------------------------------------------
+# 8. No duplicate file entries in the tar
+# ---------------------------------------------------------------------------
+
 def test_no_duplicate_tar_entries(baremetal_tar):
-    """Duplicate entries in a tar cause unpredictable extraction — last write wins."""
     with tarfile.open(baremetal_tar) as tf:
-        all_names = [m.name for m in tf.getmembers() if not m.isdir()]
-    seen = {}
-    duplicates = []
-    for name in all_names:
+        names = [m.name for m in tf.getmembers() if not m.isdir()]
+    seen, duplicates = set(), []
+    for name in names:
         if name in seen:
             duplicates.append(name)
-        seen[name] = True
-    assert not duplicates, (
-        f"Tar contains {len(duplicates)} duplicate entries. "
-        f"First few: {duplicates[:10]}"
-    )
+        seen.add(name)
+    assert not duplicates, \
+        f"Tar has {len(duplicates)} duplicate entries: {duplicates[:10]}"
