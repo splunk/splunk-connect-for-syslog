@@ -101,19 +101,33 @@ class psc_dest(LogDestination):
     def send(self, log_message):
         try:
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
-            ip_int = ip2int(ipaddr)
-            self.logger.debug(
-                f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'
-            )
+            if not ipaddr:
+                self.logger.debug(
+                    f"psc.send skipped: invalid cache key sourceip={ipaddr!r} "
+                )
+                return self.SUCCESS
+
+            try:
+                host = log_message["HOST"]
+            except KeyError:
+                self.logger.debug("psc.send skipped: HOST is missing")
+                return self.SUCCESS
+
+            try:
+                ip_int = ip2int(ipaddr)
+            except OSError:
+                self.logger.debug(
+                    f"psc.send skipped: invalid SOURCEIP sourceip={ipaddr!r}"
+                )
+                return self.SUCCESS
+
             try:
                 current = self.db[ip_int]
             except KeyError:
-                self.db[ip_int] = log_message["HOST"]
+                self.db[ip_int] = host
             else:
-                if current != log_message["HOST"]:
-                    self.db[ip_int] = log_message["HOST"]
-        except KeyError:
-            return self.ERROR
+                if current != host:
+                    self.db[ip_int] = host
         except Exception:
             self.logger.debug(traceback.format_exc())
             return self.ERROR

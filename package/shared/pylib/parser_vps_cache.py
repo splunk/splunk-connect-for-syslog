@@ -69,6 +69,9 @@ class vpsc_dest(LogDestination):
     def send(self, log_message):
         try:
             host = log_message.get_as_str("HOST", "")
+            if not host:
+                self.logger.debug("vpsc.send skipped: HOST is missing")
+                return self.SUCCESS
             fields = {}
             fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
                 "fields.sc4s_vendor"
@@ -85,8 +88,6 @@ class vpsc_dest(LogDestination):
             else:
                 if current != fields:
                     self.db[host] = fields
-        except KeyError:
-            return self.ERROR
         except Exception:
             self.logger.debug(traceback.format_exc())
             return self.ERROR
