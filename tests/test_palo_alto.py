@@ -409,6 +409,110 @@ def test_palo_alto_globalprotect(
     assert result_count == 1
 
 
+# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,2025/03/28 05:40:45,vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,system-host,0x8000000000000000,,,,,,,13,19,52,450,,system-host,1
+@mark.addons("paloalto")
+def test_palo_alto_globalprotect_old_format(
+    record_property, setup_splunk, setup_sc4s
+):
+    """Verify old-format GLOBALPROTECT logs (no high_res_time) fall back to time_generated."""
+    get_host_name = lambda: f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    orig_host = get_host_name()
+    overwritten_host_name = get_host_name()
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
+
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }} {{ bsd }} {{ orig_host }} 1,{{ time }},XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,{{ time }},vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXX,0x8000000000000000,,,,,,,13,19,52,450,,{{ overwritten_host_name }},1'
+        + "\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, orig_host=orig_host, time=time, overwritten_host_name=overwritten_host_name)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host={{ overwritten_host_name }} sourcetype="pan:globalprotect"'
+    )
+    search = st.render(epoch=epoch, overwritten_host_name=overwritten_host_name)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", overwritten_host_name)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,AUTH,0,2562,2025/03/28 05:40:45,vsys1,10.0.0.1,user,,object,auth-policy,1,12345,Palo Alto Networks,log-action,ldap-server,description,sso,authentication,1,1234567890123456789,0x8000000000000000,0,0,0,0,vsys1,system-host,1,kerberos,rule1,,,,,,Windows,10,hostname,aa:bb:cc:dd:ee:ff,US,,Mozilla/5.0,1234567,
+@mark.addons("paloalto")
+def test_palo_alto_auth_old_format(record_property, setup_splunk, setup_sc4s):
+    """Verify old-format AUTH logs (no high_res_time) fall back to generated_time."""
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
+
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},000000000000,AUTH,0,2562,{{ time }},vsys1,10.0.0.1,user,,object,auth-policy,1,12345,Palo Alto Networks,log-action,ldap-server,description,sso,authentication,1,1234567890123456789,0x8000000000000000,0,0,0,0,vsys1,{{ host }},1,kerberos,rule1,,,,,,Windows,10,hostname,aa:bb:cc:dd:ee:ff,US,,Mozilla/5.0,1234567,\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netauth host="{{ host }}" sourcetype="pan:auth"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
+# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,TRAFFIC,end,,2025/03/28 05:40:45,10.0.0.1,203.0.113.10,10.0.0.1,203.0.113.10,rule1,,,ssl,vsys1,trust,untrust,ethernet1/1,ethernet1/2,Panorama-log,,1234567,1,54321,443,54321,443,0x400000,tcp,allow,12345,6789,5556,50,2025/03/28 05:40:45,30,general-internet,,1234567890123456789,0x8000000000000000,10.0.0.0-10.255.255.255,United States,,25,25,tcp-fin,0,0,0,0,vsys1,system-host,from-policy,,,0,0,0,0,N/A,0,0,0,0,rule-uuid,0,0,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1969-12-31T16:00:00.000-08:00,,,management,general-internet,client-server,1,has-known-vulnerability,,,no,no,no
+@mark.addons("paloalto")
+def test_palo_alto_pan_os_91_high_res_time(record_property, setup_splunk, setup_sc4s):
+    """Verify PAN-OS 9.1 high_res_time (1969-12-31) is ignored and generated_time is used instead."""
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, time, _, _, _, epoch = time_operations(dt)
+
+    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} 1,{{ time }},000000000000,TRAFFIC,end,,{{ time }},10.0.0.1,203.0.113.10,10.0.0.1,203.0.113.10,rule1,,,ssl,vsys1,trust,untrust,ethernet1/1,ethernet1/2,Panorama-log,,1234567,1,54321,443,54321,443,0x400000,tcp,allow,12345,6789,5556,50,{{ time }},30,general-internet,,1234567890123456789,0x8000000000000000,10.0.0.0-10.255.255.255,United States,,25,25,tcp-fin,0,0,0,0,vsys1,{{ host }},from-policy,,,0,0,0,0,N/A,0,0,0,0,rule-uuid,0,0,,0,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,1969-12-31T16:00:00.000-08:00,,,management,general-internet,client-server,1,has-known-vulnerability,,,no,no,no\n"
+    )
+    message = mt.render(mark="<111>", bsd=bsd, host=host, time=time)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="pan:traffic"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
 # <190>Jan 23 00:45:02 panw-system-host 1,2021/01/23 00:45:03,012001003714,SYSTEM,userid,0,2021/01/22 18:00:10,,connect-ldap-sever-failure,xxx.xxx.xxx.109,0,0,general,medium,"ldap cfg blue-uxxxx-ldap-gm failed to connect to server xxx.xxx.xxx.109 xxx.xxx.xxx.xxx connect to xxx.xxx.xxx.xxx(xxx.xxx.xxx.xxx):636",6837908,0x8000000000000000,0,0,0,0,,XXX_UK_GLA_PAXXX
 @mark.addons("paloalto")
 def test_palo_alto_system(record_property,  setup_splunk, setup_sc4s):
@@ -643,7 +747,7 @@ def test_palo_alto_auth_high_resolution_timestamp(record_property, setup_splunk,
     assert result_count == 1
 
 
-# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,SCTP,0,,2025/03/28 05:40:45,10.0.0.1,10.0.0.2,,,,,,,,vsys1,trust,untrust,ethernet1/1,ethernet1/2,log-action,,1111,1,1111,2905,,,,sctp,allow,0,0,0,0,vsys1,system-host,1111111,,,1111111,,2,sctp-data,sctp-init,tag1,tag2,,,,,,,,,,,,,,,,,,0,0,0,rule-uuid,2025-03-28T05:40:45.986-04:00
+# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,SCTP,0,,2025/03/28 05:40:45,10.0.0.1,10.0.0.2,,,,,,,,vsys1,trust,untrust,ethernet1/1,ethernet1/2,Panorama-log,,1111,1,11111,2905,,,,sctp,allow,0,0,0,0,vsys1,system-host,1111111,,12345,0,medium,data,,,0x12345678,0x87654321,0,0,0,0,0,0,0,0,0,10,5,5,50,25,25,rule-uuid,2025-03-28T05:40:45.986-04:00
 @mark.addons("paloalto")
 def test_palo_alto_sctp(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -675,7 +779,7 @@ def test_palo_alto_sctp(record_property, setup_splunk, setup_sc4s):
     assert result_count == 1
 
 
-# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,GTP,0,,2025/03/28 05:40:45,10.0.0.1,10.0.0.2,,,rule1,,,web-browsing,vsys1,trust,untrust,ethernet1/1,ethernet1/2,log-action,,1111,,1111,2152,,,,,tcp,allow,gtp-create-session,441234567890,internet.apn,lte,create-session-request,192.168.1.1,teid1,teid2,s11,0,medium,310,260,111,22222,1,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,60,3600,tunnel-rule,10.1.1.1,user,rule-uuid,pcap-id,2025-03-28T05:40:45.986-04:00,,,management,general-internet,networking,2,has-known-vulnerability,web-browsing,no,no
+# <190>Mar 28 05:40:45 system-host 1,2025/03/28 05:40:45,000000000000,GTP,0,,2025/03/28 05:40:45,10.0.0.1,10.0.0.2,,,rule1,,,web-browsing,vsys1,trust,untrust,ethernet1/1,ethernet1/2,Panorama-log,,1111,,11111,2152,,,,tcp,allow,gtp-create-session,441234567890,internet.apn,lte,create-session-request,192.168.1.1,teid1,teid2,s11,0,medium,310,260,12345,67890,1,,,10.0.0.0-10.255.255.255,United States,,,,,,,,0,0,,,,,,,,,,,,,,,,,2025/03/28 05:39:45,3600,tunnel-rule,10.1.1.1,user,rule-uuid,pcap-id,2025-03-28T05:40:45.986-04:00,,,management,general-internet,networking,2,has-known-vulnerability,web-browsing,no,no
 @mark.addons("paloalto")
 def test_palo_alto_gtp(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
