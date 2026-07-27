@@ -28,7 +28,7 @@ def splunk_single(service, search, attempt_limit=10):
             if stats["isDone"] == "1":
                 break
             else:
-                sleep(2)
+                sleep(4)
 
         # Get the results and display them
         result_count = stats["resultCount"]
@@ -37,5 +37,5 @@ def splunk_single(service, search, attempt_limit=10):
             break
         else:
             tried += 1
-            sleep(5)
+            sleep(8)
     return result_count, event_count
