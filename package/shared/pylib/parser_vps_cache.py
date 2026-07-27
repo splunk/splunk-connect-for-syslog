@@ -29,13 +29,14 @@ class vpsc_parse(LogParser):
         try:
             host = log_message.get_as_str("HOST", "")
             self.logger.debug(f"vpsc.parse host={host}")
-            fields = self.db[host]
+            try:
+                fields = self.db[host]
+            except KeyError:
+                return False
             self.logger.debug(f"vpsc.parse host={host} fields={fields}")
             for k, v in fields.items():
                 log_message[k] = v
 
-        except KeyError:
-            return False
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False

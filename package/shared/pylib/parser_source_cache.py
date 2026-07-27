@@ -62,12 +62,13 @@ class psc_parse(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
             ip_int = ip2int(ipaddr)
             self.logger.debug(f"psc.parse sourceip={ipaddr} int={ip_int}")
-            name = self.db[ip_int]
+            try:
+                name = self.db[ip_int]
+            except KeyError:
+                return False
             self.logger.debug(f"psc.parse host={name}")
             log_message["HOST"] = name
 
-        except KeyError:
-            return False
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False
