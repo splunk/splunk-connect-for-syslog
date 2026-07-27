@@ -66,6 +66,8 @@ class psc_parse(LogParser):
             self.logger.debug(f"psc.parse host={name}")
             log_message["HOST"] = name
 
+        except KeyError:
+            return False
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False
@@ -96,9 +98,9 @@ class psc_dest(LogDestination):
         self.close()
 
     def send(self, log_message):
-        ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
-        ip_int = ip2int(ipaddr)
         try:
+            ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
+            ip_int = ip2int(ipaddr)
             self.logger.debug(
                 f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'
             )
@@ -110,7 +112,6 @@ class psc_dest(LogDestination):
                 if current != log_message["HOST"]:
                     self.db[ip_int] = log_message["HOST"]
         except KeyError:
-            self.logger.debug(f"psc.send key: ${ip_int} not found")
             return self.ERROR
         except Exception:
             self.logger.debug(traceback.format_exc())

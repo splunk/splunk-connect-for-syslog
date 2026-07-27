@@ -34,6 +34,8 @@ class vpsc_parse(LogParser):
             for k, v in fields.items():
                 log_message[k] = v
 
+        except KeyError:
+            return False
         except Exception:
             self.logger.debug(traceback.format_exc())
             return False
@@ -64,8 +66,8 @@ class vpsc_dest(LogDestination):
         self.close()
 
     def send(self, log_message):
-        host = log_message.get_as_str("HOST", "")
         try:
+            host = log_message.get_as_str("HOST", "")
             fields = {}
             fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
                 "fields.sc4s_vendor"
@@ -83,7 +85,6 @@ class vpsc_dest(LogDestination):
                 if current != fields:
                     self.db[host] = fields
         except KeyError:
-            self.logger.debug(f"vpsc.send key: ${host} not found")
             return self.ERROR
         except Exception:
             self.logger.debug(traceback.format_exc())
