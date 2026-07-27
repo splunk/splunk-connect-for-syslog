@@ -113,6 +113,12 @@ class psc_dest(LogDestination):
                 self.logger.debug("psc.send skipped: HOST is missing")
                 return self.SUCCESS
 
+            if not host:
+                self.logger.debug(
+                    f"psc.send skipped: HOST is empty"
+                )
+                return self.SUCCESS
+
             try:
                 ip_int = ip2int(ipaddr)
             except OSError:
