@@ -115,7 +115,7 @@ class psc_dest(LogDestination):
 
             if not host:
                 self.logger.debug(
-                    f"psc.send skipped: HOST is empty"
+                    "psc.send skipped: HOST is empty"
                 )
                 return self.SUCCESS
 
