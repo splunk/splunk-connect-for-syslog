@@ -54,6 +54,10 @@ jobs:
           tar rvf /tmp/baremetal.tar -C package/shared local_config
           tar rvf /tmp/baremetal.tar -C package/shared test_parsers
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
+      - name: Validate BYOE package
+        run: |
+          poetry install
+          BAREMETAL_TAR=/tmp/baremetal.tar poetry run pytest tests/test_baremetal_package.py -v -m baremetal
       - name: Release
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
