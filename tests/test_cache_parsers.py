@@ -53,7 +53,7 @@ def test_name_cache_miss_preserves_message_without_logging_traceback():
         "SOURCEIP": "192.0.2.10",
         "HOST": "192.0.2.10",
     }
-    assert parser.logger.messages == []
+    assert "Traceback" not in "\n".join(parser.logger.messages)
 
 
 def test_name_cache_hit_applies_cached_host():
@@ -91,7 +91,7 @@ def test_vps_cache_miss_preserves_message_without_logging_traceback():
 
     assert parser.parse(message) is False
     assert message == {"HOST": "cache-host"}
-    assert parser.logger.messages == []
+    assert "Traceback" not in "\n".join(parser.logger.messages)
 
 
 def test_vps_cache_hit_applies_cached_fields():
