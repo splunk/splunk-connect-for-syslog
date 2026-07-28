@@ -1,5 +1,4 @@
 import re
-import sys
 import traceback
 
 try:
@@ -66,9 +65,7 @@ class cef_kv(LogParser):
                 log_message[f".values.{kc}"] = v
 
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
+            self.logger.debug(traceback.format_exc())
             return False
 
         return True

@@ -1,10 +1,7 @@
-import sys
 import traceback
 import socket
 import struct
 from sqlitedict import SqliteDict
-
-import time
 
 try:
     import syslogng
@@ -65,14 +62,15 @@ class psc_parse(LogParser):
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
             ip_int = ip2int(ipaddr)
             self.logger.debug(f"psc.parse sourceip={ipaddr} int={ip_int}")
-            name = self.db[ip_int]
+            try:
+                name = self.db[ip_int]
+            except KeyError:
+                return False
             self.logger.debug(f"psc.parse host={name}")
             log_message["HOST"] = name
 
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
+            self.logger.debug(traceback.format_exc())
             return False
         self.logger.debug("psc.parse complete")
         return True
@@ -81,45 +79,74 @@ class psc_parse(LogParser):
 class psc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
+        self.db = None
+        return True
+
+    def open(self):
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=False)
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
+            self.logger.debug(traceback.format_exc())
             return False
         return True
 
+    def close(self):
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+
     def deinit(self):
-        """Close the connection to the target service"""
-        self.db.commit()
-        self.db.close()
+        self.close()
 
     def send(self, log_message):
         try:
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
-            ip_int = ip2int(ipaddr)
-            self.logger.debug(
-                f'psc.send sourceip={ipaddr} int={ip_int} host={log_message["HOST"]}'
-            )
-            if ip_int in self.db:
-                current = self.db[ip_int]
-                if current != log_message["HOST"]:
-                    self.db[ip_int] = log_message["HOST"]
-            else:
-                self.db[ip_int] = log_message["HOST"]
+            if not ipaddr:
+                self.logger.debug(
+                    f"psc.send skipped: invalid cache key sourceip={ipaddr!r} "
+                )
+                return self.SUCCESS
 
+            try:
+                host = log_message["HOST"]
+            except KeyError:
+                self.logger.debug("psc.send skipped: HOST is missing")
+                return self.SUCCESS
+
+            if not host:
+                self.logger.debug(
+                    "psc.send skipped: HOST is empty"
+                )
+                return self.SUCCESS
+
+            try:
+                ip_int = ip2int(ipaddr)
+            except OSError:
+                self.logger.debug(
+                    f"psc.send skipped: invalid SOURCEIP sourceip={ipaddr!r}"
+                )
+                return self.SUCCESS
+
+            try:
+                current = self.db[ip_int]
+            except KeyError:
+                self.db[ip_int] = host
+            else:
+                if current != host:
+                    self.db[ip_int] = host
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
-            return False
+            self.logger.debug(traceback.format_exc())
+            return self.ERROR
         self.logger.debug("psc.send complete")
-        return True
+        return self.QUEUED
 
     def flush(self):
-        self.db.commit()
-        return True
+        try:
+            self.db.commit()
+        except Exception:
+            self.logger.debug(traceback.format_exc())
+            return self.ERROR
+        return self.SUCCESS
 
 
 if __name__ == "__main__":

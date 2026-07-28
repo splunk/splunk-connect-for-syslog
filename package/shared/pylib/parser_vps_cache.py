@@ -1,10 +1,5 @@
-import sys
 import traceback
-import socket
-import struct
 from sqlitedict import SqliteDict
-
-import time
 
 try:
     import syslogng
@@ -34,15 +29,16 @@ class vpsc_parse(LogParser):
         try:
             host = log_message.get_as_str("HOST", "")
             self.logger.debug(f"vpsc.parse host={host}")
-            fields = self.db[host]
+            try:
+                fields = self.db[host]
+            except KeyError:
+                return False
             self.logger.debug(f"vpsc.parse host={host} fields={fields}")
             for k, v in fields.items():
                 log_message[k] = v
 
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
+            self.logger.debug(traceback.format_exc())
             return False
         self.logger.debug("vpsc.parse complete")
         return True
@@ -51,23 +47,31 @@ class vpsc_parse(LogParser):
 class vpsc_dest(LogDestination):
     def init(self, options):
         self.logger = syslogng.Logger()
+        self.db = None
+        return True
+
+    def open(self):
         try:
-            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=True)
+            self.db = SqliteDict(f"{hostdict}.sqlite", autocommit=False)
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
+            self.logger.debug(traceback.format_exc())
             return False
         return True
 
+    def close(self):
+        if self.db is not None:
+            self.db.close()
+            self.db = None
+
     def deinit(self):
-        """Close the connection to the target service"""
-        self.db.commit()
-        self.db.close()
+        self.close()
 
     def send(self, log_message):
         try:
             host = log_message.get_as_str("HOST", "")
+            if not host:
+                self.logger.debug("vpsc.send skipped: HOST is missing")
+                return self.SUCCESS
             fields = {}
             fields[".netsource.sc4s_vendor"] = log_message.get_as_str(
                 "fields.sc4s_vendor"
@@ -77,21 +81,23 @@ class vpsc_dest(LogDestination):
             )
 
             self.logger.debug(f"vpsc.send host={host} fields={fields}")
-            if host in self.db:
+            try:
                 current = self.db[host]
+            except KeyError:
+                self.db[host] = fields
+            else:
                 if current != fields:
                     self.db[host] = fields
-            else:
-                self.db[host] = fields
-
         except Exception:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
-            self.logger.debug("".join("!! " + line for line in lines))
-            return False
-        self.logger.debug("psc.send complete")
-        return True
+            self.logger.debug(traceback.format_exc())
+            return self.ERROR
+        self.logger.debug("vpsc.send complete")
+        return self.QUEUED
 
     def flush(self):
-        self.db.commit()
-        return True
+        try:
+            self.db.commit()
+        except Exception:
+            self.logger.debug(traceback.format_exc())
+            return self.ERROR
+        return self.SUCCESS
