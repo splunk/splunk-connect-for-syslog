@@ -281,6 +281,26 @@ then
   fi
 fi
 
+# Disk-buffer preflight: if the disk buffer is enabled but its directory cannot
+# be locked (ephemeral/overlay storage such as AWS Fargate), fail fast with an
+# actionable message instead of letting syslog-ng crash-loop on the cryptic
+# "Failed to grab disk-buffer dirlock ... Bad file descriptor (9)". Set
+# SC4S_DISKBUFF_PREFLIGHT=no to bypass. Honors the same debug escape hatch as
+# the syntax check above.
+if [[ "${SC4S_DISKBUFF_PREFLIGHT}" != "no" ]]
+then
+  python3 /diskbuffer_preflight.py
+  if [[ $? != 0 ]]
+  then
+    if [[ "${SC4S_DEBUG_CONTAINER}" == "yes" ]]
+    then
+      tail -f /dev/null
+    else
+      exit 1
+    fi
+  fi
+fi
+
 # Loop that runs and restarts syslog-ng, reacts to specific signals (exit codes - 147) to exit syslog-ng
 while :
 do
