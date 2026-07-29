@@ -44,7 +44,7 @@ jobs:
           curl --proto "=https" --tlsv1.2 -sSf -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 >/tmp/regctl
           chmod 755 /tmp/regctl
       - name: Login to GitHub Packages Docker Registry
-        uses: docker/login-action@371161bbe7024a29a25c5e19bfcbc0804fe9ad2c # v4.5.2
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
