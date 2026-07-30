@@ -58,7 +58,7 @@ def submit_job(work: Callable[[], dict]):
         )
 
     url = _get_status_url(job.job_id)
-    response = jsonify({"status": "success", "job_id": job.job_id})
+    response = jsonify({"status": "accepted", "job_id": job.job_id})
     response.headers["Location"] = url
     response.status_code = 202
     return response

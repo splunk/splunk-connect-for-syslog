@@ -73,15 +73,15 @@ def restart_syslog_ng():
     if result.returncode != 0:
         raise RuntimeError(f"syslog-ng restart failed: {result.stderr.strip()}")
 
-    deadline = time.time() + RESTART_TIMEOUT_SECONDS
-    while time.time() < deadline:
+    deadline = time.monotonic() + RESTART_TIMEOUT_SECONDS
+    while time.monotonic() < deadline:
         current_pids = _get_syslog_ng_pids()
-        if current_pids - previous_pids and _syslog_ng_is_healthy():
-            if time.time() < deadline:
-                return
-            break
-
-        remaining = deadline - time.time()
+        replacement_is_healthy = (
+            bool(current_pids - previous_pids) and _syslog_ng_is_healthy()
+        )
+        remaining = deadline - time.monotonic()
+        if replacement_is_healthy and remaining > 0:
+            return
         if remaining <= 0:
             break
         time.sleep(min(RESTART_POLL_INTERVAL_SECONDS, remaining))

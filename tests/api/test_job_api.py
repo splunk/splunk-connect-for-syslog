@@ -17,13 +17,13 @@ def create_app(manager: JobManager) -> Flask:
     return app
 
 
-def test_submit_returns_202_with_job_id_and_location():
+def test_submit_returns_202_accepted_with_job_id_and_location():
     app = create_app(JobManager(executor=DeferredExecutor()))
 
     response = app.test_client().post("/submit")
 
     assert response.status_code == 202
-    assert response.get_json()["status"] == "success"
+    assert response.get_json()["status"] == "accepted"
     job_id = response.get_json()["job_id"]
     assert response.headers["Location"] == f"/jobs/{job_id}"
 
