@@ -414,22 +414,28 @@ def test_palo_alto_globalprotect(
 def test_palo_alto_globalprotect_old_format(
     record_property, setup_splunk, setup_sc4s
 ):
-    """Verify old-format GLOBALPROTECT logs (no high_res_time) fall back to time_generated."""
+    """Verify old-format GLOBALPROTECT logs (no high_res_time) fall back to time_generated.
+    Uses a time_generated 15 minutes behind BSD header so only time_generated can match epoch.
+    """
     get_host_name = lambda: f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
     orig_host = get_host_name()
     overwritten_host_name = get_host_name()
 
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    _, bsd, time, _, _, _, epoch = time_operations(dt)
+    dt_now = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, bsd_time, _, _, _, _ = time_operations(dt_now)
+    bsd_time = dt_now.strftime("%Y/%m/%d %H:%M:%S")
 
-    time = dt.strftime("%Y/%m/%d %H:%M:%S")
+    # time_generated is 15 minutes behind BSD — only time_generated can match epoch
+    dt_past = dt_now - datetime.timedelta(minutes=15)
+    _, _, time_generated, _, _, _, epoch = time_operations(dt_past)
+    time_generated = dt_past.strftime("%Y/%m/%d %H:%M:%S")
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }} {{ bsd }} {{ orig_host }} 1,{{ time }},XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,{{ time }},vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXX,0x8000000000000000,,,,,,,13,19,52,450,,{{ overwritten_host_name }},1'
+        '{{ mark }} {{ bsd }} {{ orig_host }} 1,{{ bsd_time }},XXXXXXXXXXXXXXXXXX,GLOBALPROTECT,0,2561,{{ time_generated }},vsys1,gateway-logout,logout,,,XXXXXXXX,XX,XXXXXXXXXXXXXX,8.8.8.8,0.0.0.0,192.0.0.1,0.0.0.0,XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX,XXXXXXXXXXXX,5.2.12,Windows,"Microsoft Windows 10 Enterprise , 64-bit",1,,,"client logout",success,,1554,,0,XXXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXX,0x8000000000000000,,,,,,,13,19,52,450,,{{ overwritten_host_name }},1'
         + "\n"
     )
-    message = mt.render(mark="<111>", bsd=bsd, orig_host=orig_host, time=time, overwritten_host_name=overwritten_host_name)
+    message = mt.render(mark="<111>", bsd=bsd, orig_host=orig_host, bsd_time=bsd_time, time_generated=time_generated, overwritten_host_name=overwritten_host_name)
 
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
