@@ -36,7 +36,10 @@ def set_env():
     if not file.filename:
         return jsonify({"status": "error", "message": "empty file"}), 400
 
-    content = file.read().decode("utf-8")
+    try:
+        content = file.read().decode("utf-8")
+    except UnicodeDecodeError:
+        return jsonify({"status": "error", "message": "invalid file"}), 400
 
     def apply_env():
         apply_with_rollback({ENV_FILE: content})
