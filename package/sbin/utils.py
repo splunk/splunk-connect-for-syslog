@@ -152,8 +152,12 @@ def cleanup_backups_files(backups: list[tuple[Path, Path]]):
 
 
 def apply_with_rollback(files_to_write: dict[Path, str | None]):
-    """Write files (or delete if content is None), run syntax check + restart, rollback on failure."""
+    """Write files, validate and restart.
+
+    Restore both files and runtime on failure.
+    """
     backups = []
+    runtime_restart_started = False
     try:
         for path, content in files_to_write.items():
             backups.append((path, backup_file(path)))
@@ -163,10 +167,20 @@ def apply_with_rollback(files_to_write: dict[Path, str | None]):
                 path.write_text(content, encoding="utf-8")
 
         syntax_check()
+        runtime_restart_started = True
         restart_syslog_ng()
-    except Exception as e:
+    except Exception as apply_error:
         logger.exception("Apply failed, rolling back")
-        rollback(backups)
-        raise e
+        try:
+            rollback(backups)
+            if runtime_restart_started:
+                restart_syslog_ng()
+        except Exception as rollback_error:
+            logger.exception("Rollback failed")
+            raise RuntimeError(
+                f"configuration apply failed: {apply_error}; "
+                f"rollback failed: {rollback_error}"
+            ) from rollback_error
+        raise
     finally:
         cleanup_backups_files(backups)
