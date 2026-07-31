@@ -91,8 +91,8 @@ jobs:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
           FOSSA_CLI_VERSION: "3.17.15"
         run: |
-          curl -sL -O "https://github.com/fossas/fossa-cli/releases/download/v${FOSSA_CLI_VERSION}/fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz"
-          curl -sL -O "https://github.com/fossas/fossa-cli/releases/download/v${FOSSA_CLI_VERSION}/fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz.sha256"
+          curl --proto "=https" --tlsv1.2 -sL -O "https://github.com/fossas/fossa-cli/releases/download/v${FOSSA_CLI_VERSION}/fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz"
+          curl --proto "=https" --tlsv1.2 -sL -O "https://github.com/fossas/fossa-cli/releases/download/v${FOSSA_CLI_VERSION}/fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz.sha256"
           sha256sum --check "fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz.sha256" || { echo "::error::fossa-cli archive hash verification failed"; exit 1; }
           tar -xzf "fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz"
           sudo install fossa /usr/local/bin/fossa
