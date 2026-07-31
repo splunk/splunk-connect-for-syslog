@@ -88,12 +88,17 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: run fossa anlyze and create report
-        run: |
-          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install-latest.sh | bash
-          fossa analyze --debug
-          fossa report attribution --format text > /tmp/THIRDPARTY
         env:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
+          FOSSA_CLI_VERSION: "3.17.15"
+        run: |
+          curl -sL -O "https://github.com/fossas/fossa-cli/releases/download/v${FOSSA_CLI_VERSION}/fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz"
+          curl -sL -O "https://github.com/fossas/fossa-cli/releases/download/v${FOSSA_CLI_VERSION}/fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz.sha256"
+          sha256sum --check "fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz.sha256" || { echo "::error::fossa-cli archive hash verification failed"; exit 1; }
+          tar -xzf "fossa_${FOSSA_CLI_VERSION}_linux_amd64.tar.gz"
+          sudo install fossa /usr/local/bin/fossa
+          fossa analyze --debug
+          fossa report attribution --format text > /tmp/THIRDPARTY
       - name: upload THIRDPARTY file
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
