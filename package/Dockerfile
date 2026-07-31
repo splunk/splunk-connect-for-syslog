@@ -98,7 +98,6 @@ COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
-COPY package/sbin/diskbuffer_preflight.py /
 
 # Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
 # entrypoint creates/updates at startup, enabling non-root runtimes without

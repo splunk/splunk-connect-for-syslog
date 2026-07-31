@@ -124,7 +124,6 @@ COPY package/sbin/entrypoint.sh /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/healthcheck.py /
 COPY package/sbin/source_ports_validator.py /
-COPY package/sbin/diskbuffer_preflight.py /
 
 
 RUN chmod -R 755 /etc/syslog-ng/
