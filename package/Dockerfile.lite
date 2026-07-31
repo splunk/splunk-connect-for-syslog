@@ -59,7 +59,8 @@ RUN apk add --no-cache --upgrade \
     curl \
     libpq \
     postgresql-libs \ 
-    socat
+    socat \ 
+    c-ares 
 
 EXPOSE 514
 EXPOSE 601/tcp
