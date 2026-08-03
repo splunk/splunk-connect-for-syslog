@@ -37,7 +37,7 @@ Non-interactive mode (SC4S_NON_INTERACTIVE=1):
     SC4S_ADJUST_FETCH_LIMIT        yes|no (default: no)
     SC4S_SOURCE_UDP_FETCH_LIMIT    integer (default: 1000)
     SC4S_ADJUST_LISTEN_SOCKETS     yes|no (default: no)
-    SC4S_SOURCE_LISTEN_UDP_SOCKETS integer (default: 2)
+    SC4S_SOURCE_LISTEN_UDP_SOCKETS integer (default: 4)
     SC4S_SOURCE_UDP_SO_RCVBUFF     integer (default: -1)
     SC4S_ENABLE_EBPF               yes|no (default: no)
     SC4S_EBPF_NO_SOCKETS           integer (default: 4)
@@ -122,7 +122,7 @@ PROTOCOL="both"
 ADJUST_FETCH_LIMIT="no"
 ADJUST_LISTEN_SOCKETS="no"
 ADJUST_DISKBUFF="no"
-SC4S_SOURCE_LISTEN_UDP_SOCKETS=2
+SC4S_SOURCE_LISTEN_UDP_SOCKETS=4
 SC4S_SOURCE_UDP_FETCH_LIMIT=1000
 SC4S_ENABLE_EBPF="no"
 SC4S_EBPF_NO_SOCKETS=4
