@@ -21,7 +21,7 @@ def get_splunk_metadata() -> dict:
 
 @mcp.tool
 def set_splunk_metadata(entries: list[dict]) -> dict:
-    """Overwrite the splunk_metadata.csv on the running SC4S instance. Restarts SC4S.
+    """Overwrite Splunk metadata and return a job ID for polling.
     Example: [{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}]"""
     return sc4s_request(
         "post",
@@ -33,7 +33,7 @@ def set_splunk_metadata(entries: list[dict]) -> dict:
 
 @mcp.tool
 def delete_splunk_metadata() -> dict:
-    """Clear the splunk_metadata.csv on the running SC4S instance. SC4S restarts after clearing."""
+    """Clear Splunk metadata and return a job ID for polling."""
     return sc4s_request("delete", "/config/metadata/splunk", timeout=30)
 
 
@@ -53,7 +53,7 @@ def get_compliance_overrides() -> dict:
 
 @mcp.tool
 def set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
-    """Overwrite the compliance_meta_by_source conf and CSV files instance.
+    """Overwrite compliance metadata and return a job ID for polling.
     The provided content completely replaces both files. SC4S restarts after applying changes.
 
     Args:
@@ -73,5 +73,5 @@ def set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
 
 @mcp.tool
 def delete_compliance_override() -> dict:
-    """Clear both compliance_meta_by_source files (conf and CSV), removing all compliance overrides. SC4S restarts after clearing."""
+    """Clear compliance metadata and return a job ID for polling."""
     return sc4s_request("delete", "/config/metadata/compliance", timeout=30)
