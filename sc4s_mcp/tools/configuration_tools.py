@@ -1,10 +1,141 @@
+import os
 import re
+import subprocess
+from pathlib import Path
+from typing import Literal
 
 from app import mcp, REPO_ROOT
 from utils.http import sc4s_request as _sc4s_request
 
 
 SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
+_CONFIG_SCRIPT: Path = REPO_ROOT / "configuration-tool.sh"
+
+
+def _yes_no(value: bool) -> str:
+    return "yes" if value else "no"
+
+
+@mcp.tool
+def sc4s_build_config(
+    hec_url: str,
+    hec_token: str,
+    tls_verify: bool = True,
+    protocol: Literal["udp", "tcp", "both"] = "both",
+    mode: Literal["custom", "hardware"] = "custom",
+    hardware_profile: str = "8vCPUs",
+    expected_eps: int = 1000,
+    timezone: str = "",
+    adjust_fetch_limit: bool = False,
+    udp_fetch_limit: int = 1000,
+    adjust_listen_sockets: bool = False,
+    udp_listen_sockets: int = 2,
+    udp_receive_buffer: int = -1,
+    ebpf_enabled: bool = False,
+    ebpf_sockets: int = 4,
+    udp_input_window_enabled: bool = False,
+    udp_input_window_size: int = 250000,
+    tcp_receive_buffer: int = -1,
+    parallelize_enabled: bool = False,
+    parallelize_partitions: int = 4,
+    tcp_input_window_enabled: bool = False,
+    tcp_input_window_size: int = 20000000,
+    adjust_disk_buffer: bool = False,
+    disk_buffer_enabled: bool = True,
+    disk_buffer_reliable: bool = False,
+    disk_buffer_memory_size: int = 163840000,
+    disk_buffer_size: int = 53687091200,
+) -> dict:
+    """Generate an env_file by executing the actual configuration-tool.sh.
+
+    This tool only generates content. It does not modify a running SC4S
+    instance; live changes require the separate get_env and set_env tools.
+    """
+    if not _CONFIG_SCRIPT.exists():
+        return {"error": f"Configuration script not found at {_CONFIG_SCRIPT}"}
+
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("SC4S_")
+    }
+    env.update(
+        {
+            "SC4S_NON_INTERACTIVE": "1",
+            "SC4S_HEC_URL": hec_url,
+            "SC4S_HEC_TOKEN": hec_token,
+            "SC4S_TLS_VERIFY": _yes_no(tls_verify),
+            "SC4S_PROTOCOL": protocol,
+            "SC4S_MODE": "2" if mode == "hardware" else "1",
+            "SC4S_HARDWARE": hardware_profile,
+            "SC4S_EXPECTED_EPS": str(expected_eps),
+            "SC4S_DEFAULT_TIMEZONE": timezone,
+            "SC4S_ADJUST_FETCH_LIMIT": _yes_no(adjust_fetch_limit),
+            "SC4S_SOURCE_UDP_FETCH_LIMIT": str(udp_fetch_limit),
+            "SC4S_ADJUST_LISTEN_SOCKETS": _yes_no(adjust_listen_sockets),
+            "SC4S_SOURCE_LISTEN_UDP_SOCKETS": str(udp_listen_sockets),
+            "SC4S_SOURCE_UDP_SO_RCVBUFF": str(udp_receive_buffer),
+            "SC4S_ENABLE_EBPF": _yes_no(ebpf_enabled),
+            "SC4S_EBPF_NO_SOCKETS": str(ebpf_sockets),
+            "SC4S_SOURCE_UDP_IW_USE": _yes_no(udp_input_window_enabled),
+            "SC4S_SOURCE_UDP_IW_SIZE": str(udp_input_window_size),
+            "SC4S_SOURCE_TCP_SO_RCVBUFF": str(tcp_receive_buffer),
+            "SC4S_PARALLELIZE": _yes_no(parallelize_enabled),
+            "SC4S_PARALLELIZE_NO_PARTITION": str(parallelize_partitions),
+            "SC4S_SOURCE_TCP_IW_USE": _yes_no(tcp_input_window_enabled),
+            "SC4S_SOURCE_TCP_IW_SIZE": str(tcp_input_window_size),
+            "SC4S_ADJUST_DISKBUFF": _yes_no(adjust_disk_buffer),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE": _yes_no(
+                disk_buffer_enabled
+            ),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE": _yes_no(
+                disk_buffer_reliable
+            ),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE": str(
+                disk_buffer_memory_size
+            ),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE": str(
+                disk_buffer_size
+            ),
+        }
+    )
+
+    try:
+        result = subprocess.run(
+            ["bash", str(_CONFIG_SCRIPT)],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return {"error": "Configuration script timed out after 30 seconds."}
+    except OSError as exc:
+        return {"error": f"Failed to run configuration script: {exc}"}
+
+    if result.returncode != 0:
+        detail = result.stderr.strip()
+        suffix = f": {detail}" if detail else ""
+        return {
+            "error": f"Configuration script failed (exit {result.returncode}){suffix}"
+        }
+
+    warnings = []
+    if result.stderr.strip():
+        warnings.append(result.stderr.strip())
+    if not tls_verify:
+        warnings.append(
+            "TLS verification is disabled; use this only for development or "
+            "trusted self-signed certificates."
+        )
+    if hec_url.startswith("http://"):
+        warnings.append(
+            "The HEC URL uses plaintext HTTP; the token and log data will be "
+            "unencrypted."
+        )
+
+    return {"config": result.stdout, "warnings": warnings}
 
 
 @mcp.tool
