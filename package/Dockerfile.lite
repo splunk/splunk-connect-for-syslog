@@ -129,6 +129,8 @@ COPY package/sbin/config_api.py /
 COPY package/sbin/metadata_api.py /
 COPY package/sbin/constants.py /
 COPY package/sbin/utils.py /
+COPY package/sbin/job_manager.py /
+COPY package/sbin/job_api.py /
 COPY package/sbin/source_ports_validator.py /
 COPY package/sbin/tls.py /
 COPY package/sbin/gunicorn_config.py /

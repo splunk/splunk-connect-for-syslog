@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 from config_api import config_bp, csrf
 from healthcheck import healthcheck_bp, str_to_bool
 from metadata_api import metadata_bp
+from job_api import init_job_manager, job_bp
 from auth import build_token_verify
 from tls import tls_is_enabled
 
@@ -28,6 +29,8 @@ if management_enabled:
     app.register_blueprint(config_bp)
     csrf.exempt(metadata_bp)
     app.register_blueprint(metadata_bp)
+    init_job_manager(app)
+    app.register_blueprint(job_bp)
     logger.info(
         "Management API endpoints enabled (%s=true): /config/* routes registered",
         MANAGEMENT_ENABLED_ENV,

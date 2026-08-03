@@ -56,8 +56,9 @@ def test_get_env_not_found(client):
 # ---------------------------------------------------------------------------
 
 
+@patch("config_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("config_api.apply_with_rollback")
-def test_set_env(mock_apply, client, ctx_dir):
+def test_set_env(mock_apply, _mock_submit, client, ctx_dir):
     env_file = ctx_dir / "env_file"
     env_file.write_text("OLD=value\n")
 
@@ -67,7 +68,7 @@ def test_set_env(mock_apply, client, ctx_dir):
         content_type="multipart/form-data",
     )
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert "updated successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
 
@@ -79,8 +80,9 @@ def test_set_env_no_file(client):
     assert "no file" in resp.get_json()["message"]
 
 
+@patch("config_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("config_api.apply_with_rollback", side_effect=RuntimeError("restart failed"))
-def test_set_env_rollback_on_failure(mock_apply, client, ctx_dir):
+def test_set_env_rollback_on_failure(mock_apply, mock_submit, client, ctx_dir):
     env_file = ctx_dir / "env_file"
     env_file.write_text("ORIGINAL=value\n")
 
@@ -90,8 +92,9 @@ def test_set_env_rollback_on_failure(mock_apply, client, ctx_dir):
         content_type="multipart/form-data",
     )
 
-    assert resp.status_code == 500
-    assert "restart failed" in resp.get_json()["message"]
+    assert resp.status_code == 202
+    with pytest.raises(RuntimeError, match="restart failed"):
+        mock_submit.call_args.args[0]()
 
 
 # ---------------------------------------------------------------------------
@@ -99,15 +102,16 @@ def test_set_env_rollback_on_failure(mock_apply, client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
+@patch("config_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("config_api.apply_with_rollback")
-def test_add_parser(mock_apply, client, ctx_dir):
+def test_add_parser(mock_apply, _mock_submit, client, ctx_dir):
     resp = client.post(
         "/config/parser",
         data={"file": (BytesIO(b"block parser test {}"), "test.conf")},
         content_type="multipart/form-data",
     )
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert "parser added successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
 
@@ -130,16 +134,20 @@ def test_add_parser_not_conf(client):
     assert ".conf" in resp.get_json()["message"]
 
 
+@patch("config_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("config_api.apply_with_rollback", side_effect=RuntimeError("syntax error"))
-def test_add_parser_rollback_on_syntax_fail(mock_apply, client, ctx_dir):
+def test_add_parser_rollback_on_syntax_fail(
+    mock_apply, mock_submit, client, ctx_dir
+):
     resp = client.post(
         "/config/parser",
         data={"file": (BytesIO(b"bad content"), "bad.conf")},
         content_type="multipart/form-data",
     )
 
-    assert resp.status_code == 500
-    assert "syntax error" in resp.get_json()["message"]
+    assert resp.status_code == 202
+    with pytest.raises(RuntimeError, match="syntax error"):
+        mock_submit.call_args.args[0]()
 
 
 # ---------------------------------------------------------------------------
@@ -181,14 +189,15 @@ def test_get_parser_not_found(client):
 # ---------------------------------------------------------------------------
 
 
+@patch("config_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("config_api.apply_with_rollback")
-def test_delete_parser(mock_apply, client, ctx_dir):
+def test_delete_parser(mock_apply, _mock_submit, client, ctx_dir):
     parser_file = ctx_dir / "parsers" / "my_parser.conf"
     parser_file.write_text("block parser my_parser {}")
 
     resp = client.delete("/config/parser/my_parser.conf")
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert "deleted successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
 
@@ -200,15 +209,19 @@ def test_delete_parser_not_found(client):
     assert "not found" in resp.get_json()["message"]
 
 
+@patch("config_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("config_api.apply_with_rollback", side_effect=RuntimeError("syntax error"))
-def test_delete_parser_rollback_on_failure(mock_apply, client, ctx_dir):
+def test_delete_parser_rollback_on_failure(
+    mock_apply, mock_submit, client, ctx_dir
+):
     parser_file = ctx_dir / "parsers" / "my_parser.conf"
     parser_file.write_text("block parser my_parser {}")
 
     resp = client.delete("/config/parser/my_parser.conf")
 
-    assert resp.status_code == 500
-    assert "syntax error" in resp.get_json()["message"]
+    assert resp.status_code == 202
+    with pytest.raises(RuntimeError, match="syntax error"):
+        mock_submit.call_args.args[0]()
 
 
 # ---------------------------------------------------------------------------
@@ -233,3 +246,56 @@ def test_list_parsers_empty(client):
 
     assert resp.status_code == 200
     assert resp.get_json()["parsers"] == []
+
+
+@patch("config_api.submit_job", return_value=({"job_id": "job-1"}, 202))
+@patch("config_api.apply_with_rollback")
+def test_set_env_submits_background_work(mock_apply, mock_submit, client, ctx_dir):
+    response = client.post(
+        "/config/env",
+        data={"file": (BytesIO(b"NEW=value\n"), "env_file")},
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {"status": "env_file updated successfully"}
+    mock_apply.assert_called_once_with({ctx_dir / "env_file": "NEW=value\n"})
+
+
+@patch("config_api.submit_job", return_value=({"job_id": "job-2"}, 202))
+@patch("config_api.apply_with_rollback")
+def test_add_parser_submits_background_work(
+    mock_apply, mock_submit, client, ctx_dir
+):
+    response = client.post(
+        "/config/parser",
+        data={"file": (BytesIO(b"block parser test {}"), "test.conf")},
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {
+        "status": "parser added successfully",
+        "path": str(ctx_dir / "parsers" / "test.conf"),
+    }
+    mock_apply.assert_called_once_with(
+        {ctx_dir / "parsers" / "test.conf": "block parser test {}"}
+    )
+
+
+@patch("config_api.submit_job", return_value=({"job_id": "job-3"}, 202))
+@patch("config_api.apply_with_rollback")
+def test_delete_parser_submits_background_work(
+    mock_apply, mock_submit, client, ctx_dir
+):
+    parser_file = ctx_dir / "parsers" / "my_parser.conf"
+    parser_file.write_text("block parser my_parser {}")
+
+    response = client.delete("/config/parser/my_parser.conf")
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {"status": "parser deleted successfully"}
+    mock_apply.assert_called_once_with({parser_file: None})

@@ -4,10 +4,14 @@ import logging
 from pathlib import Path
 import subprocess
 import shutil
+import time
 
 from constants import BACKUP_FILE, ENV_FILE
 
 logger = logging.getLogger(__name__)
+
+RESTART_TIMEOUT_SECONDS = 30
+RESTART_POLL_INTERVAL_SECONDS = 0.5
 
 
 def build_env_from_file():
@@ -26,8 +30,40 @@ def build_env_from_file():
     return env
 
 
+def _get_syslog_ng_pids() -> set[int]:
+    result = subprocess.run(
+        ["pgrep", "-x", "syslog-ng"],
+        capture_output=True,
+        text=True,
+        timeout=1,
+    )
+    if result.returncode == 1:
+        return set()
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"failed to find syslog-ng processes: {result.stderr.strip()}"
+        )
+
+    return {int(pid) for pid in result.stdout.split()}
+
+
+def _syslog_ng_is_healthy() -> bool:
+    try:
+        result = subprocess.run(
+            ["syslog-ng-ctl", "healthcheck", "--timeout", "1"],
+            capture_output=True,
+            text=True,
+            timeout=2,
+        )
+    except subprocess.TimeoutExpired:
+        return False
+
+    return result.returncode == 0
+
+
 def restart_syslog_ng():
-    """Kill syslog-ng; the entrypoint while loop will restart it automatically."""
+    """Restart syslog-ng and wait for its replacement to become healthy."""
+    previous_pids = _get_syslog_ng_pids()
     result = subprocess.run(
         ["pkill", "syslog-ng"],
         capture_output=True,
@@ -36,6 +72,23 @@ def restart_syslog_ng():
     )
     if result.returncode != 0:
         raise RuntimeError(f"syslog-ng restart failed: {result.stderr.strip()}")
+
+    deadline = time.monotonic() + RESTART_TIMEOUT_SECONDS
+    while time.monotonic() < deadline:
+        current_pids = _get_syslog_ng_pids()
+        replacement_is_healthy = (
+            bool(current_pids - previous_pids) and _syslog_ng_is_healthy()
+        )
+        remaining = deadline - time.monotonic()
+        if replacement_is_healthy and remaining > 0:
+            return
+        if remaining <= 0:
+            break
+        time.sleep(min(RESTART_POLL_INTERVAL_SECONDS, remaining))
+
+    raise RuntimeError(
+        f"syslog-ng restart timed out after {RESTART_TIMEOUT_SECONDS} seconds"
+    )
 
 
 def rollback_env():
@@ -99,8 +152,12 @@ def cleanup_backups_files(backups: list[tuple[Path, Path]]):
 
 
 def apply_with_rollback(files_to_write: dict[Path, str | None]):
-    """Write files (or delete if content is None), run syntax check + restart, rollback on failure."""
+    """Write files, validate and restart.
+
+    Restore both files and runtime on failure.
+    """
     backups = []
+    runtime_restart_started = False
     try:
         for path, content in files_to_write.items():
             backups.append((path, backup_file(path)))
@@ -110,10 +167,20 @@ def apply_with_rollback(files_to_write: dict[Path, str | None]):
                 path.write_text(content, encoding="utf-8")
 
         syntax_check()
+        runtime_restart_started = True
         restart_syslog_ng()
-    except Exception as e:
+    except Exception as apply_error:
         logger.exception("Apply failed, rolling back")
-        rollback(backups)
-        raise e
+        try:
+            rollback(backups)
+            if runtime_restart_started:
+                restart_syslog_ng()
+        except Exception as rollback_error:
+            logger.exception("Rollback failed")
+            raise RuntimeError(
+                f"configuration apply failed: {apply_error}; "
+                f"rollback failed: {rollback_error}"
+            ) from rollback_error
+        raise
     finally:
         cleanup_backups_files(backups)
