@@ -13,9 +13,9 @@ COPY ./ansible .
 COPY ./charts .
 
 RUN apt update -y \
-    && apt install --require-hashes --only-binary :all: \
+    && apt install --only-binary :all: \
     --no-install-recommends -y build-essential parallel \
-    && apt install --require-hashes --only-binary :all: \
+    && apt install --only-binary :all: \
     --no-install-recommends -y sshpass \
     && apt clean
 
