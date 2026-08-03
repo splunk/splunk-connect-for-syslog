@@ -33,10 +33,9 @@ helm repo update
 replicaCount: 2
 
 splunk:
-  hec_url: "https://<your-splunk-host>:8088/services/collector/event"
+  hec_url: "https://<your-splunk-host>:8088"
   hec_token: "<your-hec-token>"
   hec_verify_tls: "yes"
-
 
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container3
@@ -61,9 +60,11 @@ resources:
     memory: "2Gi"
 
 autoscaling:
-  enabled: false
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
 ```
-
 
 4. Add firewall rules to allow inbound syslog traffic:
 
@@ -75,7 +76,7 @@ gcloud compute firewall-rules create allow-sc4s-tcp \
 
 gcloud compute firewall-rules create allow-sc4s-udp \
   --network=default \
-  --allow=udp:514,udp:601 \
+  --allow=udp:514 \
   --source-ranges=<your-syslog-sender-ip-ranges>
 ```
 
@@ -131,58 +132,7 @@ kubectl describe pod {your_pod_name} -n sc4s
 
 # Configure HPA (Horizontal Pod Autoscaler)
 
-The SC4S Helm chart's built-in HPA template uses the deprecated `autoscaling/v2beta1` API which was removed in Kubernetes 1.26. Since all GKE clusters run Kubernetes 1.26 or later, you must create the HPA manually using `autoscaling/v2`.
-
-Refer to the [Kubernetes HPA documentation](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) for background.
-
-1. Create an `hpa.yaml` file:
-
-```yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: sc4s-autoscaler
-  namespace: sc4s
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: StatefulSet
-    name: sc4s-splunk-connect-for-syslog
-  minReplicas: 2
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 50
-  behavior:
-    scaleDown:
-      stabilizationWindowSeconds: 30
-      policies:
-      - type: Percent
-        value: 30
-        periodSeconds: 15
-    scaleUp:
-      stabilizationWindowSeconds: 10
-      policies:
-      - type: Percent
-        value: 80
-        periodSeconds: 15
-      - type: Pods
-        value: 2
-        periodSeconds: 15
-      selectPolicy: Max
-```
-
-2. Apply the HPA:
-
-```bash
-kubectl apply -f hpa.yaml
-```
-
-3. Verify the HPA is active:
+HPA is already enabled in the `values.yaml` above. Verify it is active after deployment:
 
 ```bash
 kubectl get hpa -n sc4s
