@@ -41,4 +41,4 @@ We welcome feedback and contributions from the community! Please see our [contri
 
 ## References
 
-* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog/)
+* Syslog-ng Documentation provided by Axoflow [Docs](https://axoflow.com/docs/axosyslog-core/)

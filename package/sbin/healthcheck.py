@@ -29,6 +29,7 @@ def get_list_of_destinations():
     return set(found_destinations)
 
 class Config:
+    HEALTHCHECK_HOST = os.getenv('SC4S_LISTEN_STATUS_HOST', '0.0.0.0')
     HEALTHCHECK_PORT = int(os.getenv('SC4S_LISTEN_STATUS_PORT', '8080'))
     CHECK_QUEUE_SIZE = str_to_bool(os.getenv('HEALTHCHECK_CHECK_QUEUE_SIZE', "false"))
     MAX_QUEUE_SIZE = int(os.getenv('HEALTHCHECK_MAX_QUEUE_SIZE', '10000'))
@@ -131,4 +132,4 @@ def healthcheck():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=Config.HEALTHCHECK_PORT)
+    app.run(host=Config.HEALTHCHECK_HOST, port=Config.HEALTHCHECK_PORT)

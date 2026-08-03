@@ -10,6 +10,7 @@
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Technology Add-On for FireEye | <https://splunkbase.splunk.com/app/1904/>                                                          |
+| Add-On for etp | <https://splunkbase.splunk.com/app/7372/>                                                          |
 
 ## Sourcetypes
 

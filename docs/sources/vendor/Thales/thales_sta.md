@@ -8,7 +8,7 @@ example `RemoteLogging`) in `MSGID`, and substitutes a UTF-8 BOM
 (`EF BB BF`) for the structured-data slot before the JSON body. STA also
 frames each message with RFC6587 octet-counting and emits the JSON body
 pretty-printed across multiple lines.
-- Vendor reference: [https://thalesdocs.com/sta/agents/logging/index.html](https://thalesdocs.com/sta/agents/logging/index.html)
+- Vendor reference: [reference link](https://thalesdocs.com/sta/agents/logging/index.html)
 - SC4S strips the BOM and forwards the JSON body as `_raw`.
 
 ## Sourcetypes

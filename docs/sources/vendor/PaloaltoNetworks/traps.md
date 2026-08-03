@@ -9,7 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/2757/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/7523/>                                                                 |
 
 ## Sourcetypes
 

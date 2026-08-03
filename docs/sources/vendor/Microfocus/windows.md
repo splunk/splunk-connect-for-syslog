@@ -9,8 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | <https://bitbucket.org/SPLServices/ta-cef-for-splunk/downloads/>                                                              |
-| Splunk Add-on CEF | <https://bitbucket.org/SPLServices/ta-cef-microsoft-windows-for-splunk/downloads/>                                                             |
+| Splunk Add-on CEF | <https://github.com/splunk/splunk-add-on-for-cef>                                                              |
 | Product Manual | <https://docs.imperva.com/bundle/cloud-application-security/page/more/log-configuration.htm>                                                        |
 
 ## Sourcetypes

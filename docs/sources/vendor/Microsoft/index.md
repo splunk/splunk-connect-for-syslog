@@ -9,7 +9,7 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | <https://bitbucket.org/SPLServices/ta-cef-for-splunk/downloads/>                                                              |
+| Splunk Add-on CEF | <https://github.com/splunk/splunk-add-on-for-cef>                                                              |
 | Splunk Add-on Source Specific | none |
 | Product Manual | <https://docs.microsoft.com/en-us/cloud-app-security/siem>                                                |
 

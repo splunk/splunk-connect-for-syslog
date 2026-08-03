@@ -10,8 +10,8 @@
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on CEF | <https://bitbucket.org/SPLServices/ta-cef-for-splunk/downloads/>                                                              |
-| Splunk Add-on Source Specific | <https://bitbucket.org/SPLServices/ta-cef-imperva-incapsula/downloads/>                                                               |
+| Splunk Add-on CEF | <https://github.com/splunk/splunk-add-on-for-cef>                                                              |
+| Splunk Add-on Source Specific | <https://splunkbase.splunk.com/app/7034>                                                               |
 | Product Manual | <https://docs.imperva.com/bundle/cloud-application-security/page/more/log-configuration.htm>                                                        |
 
 ## Sourcetypes

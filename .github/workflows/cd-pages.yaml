@@ -23,13 +23,13 @@ jobs:
           sudo docker image prune --all --force
           df -h
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: oleksiyrudenko/gha-git-credentials@v2.1.2
+      - uses: oleksiyrudenko/gha-git-credentials@8bb1fe6d543b2233ef1856cd3b0181f5abbd4d6a # v2.1.2
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.14' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
@@ -37,7 +37,7 @@ jobs:
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
           echo $VERSION
-          pip3 install poetry
+          pip3 install --only-binary :all: poetry
           poetry install
           poetry run mike deploy -p $VERSION
   helm:
@@ -50,13 +50,13 @@ jobs:
       pages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Install Helm
-        uses: azure/setup-helm@v5
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
         with:
-          version: v4.2.2
+          version: v4.2.3
       - name: Upload
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
           helm repo index /tmp/package --url https://github.com/splunk/splunk-connect-for-syslog/releases/download/$VERSION --merge /tmp/origin/index.yaml
           cp /tmp/package/index.yaml /tmp/index/
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: /tmp/index

@@ -11,7 +11,7 @@ messages to create meaningful final output.  This will require follow-on process
 
 | Ref            | Link                                                                                                    |
 |----------------|---------------------------------------------------------------------------------------------------------|
-| Splunk Add-on  | <https://splunkbase.splunk.com/app/3080/>                                                                 |
+| Splunk Add-on  | <https://splunkbase.splunk.com/app/4327/>                                                                 |
 | Product Manual | <https://proofpointcommunities.force.com/community/s/article/Remote-Syslog-Forwarding>                    |
 
 ## Sourcetypes
