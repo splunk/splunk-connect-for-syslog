@@ -69,13 +69,14 @@ def test_get_splunk_metadata_empty_file(client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_set_splunk_metadata(mock_apply, client, ctx_dir):
+def test_set_splunk_metadata(mock_apply, _mock_submit, client, ctx_dir):
     entries = [{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}]
 
     resp = client.post("/config/metadata/splunk", json={"entries": entries})
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert resp.get_json()["status"] == "metadata updated successfully"
     mock_apply.assert_called_once()
 
@@ -112,14 +113,15 @@ def test_set_splunk_metadata_no_body(client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_delete_metadata(mock_apply, client, ctx_dir):
+def test_delete_metadata(mock_apply, _mock_submit, client, ctx_dir):
     csv_file = ctx_dir / "splunk_metadata.csv"
     csv_file.write_text("juniper_netscreen,index,ns_index\n")
 
     resp = client.delete("/config/metadata/splunk")
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert "cleared successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
 
@@ -169,8 +171,9 @@ def test_get_compliance_no_files(client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_set_compliance(mock_apply, client, ctx_dir):
+def test_set_compliance(mock_apply, _mock_submit, client, ctx_dir):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
         "csv_content": [
@@ -180,25 +183,27 @@ def test_set_compliance(mock_apply, client, ctx_dir):
 
     resp = client.post("/config/metadata/compliance", json=payload)
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert "compliance metadata updated successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_set_compliance_conf_only(mock_apply, client, ctx_dir):
+def test_set_compliance_conf_only(mock_apply, _mock_submit, client, ctx_dir):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
     }
 
     resp = client.post("/config/metadata/compliance", json=payload)
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     mock_apply.assert_called_once()
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_set_compliance_csv_only(mock_apply, client, ctx_dir):
+def test_set_compliance_csv_only(mock_apply, _mock_submit, client, ctx_dir):
     payload = {
         "csv_content": [
             {"filter_name": "f_pci", "field_name": ".splunk.index", "value": "pci_idx"}
@@ -207,7 +212,7 @@ def test_set_compliance_csv_only(mock_apply, client, ctx_dir):
 
     resp = client.post("/config/metadata/compliance", json=payload)
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     mock_apply.assert_called_once()
 
 
@@ -269,8 +274,11 @@ def test_set_compliance_orphaned_filter(client, ctx_dir):
     assert "not defined in conf_content" in resp.get_json()["message"]
 
 
+@patch("metadata_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("metadata_api.apply_with_rollback", side_effect=RuntimeError("restart failed"))
-def test_set_compliance_rollback_on_failure(mock_apply, client, ctx_dir):
+def test_set_compliance_rollback_on_failure(
+    mock_apply, mock_submit, client, ctx_dir
+):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
         "csv_content": [
@@ -280,8 +288,9 @@ def test_set_compliance_rollback_on_failure(mock_apply, client, ctx_dir):
 
     resp = client.post("/config/metadata/compliance", json=payload)
 
-    assert resp.status_code == 500
-    assert "restart failed" in resp.get_json()["message"]
+    assert resp.status_code == 202
+    with pytest.raises(RuntimeError, match="restart failed"):
+        mock_submit.call_args.args[0]()
 
 
 # ---------------------------------------------------------------------------
@@ -289,25 +298,27 @@ def test_set_compliance_rollback_on_failure(mock_apply, client, ctx_dir):
 # ---------------------------------------------------------------------------
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_delete_compliance(mock_apply, client, ctx_dir):
+def test_delete_compliance(mock_apply, _mock_submit, client, ctx_dir):
     (ctx_dir / "compliance.conf").write_text("filter f_pci {};\n")
     (ctx_dir / "compliance.csv").write_text("f_pci,.splunk.index,pci_idx\n")
 
     resp = client.delete("/config/metadata/compliance")
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     assert "cleared successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
 
 
+@patch("metadata_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("metadata_api.apply_with_rollback")
-def test_delete_compliance_conf_only(mock_apply, client, ctx_dir):
+def test_delete_compliance_conf_only(mock_apply, _mock_submit, client, ctx_dir):
     (ctx_dir / "compliance.conf").write_text("filter f_pci {};\n")
 
     resp = client.delete("/config/metadata/compliance")
 
-    assert resp.status_code == 200
+    assert resp.status_code == 202
     mock_apply.assert_called_once()
 
 
@@ -316,3 +327,83 @@ def test_delete_compliance_no_files(client, ctx_dir):
 
     assert resp.status_code == 404
     assert "not found" in resp.get_json()["message"]
+
+
+@patch("metadata_api.submit_job", return_value=({"job_id": "job-1"}, 202))
+@patch("metadata_api.apply_with_rollback")
+def test_set_splunk_metadata_submits_background_work(
+    mock_apply, mock_submit, client, ctx_dir
+):
+    entries = [{"key": "juniper", "metadata": "index", "value": "network"}]
+
+    response = client.post("/config/metadata/splunk", json={"entries": entries})
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {"status": "metadata updated successfully", "entries": entries}
+    mock_apply.assert_called_once_with(
+        {ctx_dir / "splunk_metadata.csv": "juniper,index,network\r\n"}
+    )
+
+
+@patch("metadata_api.submit_job", return_value=({"job_id": "job-2"}, 202))
+@patch("metadata_api.apply_with_rollback")
+def test_delete_splunk_metadata_submits_background_work(
+    mock_apply, mock_submit, client, ctx_dir
+):
+    csv_file = ctx_dir / "splunk_metadata.csv"
+    csv_file.write_text("juniper,index,network\n")
+
+    response = client.delete("/config/metadata/splunk")
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {"status": "splunk_metadata.csv cleared successfully"}
+    mock_apply.assert_called_once_with({csv_file: ""})
+
+
+@patch("metadata_api.submit_job", return_value=({"job_id": "job-3"}, 202))
+@patch("metadata_api.apply_with_rollback")
+def test_set_compliance_submits_background_work(
+    mock_apply, mock_submit, client, ctx_dir
+):
+    payload = {
+        "conf_content": 'filter f_pci { host("pci-*") };',
+        "csv_content": [
+            {
+                "filter_name": "f_pci",
+                "field_name": ".splunk.index",
+                "value": "pci_idx",
+            }
+        ],
+    }
+
+    response = client.post("/config/metadata/compliance", json=payload)
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {"status": "compliance metadata updated successfully"}
+    mock_apply.assert_called_once_with(
+        {
+            ctx_dir / "compliance.conf": payload["conf_content"] + "\n",
+            ctx_dir / "compliance.csv": "f_pci,.splunk.index,pci_idx\r\n",
+        }
+    )
+
+
+@patch("metadata_api.submit_job", return_value=({"job_id": "job-4"}, 202))
+@patch("metadata_api.apply_with_rollback")
+def test_delete_compliance_submits_background_work(
+    mock_apply, mock_submit, client, ctx_dir
+):
+    conf_file = ctx_dir / "compliance.conf"
+    csv_file = ctx_dir / "compliance.csv"
+    conf_file.write_text("filter f_pci {};\n")
+    csv_file.write_text("f_pci,.splunk.index,pci_idx\n")
+
+    response = client.delete("/config/metadata/compliance")
+
+    assert response.status_code == 202
+    work = mock_submit.call_args.args[0]
+    assert work() == {"status": "compliance metadata cleared successfully"}
+    mock_apply.assert_called_once_with({conf_file: "", csv_file: ""})

@@ -46,8 +46,9 @@ instead of a failure inside your SC4S container.
 | Tool | Description |
 |---|---|
 | `sc4s_health()` | Returns the health payload from the SC4S management API. Use this first when troubleshooting. |
+| `get_job_status(job_id)` | Polls a configuration job until its status is `success` or `failed`. |
 | `get_env()` | Reads the current `env_file` from the running SC4S instance. |
-| `set_env(env_file_content)` | Uploads a new `env_file`. The SC4S API backs up the previous file, applies the new one, and restarts `syslog-ng`. On validation failure the previous file is restored. |
+| `set_env(env_file_content)` | Uploads a new `env_file` and returns an asynchronous job ID. |
 
 ### Custom parsers
 
@@ -55,8 +56,8 @@ instead of a failure inside your SC4S container.
 |---|---|
 | `list_custom_parsers()` | Lists all custom parsers currently deployed on the SC4S instance. |
 | `get_custom_parser(name)` | Reads the content of a deployed custom parser. |
-| `add_parser(filename, content)` | Uploads a new `.conf` parser. The `.conf` extension is added if missing. SC4S validates syntax and restarts `syslog-ng`; invalid parsers are rolled back. |
-| `delete_parser(name)` | Deletes a custom parser. SC4S re-validates the remaining configuration and restarts `syslog-ng`; if validation fails, the parser is restored. |
+| `add_parser(filename, content)` | Uploads a new `.conf` parser and returns an asynchronous job ID. |
+| `delete_parser(name)` | Deletes a custom parser and returns an asynchronous job ID. |
 
 ### Splunk metadata (`splunk_metadata.csv`)
 
@@ -66,8 +67,8 @@ These tools manage per-vendor/product overrides that SC4S sends to Splunk
 | Tool | Description                                                                                                                                                                                            |
 |---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `get_splunk_metadata()` | Reads `splunk_metadata.csv` entries. Each entry is `{ key, metadata, value }`, where `metadata` is one of `index, source, sourcetype, host, sc4s_template` and `key` is a `vendor_product` identifier. |
-| `set_splunk_metadata(entries)` | Overwrites `splunk_metadata.csv` with the provided list. SC4S restarts after applying. Example entry: `{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}`.                        |
-| `delete_splunk_metadata()` | Clears all Splunk metadata overrides. SC4S restarts after clearing.                                                                                                                                    |
+| `set_splunk_metadata(entries)` | Overwrites `splunk_metadata.csv` and returns an asynchronous job ID. Example entry: `{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}`. |
+| `delete_splunk_metadata()` | Clears all Splunk metadata overrides and returns an asynchronous job ID. |
 
 ### Compliance metadata (`compliance_meta_by_source`)
 
@@ -78,8 +79,16 @@ host, IP, or subnet matching.
 | Tool | Description |
 |---|---|
 | `get_compliance_overrides()` | Reads both the `.conf` filter definitions (`conf_content`) and the CSV rows (`csv_content`). |
-| `set_compliance_override(conf_content, csv_content)` | Overwrites both files. `csv_content` is a list of `{filter_name, field_name, value}` dicts, where `field_name` must be `.splunk.index`, `.splunk.source`, `.splunk.sourcetype`, or `fields.<name>`. SC4S restarts after applying. |
-| `delete_compliance_override()` | Clears both files, removing all compliance overrides. SC4S restarts after clearing. |
+| `set_compliance_override(conf_content, csv_content)` | Overwrites both files and returns an asynchronous job ID. `field_name` must be `.splunk.index`, `.splunk.source`, `.splunk.sourcetype`, or `fields.<name>`. |
+| `delete_compliance_override()` | Clears both files and returns an asynchronous job ID. |
+
+Any tool that modifies the SC4S configuration returns the ID of the job
+performing the update. Call `get_job_status(job_id)` to check whether the job
+is `in_progress`, `success`, or `failed`.
+
+If you try to start another job while one is already running, the API returns
+HTTP `409 Conflict` with details about the active job. Wait for that job to
+finish before retrying.
 
 Example `conf_content`:
 

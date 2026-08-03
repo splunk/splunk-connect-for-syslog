@@ -42,6 +42,11 @@ def test_metadata_splunk_disabled_returns_404():
     assert client.get("/config/metadata/splunk").status_code == 404
 
 
+def test_jobs_disabled_returns_404():
+    client = _make_client(enabled=False)
+    assert client.get("/jobs/job-1").status_code == 404
+
+
 def test_management_routes_registered_when_enabled():
     import api
     _make_client(enabled=True)
@@ -50,6 +55,7 @@ def test_management_routes_registered_when_enabled():
     assert "/config/env" in rules
     assert "/config/parsers" in rules
     assert "/config/metadata/splunk" in rules
+    assert "/jobs/<job_id>" in rules
 
 
 def test_management_routes_absent_when_disabled():
@@ -60,3 +66,4 @@ def test_management_routes_absent_when_disabled():
     assert "/config/env" not in rules
     assert "/config/parsers" not in rules
     assert "/config/metadata/splunk" not in rules
+    assert "/jobs/<job_id>" not in rules

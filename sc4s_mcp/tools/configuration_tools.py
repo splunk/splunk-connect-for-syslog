@@ -101,8 +101,14 @@ def sc4s_health() -> dict:
 
 
 @mcp.tool
+def get_job_status(job_id: str) -> dict:
+    """Get the current state and result of an asynchronous configuration job."""
+    return _sc4s_request("get", f"/jobs/{job_id}", timeout=10)
+
+
+@mcp.tool
 def set_env(env_file_content: str) -> dict:
-    """Upload a new env_file to the running SC4S instance. Provide the full env_file content as a string. SC4S will backup the current env_file, apply the new one, and restart syslog-ng."""
+    """Upload an env_file and return a job ID for polling with get_job_status."""
     return _sc4s_request(
         "post",
         "/config/env",
@@ -119,7 +125,7 @@ def get_env() -> dict:
 
 @mcp.tool
 def add_parser(filename: str, content: str) -> dict:
-    """Upload a new parser .conf file to the running SC4S instance. SC4S will validate the syntax and restart syslog-ng. If syntax check fails, the parser is rolled back."""
+    """Upload a parser and return a job ID for polling with get_job_status."""
     if not filename.endswith(".conf"):
         filename += ".conf"
     return _sc4s_request(
@@ -132,7 +138,7 @@ def add_parser(filename: str, content: str) -> dict:
 
 @mcp.tool
 def delete_parser(name: str) -> dict:
-    """Delete a custom parser from the running SC4S instance. SC4S will validate the config after removal and restart syslog-ng. If validation fails, the parser is restored."""
+    """Delete a parser and return a job ID for polling with get_job_status."""
     return _sc4s_request("delete", f"/config/parser/{name}", timeout=30)
 
 

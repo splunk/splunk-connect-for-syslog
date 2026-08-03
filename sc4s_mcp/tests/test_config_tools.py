@@ -8,6 +8,7 @@ from tools.configuration_tools import (
     get_parser,
     search_docs,
     sc4s_health,
+    get_job_status,
     set_env,
     get_env,
     add_parser,
@@ -190,6 +191,16 @@ def test_search_docs_invalid_regex():
 def test_sc4s_health(mock_req):
     sc4s_health()
     mock_req.assert_called_once_with("get", "/health", timeout=10)
+
+
+@patch("tools.configuration_tools._sc4s_request")
+def test_get_job_status(mock_req):
+    mock_req.return_value = {"job_id": "job-1", "status": "success"}
+
+    result = get_job_status("job-1")
+
+    assert result == {"job_id": "job-1", "status": "success"}
+    mock_req.assert_called_once_with("get", "/jobs/job-1", timeout=10)
 
 
 @patch("tools.configuration_tools._sc4s_request")
