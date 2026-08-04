@@ -243,8 +243,6 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Run tests
-        env:
-          POETRY_INSTALLER_ONLY_BINARY: ":all:"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -299,8 +297,6 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Run tests
-        env:
-          POETRY_INSTALLER_ONLY_BINARY: ":all:"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -357,8 +353,6 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Run tests
-        env:
-          POETRY_INSTALLER_ONLY_BINARY: ":all:"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -420,8 +414,6 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Install dependencies
-        env:
-          POETRY_INSTALLER_ONLY_BINARY: ":all:"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -458,8 +450,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y linux-tools-$(uname -r) linux-tools-generic || sudo apt-get install -y bpftool
       - name: Install test dependencies
-        env:
-          POETRY_INSTALLER_ONLY_BINARY: ":all:"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
