@@ -146,7 +146,19 @@ Setup notes:
 
 - Create the EFS file system in **the same VPC** as your tasks, with a mount target in each subnet/AZ the service runs in.
 - The EFS security group must allow **NFS (TCP 2049)** inbound from the task security group.
-- If you run more than one task, give **each task its own subdirectory** (a dedicated access point per task, or a unique path). Two syslog-ng instances must not share the same buffer directory.
+
+!!! warning "One task per access point"
+    Every task started from a task definition mounts the same access point, so running a service
+    with `--desired-count` greater than `1` makes several syslog-ng instances share one buffer
+    directory, and collide trying to access the same resources.
+
+    Giving each task its own directory requires a separate access point **and** a separate task
+    definition, which cannot be expressed through a single ECS service's desired count. In practice
+    this means you have to choose:
+
+    - EFS disk buffer with a single task,
+    - EFS disk buffer with multiple tasks, each task as its own single-task service with its own access point and task definition,
+    - Multiple tasks with the disk buffer disabled , accepting the data-loss risk.
 
 ## Option B: Disable the disk buffer
 
