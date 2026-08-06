@@ -16,33 +16,31 @@ normalize_hec_url() {
 export PYTHONPATH=/etc/syslog-ng/pylib
 python3 /etc/syslog-ng/pylib/parser_source_cache.py
 
-# Configuring environment variables
-export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
+# Apply defaults both at startup and after an env_file reload. The reload loop
+# unsets removed keys, so defaults must be restored before syslog-ng restarts.
+apply_sc4s_defaults() {
+  export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
+  export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
+  export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
+  export SC4S_LISTEN_DEFAULT_TLS_PORT=${SC4S_LISTEN_DEFAULT_TLS_PORT:=6514}
+  export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
+  export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
+  export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
+  export SC4S_CLEAR_NAME_CACHE=${SC4S_CLEAR_NAME_CACHE:=no}
+  export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
+  export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
+  export SC4S_DEST_SPLUNK_INDEXED_FIELDS=${SC4S_DEST_SPLUNK_INDEXED_FIELDS:=r_unixtime,facility,container,loghost,destport,fromhostip,proto,severity}
+  export SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX=${SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX:=fgt}
+  export SC4S_OPTION_DELL_POWERSTORE_INDEX=${SC4S_OPTION_DELL_POWERSTORE_INDEX:=infraops}
+  export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
+  export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
+  export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
+  export SC4S_BIN=${SC4S_BIN:=/usr/bin}
+  export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
+  export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
+}
 
-
-export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
-export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
-export SC4S_LISTEN_DEFAULT_TLS_PORT=${SC4S_LISTEN_DEFAULT_TLS_PORT:=6514}
-export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
-export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
-export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
-export SC4S_CLEAR_NAME_CACHE=${SC4S_CLEAR_NAME_CACHE:=no}
-
-export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
-export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
-export SC4S_DEST_SPLUNK_INDEXED_FIELDS=${SC4S_DEST_SPLUNK_INDEXED_FIELDS:=r_unixtime,facility,container,loghost,destport,fromhostip,proto,severity}
-
-export SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX=${SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX:=fgt}
-export SC4S_OPTION_DELL_POWERSTORE_INDEX=${SC4S_OPTION_DELL_POWERSTORE_INDEX:=infraops}
-# Variables with path to sc4s directories
-# These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
-export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
-export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
-export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
-export SC4S_BIN=${SC4S_BIN:=/usr/bin}
-export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
-
-export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
+apply_sc4s_defaults
 
 # Set list with alternate destinations than HEC
 export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
@@ -317,6 +315,7 @@ do
     . /opt/sc4s/env_file
     set +a
 
+    apply_sc4s_defaults
     normalize_hec_url
   else
     # env_file was deleted -- unset all previously tracked keys
@@ -325,6 +324,7 @@ do
       unset "$key"
     done < /tmp/sc4s_prev_env_keys
     : > /tmp/sc4s_prev_env_keys
+    apply_sc4s_defaults
   fi
 
   echo starting syslog-ng
