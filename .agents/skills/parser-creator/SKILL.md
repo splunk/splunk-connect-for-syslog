@@ -1,99 +1,81 @@
 ---
 name: create-parser
-description: "Turn a raw log sample into a deployed syslog-ng SC4S parser. Works with or without the SC4S MCP server."
+description: Design an SC4S syslog-ng parser from raw log samples, optionally deploy it through the SC4S MCP server. Use when onboarding a new vendor or product, adding a custom log source, or creating parser logic for unsupported logs.
 ---
 
-# SC4S Create Parser Skill
+# Create SC4S Parser
 
-Guide the operator through building and deploying a syslog-ng parser from a raw log sample.
+Guide the operator through collecting representative logs, designing an SC4S parser, optionally deploying it, and verifying the resulting event routing.
 
-## Step 1 — Detect MCP mode
+## 1. Collect requirements and samples
 
-Search your available tools for any callable tool whose name ends in `add_parser` — it may appear under any namespace depending on how the SC4S MCP server is registered. Store the namespace prefix (everything before `add_parser`, for example `mcp__mcp-server__`) as `{SC4S_NS}` and use it for all SC4S tool calls in this session. Use the same prefix for `get_parser_creation_guide`, `list_vendors`, `list_vendor_parsers`, `get_parser`, `search_docs`, `list_custom_parsers`, `get_custom_parser`, `get_job_status`, and `sc4s_health`.
+Ask once for all missing information:
 
-- If a matching tool is **found and callable**: you are in **MCP mode**. Use `{SC4S_NS}add_parser` and all other `{SC4S_NS}*` tools below.
-- If **no matching tool is found**: you are in **Manual mode**. Use manual steps below. Do not mention this detection to the operator — just adapt silently.
+- Full positive log lines. Prefer at least three examples covering different event types or layouts; require at least one.
+- Vendor, product, and device or software version. Offer inferred values for confirmation when unknown.
+- Desired Splunk index and sourcetype. Offer a conventional value for confirmation when unknown.
+- Whether the parser should only route events or also parse named values into the event payload, and which values matter. Explain that this controls SC4S parser-stage extraction and output templates; it does not create Splunk search-time field definitions.
 
-## Step 2 — Collect log sample
+Do not proceed until at least one complete positive log, vendor, product, index, and sourcetype are known or explicitly confirmed. If only one positive example is available, continue but state that filter confidence is limited and request additional examples before production rollout.
 
-Ask the operator:
+## 2. Gather parser knowledge
 
-> "Please paste one or more raw log lines from the device you want to parse. The more examples you can share, the better the parser will be."
+Read `parser-guide.md` next to this file before designing the parser. Treat it as the authoritative reference for SC4S parser structure, filters, rewrites, templates, and deployment layout.
 
-Wait for the operator to paste samples. Do not proceed until you have at least one log line.
+When the SC4S repository lookup tools are available:
 
-## Step 3 — Gather parser knowledge
+1. Call `list_vendors` to check for existing vendor support.
+2. When the vendor exists, call `list_vendor_parsers(vendor)`, then `get_parser(parser_name)` for the closest parser. Reuse conventions, not product-specific assumptions.
+3. Call `search_docs(query)` with a narrow vendor, product, format, or parser question.
 
-**MCP mode:**
-1. Call `{SC4S_NS}get_parser_creation_guide` to load the full SC4S parser creation guide.
-2. Call `{SC4S_NS}list_vendors` to check if the vendor already has existing parsers.
-3. If the vendor exists, call `{SC4S_NS}list_vendor_parsers(vendor)` to list their parsers, then `{SC4S_NS}get_parser(parser_name)` on the most relevant one — use it as a reference for structure and conventions.
-4. Call `{SC4S_NS}search_docs(query)` with the vendor or product name to find any additional documentation.
+Use these lookups to supplement the bundled guide, not replace it.
 
-**Manual mode:**
-Read the parser creation guide from this skill's directory: `parser-guide.md` (located next to this SKILL.md file). It contains the correct SC4S parser structure, topic types, rewrite functions, parser methods, and a complete example. Do not rely on general syslog-ng knowledge — use that file.
+## 3. Design the parser
 
-## Step 4 — Generate the parser
+Analyze every supplied sample and create a complete `.conf` file:
 
-Analyze the log sample(s) and produce a `.conf` file following SC4S conventions:
+1. Identify RFC3164, RFC5424, CEF, or the supported format described by the guide.
+2. Select the narrowest reliable application topic and filter. Prefer structured identity or program values over message-text matching. Account for the positive samples and avoid the supplied negative examples.
+3. Select parser stages appropriate to the data and requested field extraction.
+4. Set the confirmed index, sourcetype, vendor, product, and template through SC4S rewrite conventions.
+5. Set `<filename>` to `app-<type>-<vendor>_<product>.conf`. Normalize it to lowercase, use underscores within vendor/product identifiers, retain the `.conf` suffix, and reject path separators, traversal components, or an empty name.
 
-1. Identify the vendor and product from the log content
-2. Pick a filter that uniquely identifies this log source (program field preferred; message content as fallback)
-3. Write the complete `.conf` file
-4. Choose a filename: `<vendor>_<product>.conf` (lowercase, underscores, no spaces)
+Show the exact `<filename>` and complete parser. Explain:
 
-Show the complete generated parser to the operator and explain:
-- What the filter matches and why
-- What `vendor_product` value was chosen
-- What Splunk sourcetype will be assigned (or how to add one via `sc4s:configure`)
+- The detected format, application topic, and filter.
+- Why each positive sample should match and why negative examples should not.
+- The selected index, sourcetype, `vendor_product`, template, and extracted fields.
+- Any assumptions caused by missing samples or product information.
 
-Ask: "Does this parser look correct? Would you like any adjustments before I deploy it?"
+If an external metadata override is needed, recommend `$manage-splunk-metadata`; do not refer to an undefined `sc4s:configure` command.
 
-Wait for confirmation. If the operator wants changes, revise and show the updated parser. Repeat until approved.
+Ask whether the parser needs adjustments. Revise and repeat the explanation until the operator approves the content. Treat this as authoring approval only, not permission to mutate SC4S.
 
-## Step 5 — Deploy
+## 4. Optionally deploy
 
-After the operator confirms the parser is correct:
+Ask whether to deploy the approved parser.
 
-**MCP mode:**
+If `$manage-sc4s-parsers` is available, hand off the exact approved `<filename>` and parser content to that skill. Follow its read-before-write, overwrite warning, fresh confirmation, asynchronous job polling, read-back, health verification, conflict handling, and rollback-preservation workflow. Do not call `add_parser` directly from this skill, and do not reuse authoring approval as deployment confirmation.
 
-1. Call `{SC4S_NS}list_custom_parsers` before making any change.
-2. If `<filename>.conf` already exists, call `{SC4S_NS}get_custom_parser` and show the operator what will change. Warn that deployment replaces that parser's complete content. If it does not exist, explain that a new custom parser will be added.
-3. Say: "I'm about to deploy `<filename>.conf` to SC4S and restart its runtime — proceed? (yes/no)"
+If the management skill is unavailable or the operator prefers manual deployment:
 
-Wait for explicit "yes" before proceeding.
+1. Save the file as `/opt/sc4s/local/config/app_parsers/<filename>`.
+2. Restart the SC4S runtime using the operator's deployment method.
+3. Inspect runtime logs for syslog-ng configuration or restart errors.
 
-On "yes":
-1. Call `{SC4S_NS}add_parser` exactly once with `filename=<filename>.conf` and `content=<parser content>`.
-2. Extract and validate the returned `job_id`. Treat a missing or malformed job ID as an unsuccessful submission.
-3. Call `{SC4S_NS}get_job_status(job_id)` and keep polling while the status is `in_progress`. Do not describe the parser as deployed or the restart as successful before a terminal result.
-4. If the terminal status is `failed`, explain the reported error and stop. Do not claim success and do not retry or roll back without a separate explicit request and confirmation.
-5. Only after terminal `success`, call `{SC4S_NS}get_custom_parser` to verify the deployed content and `{SC4S_NS}sc4s_health` to verify SC4S is healthy.
-6. Report successful deployment only when the job succeeded and the post-change checks pass. If the parser cannot be read back or SC4S is unhealthy, report that the job completed but verification failed, then give the relevant recovery steps below.
+Always provide the complete parser content for manual copy and preserve the approved filename exactly.
 
-If the deploy call fails:
-- Translate the error to plain language — never show raw API responses
-- Offer to show the parser content so the operator can deploy manually instead
+## 5. Verify event routing
 
-If deployment returns a `409 conflict`, explain that another configuration job is active. Poll that job when its ID is available. After it completes, call `list_custom_parsers` and `get_custom_parser` again, rebuild the preview, and obtain fresh explicit confirmation before retrying. Do not treat the active job as this parser deployment.
+After either deployment path:
 
-**Manual mode:**
+1. Send a positive sample through the same transport and source path used by the device.
+2. Verify in Splunk that it arrives in the confirmed index and sourcetype with the intended vendor, product, template output, and requested extracted fields.
+3. When a negative example exists, send or search for it and verify that the new parser did not route it into the new sourcetype.
+4. If verification fails, report the observed mismatch and return to parser design. Do not redeploy a revision without a new preview and confirmation through `$manage-sc4s-parsers`.
 
-Say:
+Use precise completion language:
 
-> "To deploy this parser manually:
-> 1. Save the file as `/opt/sc4s/local/<filename>.conf`
-> 2. Restart SC4S: `sudo systemctl restart sc4s` (or `docker restart sc4s` if running in Docker)
-> 3. Check the logs: `sudo journalctl -u sc4s -f` (or `docker logs -f sc4s`)
-> 4. Send a test log and verify it appears in Splunk with the correct sourcetype."
-
-Then show the complete file content in a code block for easy copy-paste.
-
-## Error Handling
-
-| Situation | Response |
-|-----------|----------|
-| Deploy fails with auth error | "SC4S rejected the request — check that the MCP server token matches SC4S configuration." |
-| SC4S unhealthy after deploy | "The parser may have a syntax error. Check `/opt/sc4s/local/<filename>.conf` and look for syslog-ng config errors in `sudo journalctl -u sc4s`." |
-| API unreachable | "SC4S doesn't seem to be running. Try: `curl http://localhost:8080/health`" |
-| Operator pastes malformed logs | Ask for clarification: "These logs look incomplete — can you paste the full log line including the syslog header?" |
+- Job success, exact read-back, and healthy SC4S means **deployed and runtime-verified**.
+- A correctly routed positive sample with expected metadata and fields means **end-to-end verified**.
+- If the operator cannot perform the Splunk check, report deployment status and state explicitly that end-to-end verification remains outstanding.
