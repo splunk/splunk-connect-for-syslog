@@ -4,8 +4,8 @@
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "512",
   "memory": "1024",
-  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<SC4S_EXECUTION_ROLE>",
-  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<SC4S_TASK_ROLE>",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/sc4s-execution-role",
+  "taskRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/sc4s-task-role",
   "runtimePlatform": {
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
