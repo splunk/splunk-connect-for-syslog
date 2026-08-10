@@ -11945,9 +11945,19 @@
 <td>Use reverse DNS to identify hosts when HOST is not valid in the syslog header.</td>
 </tr>
 <tr>
+<td>SC4S_USE_REVERSE_DNS_&lt;PORT_ID&gt;</td>
+<td>yes or no</td>
+<td>Per-source override for reverse DNS. Takes precedence over <code>SC4S_USE_REVERSE_DNS</code> for the specified source. <code>PORT_ID</code> is everything between <code>SC4S_LISTEN_</code> and <code>_{PROTOCOL}_PORT</code>, uppercased (e.g. <code>SC4S_LISTEN_MY_DEVICE_UDP_PORT</code> → <code>MY_DEVICE</code>).</td>
+</tr>
+<tr>
 <td>SC4S_REVERSE_DNS_KEEP_FQDN</td>
 <td>yes or no (default)</td>
 <td>When enabled, SC4S will not extract the hostname from FQDN, and instead will pass the full domain name to the host.</td>
+</tr>
+<tr>
+<td>SC4S_REVERSE_DNS_KEEP_FQDN_&lt;PORT_ID&gt;</td>
+<td>yes or no</td>
+<td>Per-source override for FQDN behavior. Takes precedence over <code>SC4S_REVERSE_DNS_KEEP_FQDN</code> for the specified source. Same <code>PORT_ID</code> derivation as above.</td>
 </tr>
 <tr>
 <td>SC4S_CONTAINER_HOST</td>
@@ -11956,9 +11966,16 @@
 </tr>
 </tbody>
 </table>
-<p>If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. If the variable <code>SC4S_USE_REVERSE_DNS</code> is set to &ldquo;yes&rdquo;, then SC4S first checks <code>host.csv</code> and replaces the value of <code>host</code> with the specified value that matches the incoming IP address. If no value is found in <code>host.csv</code>, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (<code>example.domain.com</code> -&gt; <code>example</code>). If <code>SC4S_REVERSE_DNS_KEEP_FQDN</code> variable is set to &ldquo;yes&rdquo;, full domain name is assigned to the host field.</p>
-<p><strong>Note:</strong> Using the <code>SC4S_USE_REVERSE_DNS</code> variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
-in the event, for example, if you notice a latency between <code>_indextime</code> and <code>_time</code>.</p>
+<p>If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. SC4S first checks <code>host.csv</code> and replaces the value of <code>host</code> with the specified value that matches the incoming IP address. If no value is found in <code>host.csv</code>, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (<code>example.domain.com</code> -&gt; <code>example</code>). If <code>SC4S_REVERSE_DNS_KEEP_FQDN</code> variable is set to &ldquo;yes&rdquo;, full domain name is assigned to the host field.</p>
+<p><strong>Note:</strong> <code>host.csv</code> is checked regardless of whether <code>SC4S_USE_REVERSE_DNS</code> is enabled. It is the recommended approach for sources with stable, known IP addresses as it has no performance impact.</p>
+<p>To enable DNS only for specific sources while keeping it disabled globally:</p>
+<div class="highlight"><pre><span></span><code>SC4S_USE_REVERSE_DNS=no
+SC4S_LISTEN_FORTINET_FORTIGATE_UDP_PORT=5001
+
+SC4S_USE_REVERSE_DNS_MY_NETWORK_DEVICE=yes
+SC4S_LISTEN_MY_NETWORK_DEVICE_UDP_PORT=5000
+</code></pre></div>
+<p><strong>Note:</strong> Using the <code>SC4S_USE_REVERSE_DNS</code> variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp in the event, for example, if you notice a latency between <code>_indextime</code> and <code>_time</code>.</p>
 <h2 id="configure-your-external-http-proxy">Configure your external HTTP proxy<a class="headerlink" href="#configure-your-external-http-proxy" title="Permanent link">&para;</a></h2>
 <p>Many HTTP proxies are not provisioned with application traffic in mind. Ensure adequate capacity is available to avoid data loss and proxy outages. The following variables must be entered in lower case:</p>
 <table>
