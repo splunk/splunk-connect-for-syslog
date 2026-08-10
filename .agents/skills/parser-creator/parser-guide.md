@@ -100,17 +100,38 @@ Ask operator permission before using this topic. If they refuse, stop.
 
 **`r_set_splunk_dest_update_v2`** — conditionally overrides specific fields already set by the default. Use only inside `if/elif` branches.
 
+### Choose the final event format and namespaces
+
+Choose how the event should appear in Splunk before choosing parser prefixes. A parser can extract fields correctly and still produce an unwanted event if its namespaces and template do not agree.
+
+| Goal | Template | Extraction namespace | Result in Splunk |
+|------|----------|----------------------|------------------|
+| Preserve the message body; use parsed values only inside SC4S | `t_msg_only` or another raw-message template | `.tmp.*` | Original message body; temporary values are not sent |
+| Replace the body with normalized key/value text | `t_kv_values` | `.values.*` | WELF-formatted key/value event |
+| Replace the body with JSON | `t_json_values` | `.values.*` | JSON event |
+| Include parsed values and the original message as a field | `t_kv_values_msg` or `t_json_values_msg` | `.values.*` | WELF or JSON event containing a `message` field; the body is still transformed |
+| Preserve the message body and send indexed fields through Splunk HEC | A raw-message template such as `t_msg_only` | `fields.*` | Original message body plus indexed HEC fields |
+
+Apply these namespace rules:
+
+- Use `.tmp.*` for intermediate fragments, discarded prefixes, and raw tails that must not appear in the event.
+- Use `.values.*` only for fields intentionally serialized by a values template.
+- Use `fields.*` only when indexed HEC fields are required. This is destination-specific and is not a Splunk search-time field definition.
+- Never capture an unparsed tail such as `key="value" key2="value with spaces"` into `.values.*` when using `t_kv_values` or `t_json_values`. The serializer will emit the whole tail as one escaped value alongside any parsed fields.
+
 ### Parser methods
 
-**`kv-parser`** — use when logs contain key=value pairs or RFC5424 SDATA blocks:
+**`kv-parser`** — use when the selected input contains key/value pairs or RFC5424 SDATA blocks:
 ```
 parser {
     kv-parser(
-        prefix(".values.sdata.")
-        template("${SDATA}")
+        prefix(".values.")
+        template("${MESSAGE}")
     );
 };
 ```
+
+When only part of a message contains key/value data, set `template()` to a temporary field containing only that portion. Keep the temporary value in `.tmp.*`; do not also emit it as a `.values.*` field.
 
 **`csv-parser`** — use when logs are consistently delimited with stable column order:
 ```
@@ -131,10 +152,24 @@ parser {
     regexp-parser(
         template("${MESSAGE}")
         patterns("^(?<field1>\\d+) (?<field2>[^ ]+) (?<field3>.*)")
-        prefix(".parsed.")
+        prefix(".tmp.")
     );
 };
 ```
+
+Syslog-ng string quoting changes how regular expressions are written:
+
+```conf
+# Single-quoted string: write literal double quotes and regex backslashes directly.
+patterns('rc="(?<rc>[^"]*)"')
+
+# Double-quoted string: escape double quotes and regex backslashes.
+patterns("rc=\"(?<rc>[^\"]*)\"")
+```
+
+Prefer single-quoted strings for regular expressions when the pattern does not contain an apostrophe. For example, write `\d` in a single-quoted pattern and `\\d` in a double-quoted pattern.
+
+The examples above are `.conf` content. MCP or JSON transport may display additional backslashes when serializing that content; do not copy those transport escapes back into the parser.
 
 **Conditional branches** — combine methods for logs with multiple variants:
 ```
@@ -185,16 +220,14 @@ application app-syslog-thinkst_canary[sc4s-syslog-sdata] {
 };
 ```
 
-## Common templates
+## Authoring checklist
 
-| Template | Use |
-|----------|-----|
-| `t_msg_only` | Pass message body only |
-| `t_hdr_msg` | Syslog header + message |
-| `t_5424_hdr_sdata_compact` | RFC5424 header + compact SDATA |
-| `t_kv_values` | Key/value extracted fields |
-
-For the full list, see `t_templates.conf` in the SC4S package.
+- Confirm whether the event body must remain unchanged or may become WELF or JSON.
+- Confirm every requested field and its exact expected value for each sample.
+- Keep intermediate fragments and unparsed tails in `.tmp.*`.
+- Ensure the selected output template consumes the namespace used for final fields.
+- Inspect literal quotes and backslashes in the final `.conf`, not its JSON-serialized representation.
+- For the full template list, inspect `t_templates.conf` in the SC4S package.
 
 ## Deployment path
 
