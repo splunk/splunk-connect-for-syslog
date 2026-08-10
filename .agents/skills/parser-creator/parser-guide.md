@@ -33,7 +33,7 @@ application app-<type>-<vendor>_<product>[<topic>] {
 
 `app-<type>-<vendor>_<product>.conf`
 
-Where `<type>` is one of: `syslog`, `cef`, `netsource`
+Use the SC4S parser type appropriate to the format, such as `syslog`, `cef`, or `netsource`. Preserve `<filename>` exactly, including its `.conf` suffix, after selecting it.
 
 ## Step 1 — Identify syslog format
 
@@ -198,5 +198,5 @@ For the full list, see `t_templates.conf` in the SC4S package.
 
 ## Deployment path
 
-- Deploy to running SC4S instance: `/opt/sc4s/local/<filename>.conf`
+- Deploy to a running SC4S instance: `/opt/sc4s/local/config/app_parsers/<filename>`
 - Restart SC4S after deploying: `sudo systemctl restart sc4s` or `docker restart sc4s`
