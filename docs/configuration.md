@@ -7,13 +7,26 @@ SC4S is primarily controlled by environment variables. This topic describes the 
 | Variable | Values        | Description |
 |----------|---------------|-------------|
 | SC4S_USE_REVERSE_DNS | yes or no (default) | Use reverse DNS to identify hosts when HOST is not valid in the syslog header. |
+| SC4S_USE_REVERSE_DNS_&lt;PORT_ID&gt; | yes or no | Per-source override for reverse DNS. Takes precedence over `SC4S_USE_REVERSE_DNS` for the specified source. `PORT_ID` is everything between `SC4S_LISTEN_` and `_{PROTOCOL}_PORT`, uppercased (e.g. `SC4S_LISTEN_MY_DEVICE_UDP_PORT` → `MY_DEVICE`). |
 | SC4S_REVERSE_DNS_KEEP_FQDN | yes or no (default) | When enabled, SC4S will not extract the hostname from FQDN, and instead will pass the full domain name to the host. |
+| SC4S_REVERSE_DNS_KEEP_FQDN_&lt;PORT_ID&gt; | yes or no | Per-source override for FQDN behavior. Takes precedence over `SC4S_REVERSE_DNS_KEEP_FQDN` for the specified source. Same `PORT_ID` derivation as above. |
 | SC4S_CONTAINER_HOST | string | Variable that is passed to the container to identify the actual log host for container implementations. |
 
-If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. If the variable `SC4S_USE_REVERSE_DNS` is set to "yes", then SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address. If no value is found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
+If the host value is not present in an event, and you require that a true hostname be attached to each event, SC4S provides an optional ability to perform a reverse IP to name lookup. SC4S first checks `host.csv` and replaces the value of `host` with the specified value that matches the incoming IP address. If no value is found in `host.csv`, SC4S attempts a reverse DNS lookup against the configured nameserver. In this case, SC4S by default extracts only the hostname from FQDN (`example.domain.com` -> `example`). If `SC4S_REVERSE_DNS_KEEP_FQDN` variable is set to "yes", full domain name is assigned to the host field.
 
-**Note:** Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp
-in the event, for example, if you notice a latency between `_indextime` and `_time`.
+**Note:** `host.csv` is checked regardless of whether `SC4S_USE_REVERSE_DNS` is enabled. It is the recommended approach for sources with stable, known IP addresses as it has no performance impact.
+
+To enable DNS only for specific sources while keeping it disabled globally:
+
+```
+SC4S_USE_REVERSE_DNS=no
+SC4S_LISTEN_FORTINET_FORTIGATE_UDP_PORT=5001
+
+SC4S_USE_REVERSE_DNS_MY_NETWORK_DEVICE=yes
+SC4S_LISTEN_MY_NETWORK_DEVICE_UDP_PORT=5000
+```
+
+**Note:** Using the `SC4S_USE_REVERSE_DNS` variable can have a significant impact on performance if the reverse DNS facility is not performant. Check this variable if you notice that events are indexed later than the actual timestamp in the event, for example, if you notice a latency between `_indextime` and `_time`.
 
 ## Configure your external HTTP proxy
 
@@ -344,9 +357,11 @@ ExecStart=/usr/bin/podman run \
         --name SC4S \
         --rm $SC4S_IMAGE
 ```
-# Change your status port
+# Change your status host and port
 
 Use `SC4S_LISTEN_STATUS_PORT` to change the "status" port used by the internal health check process. The default value is `8080`.
+
+Use `SC4S_LISTEN_STATUS_HOST` to change the network interface the internal health check process binds to. The default value is `0.0.0.0`, which binds to all interfaces so the health endpoint is reachable by container orchestrators (for example, Kubernetes liveness/readiness probes and Docker port mappings). If you only need local access, set this to `127.0.0.1` to restrict the endpoint to the local interface.
 
 # Parallelize
 Use the parallelize feature to manage TCP congestion when using single heavy-data streams.

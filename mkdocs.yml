@@ -67,6 +67,7 @@ nav:
         - Cloud (Experimental):
           - EKS (Experimental): "gettingstarted/eks.md"
           - ECS/Fargate (Experimental): "gettingstarted/ecs-fargate.md"
+          - GKE (Experimental): "gettingstarted/gke.md"
   - Sources:
       - Read First: "sources/index.md"
       - Message Formats: "sources/base"

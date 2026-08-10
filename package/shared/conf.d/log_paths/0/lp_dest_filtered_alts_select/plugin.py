@@ -36,7 +36,7 @@ for var in os.environ:
             else:
                 f = dest_filters[i]
 
-            if f in filters.keys():
+            if f in filters:
                 filters[f].append(d)
             else:
                 filters[f] = [d]
