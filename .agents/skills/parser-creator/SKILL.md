@@ -14,9 +14,11 @@ Ask once for all missing information:
 - Full positive log lines. Prefer at least three examples covering different event types or layouts; require at least one.
 - Vendor, product, and device or software version. Offer inferred values for confirmation when unknown.
 - Desired Splunk index and sourcetype. Offer a conventional value for confirmation when unknown.
-- Whether the parser should only route events or also parse named values into the event payload, and which values matter. Explain that this controls SC4S parser-stage extraction and output templates; it does not create Splunk search-time field definitions.
+- Whether the parser should only route events or also extract named values, which values matter, and the exact expected value for each supplied sample.
+- How the final event should appear in Splunk: preserve the original message, replace it with normalized key/value text, or replace it with JSON. Explain that this choice controls the SC4S template and is separate from Splunk search-time field definitions.
+- When the original message must be preserved, whether extracted values should remain internal to SC4S or be sent as indexed HEC fields.
 
-Do not proceed until at least one complete positive log, vendor, product, index, and sourcetype are known or explicitly confirmed. If only one positive example is available, continue but state that filter confidence is limited and request additional examples before production rollout.
+Do not proceed until at least one complete positive log, vendor, product, index, sourcetype, and desired final event format are known or explicitly confirmed. If only one positive example is available, continue but state that filter confidence is limited and request additional examples before production rollout.
 
 ## 2. Gather parser knowledge
 
@@ -36,7 +38,7 @@ Analyze every supplied sample and create a complete `.conf` file:
 
 1. Identify RFC3164, RFC5424, CEF, or the supported format described by the guide.
 2. Select the narrowest reliable application topic and filter. Prefer structured identity or program values over message-text matching. Account for the positive samples and avoid the supplied negative examples.
-3. Select parser stages appropriate to the data and requested field extraction.
+3. Select parser stages, namespaces, and an output template together. Keep intermediate fragments in `.tmp.*`; put only intentionally serialized values in `.values.*`; use `fields.*` only when the operator requested indexed HEC fields. Follow the bundled guide's template, namespace, and quoting rules.
 4. Set the confirmed index, sourcetype, vendor, product, and template through SC4S rewrite conventions.
 5. Set `<filename>` to `app-<type>-<vendor>_<product>.conf`. Normalize it to lowercase, use underscores within vendor/product identifiers, retain the `.conf` suffix, and reject path separators, traversal components, or an empty name.
 
@@ -44,7 +46,8 @@ Show the exact `<filename>` and complete parser. Explain:
 
 - The detected format, application topic, and filter.
 - Why each positive sample should match and why negative examples should not.
-- The selected index, sourcetype, `vendor_product`, template, and extracted fields.
+- The selected index, sourcetype, `vendor_product`, template, resulting event-body format, and extracted-field delivery method.
+- A compact table of every requested field and its expected value for each supplied sample.
 - Any assumptions caused by missing samples or product information.
 
 If an external metadata override is needed, recommend `$manage-splunk-metadata`; do not refer to an undefined `sc4s:configure` command.
