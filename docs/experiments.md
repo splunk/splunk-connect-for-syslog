@@ -1,5 +1,11 @@
 # Current experimental features
 
+## > 3.46.0
+### ECS/Fargate and GKE
+SC4S can now be deployed on AWS ECS/Fargate and Google Kubernetes Engine (GKE). 
+See the [ECS/Fargate getting started guide](gettingstarted/ecs-fargate.md) and [GKE getting started guide](gettingstarted/gke.md) for the task definition and setup steps.
+These guides are in an experimental phase now, and should be treated as such - it's likely they will be changed / improved in the future.
+
 ## > 3.12.0
 `SC4S_USE_NAME_CACHE=yes` supports IPv6.
 
