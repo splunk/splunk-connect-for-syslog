@@ -140,8 +140,36 @@ kubectl get hpa -n sc4s
 
 You should see `cpu: 1%/50%` with `MINPODS: 2` and `MAXPODS: 10`.
 
-!!! note
-    HPA scales pods horizontally (adds/removes pod instances) based on CPU usage. To allow new pods to start on new nodes when existing nodes are full, enable the [GKE cluster autoscaler](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler) which automatically adds nodes when pods cannot be scheduled.
+## Enable GKE Node Autoscaler (Required)
+
+The SC4S Helm chart enforces **hard pod anti-affinity** — each SC4S pod must run on its own dedicated node. This prevents CPU saturation caused by multiple SC4S pods sharing a node, which would cause new pods to crash-loop during scale-up.
+
+Because of this, when HPA requests more pods than there are available nodes, the new pods stay in `Pending` state. The GKE Node Autoscaler detects `Pending` pods and automatically adds new nodes to the cluster — allowing the pods to start cleanly.
+
+!!! warning
+    Without the Node Autoscaler enabled, new pods will stay `Pending` indefinitely when all nodes are occupied — HPA cannot scale beyond the initial node count. Previously, without hard pod anti-affinity, new pods were scheduled on already-saturated nodes and entered `CrashLoopBackOff` because syslog-ng could not initialize under CPU contention. Hard anti-affinity (built into the chart) prevents this by blocking co-location, but requires the Node Autoscaler to provide new nodes on demand.
+
+Enable the Node Autoscaler with the following example:
+
+```bash
+gcloud container clusters update <your-cluster-name> \
+  --enable-autoscaling \
+  --min-nodes=1 \
+  --max-nodes=5 \
+  --region=<your-region> \
+  --node-pool=default-pool
+```
+
+Refer to the [GKE cluster autoscaler documentation](https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler) for more details.
+
+**How HPA + Node Autoscaler work together:**
+
+1. Traffic increases → CPU rises above 50% threshold
+2. HPA requests more SC4S pods
+3. Hard anti-affinity blocks scheduling on existing nodes → pods go `Pending`
+4. Node Autoscaler detects `Pending` pods → adds a new node
+5. Pod schedules on the new dedicated node → starts cleanly
+6. Traffic decreases → HPA scales pods back down → Node Autoscaler removes unused nodes
 
 # Validate your configuration
 
