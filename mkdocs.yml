@@ -64,9 +64,10 @@ nav:
           - Docker Swarm: "gettingstarted/ansible-docker-swarm.md"
           - Podman/Docker: "gettingstarted/ansible-docker-podman.md"
           - mk8s: "gettingstarted/ansible-mk8s.md"
-        - Cloud (Experimental):
-          - EKS (Experimental): "gettingstarted/eks.md"
+        - AWS cloud deployment:
+          - EKS: "gettingstarted/eks.md"
           - ECS/Fargate (Experimental): "gettingstarted/ecs-fargate.md"
+        - Other cloud deployments:
           - GKE (Experimental): "gettingstarted/gke.md"
   - Sources:
       - Read First: "sources/index.md"
