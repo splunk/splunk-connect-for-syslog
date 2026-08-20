@@ -4,31 +4,32 @@ If you choose an AWS Network Load Balancer (NLB) as a solution for SC4S on Amazo
 
 - **Uneven TCP traffic distribution**: NLB load balancing is flow based, not message based. A high-volume syslog sender using one long-lived TCP connection can be routed to one SC4S pod while other pods remain underused.
 
-- **Connection lifecycle behavior**: During testing, missing events were observed when `loggen` broke or closed connections. The tested NLB Service was updated to avoid connection termination during deregistration by setting `deregistration_delay.connection_termination.enabled=false`.
+- **Connection lifecycle behavior**: Missing events can occur when a syslog sender breaks or closes TCP connections before SC4S and Splunk finish processing the traffic. This NLB Service avoids connection termination during deregistration by setting `deregistration_delay.connection_termination.enabled=false`.
 
-- **UDP limitations**: UDP is a protocol prone to data loss, and load balancers can introduce another point of data loss.
+- **UDP limitations**: UDP can be enabled for syslog ingestion, but it remains prone to data loss, and load balancers can introduce another point of data loss.
 
-- **Sticky sessions**: The tested configuration kept target group stickiness disabled. Source-IP stickiness was not tested because it can increase uneven distribution when many senders share the same source IP.
+- **Sticky sessions**: This configuration keeps target group stickiness disabled. Source-IP stickiness can increase uneven distribution when many senders share the same source IP.
 
-**Please note that Splunk only supports SC4S**. If issues arise due to AWS load balancing, Kubernetes networking, or the AWS Load Balancer Controller, please reach out to the appropriate vendor support team.
+!!! note "Note"
+    **Splunk only supports SC4S**. If issues arise due to the load balancer, please reach out to the AWS support team.
 
 ## Architecture
 
-The tested EKS deployment path was:
+This EKS deployment path is:
 
 ```mermaid
 flowchart LR
-    subgraph Sources["Syslog / Test Sources"]
-        L["loggen client<br/>TCP 514"]
-        S1["Allowed syslog sender<br/>TCP 514"]
+    subgraph Sources["Syslog Sources"]
+        T["TCP syslog sender<br/>TCP 514"]
+        U["UDP syslog sender<br/>UDP 514"]
     end
 
     subgraph AWS["AWS"]
-        NLB["Internet-facing AWS NLB<br/>target type: ip<br/>stickiness: disabled"]
+        NLB["Internet-facing AWS NLB<br/>target type: ip<br/>TCP/UDP listeners<br/>stickiness: disabled"]
     end
 
     subgraph EKS["Amazon EKS Cluster"]
-        SVC["Kubernetes Service<br/>type: LoadBalancer<br/>TCP 514 + healthcheck 8080"]
+        SVC["Kubernetes Service<br/>type: LoadBalancer<br/>TCP/UDP 514 + healthcheck 8080"]
 
         subgraph SC4S["SC4S Pods"]
             P1["SC4S Pod 1<br/>syslog-ng"]
@@ -39,8 +40,8 @@ flowchart LR
 
     SPLUNK["Splunk HEC"]
 
-    L --> NLB
-    S1 --> NLB
+    T --> NLB
+    U --> NLB
     NLB --> SVC
     SVC --> P1
     SVC --> P2
@@ -51,19 +52,19 @@ flowchart LR
 
     NOTE1["Traffic allowed only from configured source CIDR"] -.-> NLB
     NOTE2["NLB distributes flows, not individual syslog messages"] -.-> SVC
-    NOTE3["Long-lived or broken TCP connections can skew test results"] -.-> P1
+    NOTE3["Long-lived TCP connections can skew ingestion distribution"] -.-> P1
+    NOTE4["UDP has no retransmission; drops can appear as missing events"] -.-> P2
 ```
 
 ## Set up EKS
 
-Follow the AWS documentation to create an EKS cluster. The test setup used `eksctl` with an AWS CLI profile:
+Follow the AWS documentation to create an EKS cluster. The following example uses `eksctl` with an AWS CLI profile:
 
 ```bash
 eksctl create cluster \
   --name <cluster-name> \
   --region <region> \
-  --profile <aws-cli-profile> \
-  --tags splunkit_data_classification=public,splunkit_environment_type=non-prd
+  --profile <aws-cli-profile>
 ```
 
 Associate the IAM OIDC provider with the cluster:
@@ -92,8 +93,6 @@ eksctl create iamserviceaccount \
 
 ## Install AWS Load Balancer Controller
 
-Use the [AWS Load Balancer Controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/) to provision the NLB from the Kubernetes Service.
-
 This documentation assumes:
 
 - You already have a working EKS cluster.
@@ -102,7 +101,7 @@ This documentation assumes:
 - The SC4S pods have labels matching the Service selector.
 
 !!! note "Note"
-    The commands and manifests in this section reflect the tested investigation setup. Update cluster names, regions, AWS profiles, IAM policy ARNs, tags, resource requests, labels, ports, source CIDR ranges, and Splunk HEC settings to match your environment and security requirements.
+    The commands and manifests in this section provide an example configuration path. Update cluster names, regions, AWS profiles, IAM policy ARNs, tags, resource requests, labels, ports, source CIDR ranges, and Splunk HEC settings to match your environment and security requirements.
 
 Refer to the [AWS Load Balancer Controller installation guide](https://docs.aws.amazon.com/eks/latest/userguide/lbc-helm.html) for IAM and installation steps.
 
@@ -148,7 +147,7 @@ Create a ConfigMap from the environment file. The name must match the Deployment
 kubectl create configmap sc4s-env-config --from-env-file=/opt/sc4s/env_file -n sc4s
 ```
 
-Deploy the SC4S sample app and NodePort Service:
+Deploy SC4S and the NodePort Service:
 
 `eks-sample-deployment.yaml`
 ```yaml
@@ -241,12 +240,10 @@ kubectl get pods -n sc4s -o wide
 kubectl get svc -n sc4s
 ```
 
-!!! note "Note"
-    The NLB test Service documented below exposed TCP 514 and healthcheck 8080.
 
 ## Configure autoscaling
 
-The test setup used a HorizontalPodAutoscaler for the SC4S sample Deployment:
+You can use a HorizontalPodAutoscaler for the SC4S Deployment:
 
 `hpa.yaml`
 ```yaml
@@ -269,7 +266,7 @@ spec:
         target:
           type: Utilization
           averageUtilization: 60
-  # Normally you do not want this to be so fast. This was used for testing only.
+  # Tune these values for your production scaling requirements.
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 30
@@ -296,7 +293,7 @@ kubectl apply -f hpa.yaml
 kubectl get hpa -n sc4s
 ```
 
-The test setup also installed the Kubernetes Cluster Autoscaler:
+You can also install the Kubernetes Cluster Autoscaler:
 
 ```bash
 helm repo add autoscaler https://kubernetes.github.io/autoscaler
@@ -318,7 +315,7 @@ helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler \
 
 Load balancer support and fine-tuning is outside the scope of the SC4S team's responsibility. Review the AWS documentation for [NLB target groups](https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-target-groups.html), health checks, and target group attributes before using an NLB in production.
 
-The tested configuration used the following NLB settings:
+This configuration uses the following NLB settings:
 
 - **Target type**: `ip`
 - **Scheme**: `internet-facing`
@@ -327,19 +324,19 @@ The tested configuration used the following NLB settings:
 - **Connection termination after deregistration delay**: disabled
 - **Access control**: `loadBalancerSourceRanges`
 
-The deregistration settings were added after observing missing events associated with `loggen` connection breaks:
+The deregistration settings help avoid connection termination when a target is deregistered:
 
 ```text
 stickiness.enabled=false,deregistration_delay.timeout_seconds=300,deregistration_delay.connection_termination.enabled=false
 ```
 
-Use `internet-facing` instead of `internal` only when syslog sources must reach SC4S over public networking and the security model allows it.
+**_Use `internet-facing` instead of `internal` only when syslog sources must reach SC4S over public networking and the security model allows it._**
 
 ## Preserving source IP
 
 As a best practice, preserve or verify the original source IP of the sending device. Otherwise, logs that do not specify a hostname in the message may appear with the load balancer, node, or proxy IP. See the Kubernetes [source IP behavior](https://kubernetes.io/docs/tutorials/services/source-ip/) documentation for more information.
 
-This investigation used:
+This configuration uses:
 
 - NLB target type `ip`
 - Source allowlisting with `loadBalancerSourceRanges`
@@ -348,14 +345,17 @@ This investigation used:
 
 Verify source IP behavior in Splunk for the specific EKS, NLB, and Service configuration before relying on source-IP based parsing, host enrichment, or compliance reporting.
 
+!!! note "Note"
+    The NLB Service documented below exposes TCP 514, UDP 514, and healthcheck 8080.
+
 ### Configuration
 
-Use the following tested Service manifest:
+Use the following Service manifest:
 
-Set `loadBalancerSourceRanges` to the IP ranges that should be allowed to send test or syslog traffic to the NLB.
+Set `loadBalancerSourceRanges` to the IP ranges that should be allowed to send validation or syslog traffic to the NLB.
 
 !!! note "Note"
-    Treat this Service manifest as a starting point from the tested environment. Adjust the namespace, selector labels, allowed source ranges, tags, exposed ports, and NLB annotations according to your deployment model. Any change to target type, protocol mix, stickiness, or deregistration behavior should be retested before being used for production ingestion.
+    Treat this Service manifest as a starting point. Adjust the namespace, selector labels, allowed source ranges, tags, exposed ports, and NLB annotations according to your deployment model. Validate any change to target type, protocol mix, stickiness, or deregistration behavior before using it for production ingestion.
 
 `load-balancer-service.yaml`
 ```yaml
@@ -385,6 +385,10 @@ spec:
       protocol: TCP
       port: 514
       targetPort: 514
+    - name: udp-port
+      protocol: UDP
+      port: 514
+      targetPort: 514
   loadBalancerSourceRanges:
     - x.x.x.x/32
 ```
@@ -397,38 +401,42 @@ kubectl get svc -n sc4s load-balancer-service -o wide
 kubectl describe svc -n sc4s load-balancer-service
 ```
 
-## Test your configuration
+## Validate your configuration
 
 Get the NLB hostname:
 
 ```bash
-export TCP_NLB=$(kubectl get svc -n sc4s load-balancer-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-echo "$TCP_NLB"
+export NLB_HOST=$(kubectl get svc -n sc4s load-balancer-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+echo "$NLB_HOST"
 ```
 
-Send several TCP messages:
+Send several validation TCP messages:
 
 ```bash
-for i in {1..5}; do echo "nlb tcp test $i" | nc -w2 "$TCP_NLB" 514; done
+for i in {1..5}; do echo "nlb tcp validation $i" | nc -w2 "$NLB_HOST" 514; done
 ```
 
-Verify in Splunk that:
+Send several validation UDP messages:
+
+```bash
+for i in {1..5}; do echo "nlb udp validation $i" | nc -u -w1 "$NLB_HOST" 514; done
+```
+
+Verify the results in Splunk:
 
 - Events reached Splunk.
-- The event count matches the expected test count.
-- The source host or source IP is acceptable for the tested deployment.
+- The event count matches the expected validation count.
+- The source host or source IP matches your deployment expectations.
 - Events are routed to the expected index and sourcetype.
 
-## Research findings
+## Operational considerations
 
-Based on the tested AWS NLB configuration:
+With this AWS NLB configuration:
 
-- AWS NLB can be used as an EKS front end for SC4S TCP ingestion.
-- The tested configuration used `ip` target mode, an internet-facing NLB, TCP 514, health check port 8080, target group stickiness disabled, and a source CIDR allowlist.
-- Missing events were observed when `loggen` broke or closed connections during testing.
-- The Service was updated to keep stickiness disabled and explicitly set `deregistration_delay.timeout_seconds=300` and `deregistration_delay.connection_termination.enabled=false`.
+- Broken or closed TCP connections from a syslog sender can result in missing events.
+- The Service keeps stickiness disabled and explicitly sets `deregistration_delay.timeout_seconds=300` and `deregistration_delay.connection_termination.enabled=false`.
 - NLB distributes TCP flows, not individual syslog messages. A small number of high-volume or long-lived TCP connections can still create uneven pod utilization.
-- UDP was not part of this tested NLB configuration and should not be treated as validated by this investigation.
+- UDP ingestion can be enabled, but missing events can occur because UDP does not provide retransmission, delivery acknowledgement, or connection-level backpressure. Validate UDP capacity and loss tolerance before production use.
 - Source IP behavior must be verified in Splunk for the specific EKS, NLB, and Service configuration before relying on source-IP based enrichment.
 
 !!! note "Note"
