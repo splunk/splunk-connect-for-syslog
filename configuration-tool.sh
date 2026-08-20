@@ -438,6 +438,7 @@ require_yes_no() {
         echo "Error: $name must be yes or no." >&2
         return 1
     fi
+    return 0
 }
 
 require_integer() {
@@ -447,6 +448,7 @@ require_integer() {
         echo "Error: $name must be an integer." >&2
         return 1
     fi
+    return 0
 }
 
 load_non_interactive() {
@@ -493,7 +495,7 @@ load_non_interactive() {
             ADJUST_FETCH_LIMIT="${SC4S_ADJUST_FETCH_LIMIT:-no}"
             SC4S_SOURCE_UDP_FETCH_LIMIT="${NI_UDP_FETCH_LIMIT:-1000}"
             ADJUST_LISTEN_SOCKETS="${SC4S_ADJUST_LISTEN_SOCKETS:-no}"
-            SC4S_SOURCE_LISTEN_UDP_SOCKETS="${NI_UDP_LISTEN_SOCKETS:-2}"
+            SC4S_SOURCE_LISTEN_UDP_SOCKETS="${NI_UDP_LISTEN_SOCKETS:-4}"
             SC4S_SOURCE_UDP_SO_RCVBUFF="${NI_UDP_RCVBUFF:--1}"
             SC4S_ENABLE_EBPF="${NI_ENABLE_EBPF:-no}"
             SC4S_EBPF_NO_SOCKETS="${NI_EBPF_SOCKETS:-4}"

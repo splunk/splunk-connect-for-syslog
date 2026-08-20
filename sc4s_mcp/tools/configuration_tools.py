@@ -31,7 +31,10 @@ class SC4SConfiguratorInput(BaseModel):
     mode: Literal["1", "2"] = Field(
         default="1", description="1 for custom tuning or 2 for hardware-based tuning."
     )
-    hardware: Literal["16vCPUs", "8vCPUs", "4vCPUs"] = "8vCPUs"
+    hardware: Literal["16vCPUs", "8vCPUs", "4vCPUs"] = Field(
+        default="8vCPUs",
+        description="Closest hardware profile for automatic tuning.",
+    )
     expected_eps: int = Field(default=1000, ge=0, alias="expectedEps")
     sc4s_default_timezone: str = Field(default="", alias="SC4S_DEFAULT_TIMEZONE")
     adjust_fetch_limit: bool = False
