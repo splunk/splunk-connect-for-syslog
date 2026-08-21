@@ -310,20 +310,18 @@ spec:
       {{- end }}
       affinity:
         podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:          
-              labelSelector:
-                matchExpressions:
-                - key: app.kubernetes.io/instance
-                  operator: In
-                  values:
-                  - {{ .Release.Name }}
-                - key: app.kubernetes.io/name
-                  operator: In
-                  values:
-                  - {{ include "splunk-connect-for-syslog.name" . }}
-              topologyKey: "kubernetes.io/hostname"      
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - {{ .Release.Name }}
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - {{ include "splunk-connect-for-syslog.name" . }}
+            topologyKey: "kubernetes.io/hostname"      
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
