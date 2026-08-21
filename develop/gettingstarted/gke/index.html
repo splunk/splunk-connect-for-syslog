@@ -11659,10 +11659,31 @@ gcloud<span class="w"> </span>compute<span class="w"> </span>firewall-rules<span
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>hpa<span class="w"> </span>-n<span class="w"> </span>sc4s
 </code></pre></div>
 <p>You should see <code>cpu: 1%/50%</code> with <code>MINPODS: 2</code> and <code>MAXPODS: 10</code>.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>HPA scales pods horizontally (adds/removes pod instances) based on CPU usage. To allow new pods to start on new nodes when existing nodes are full, enable the <a href="https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler">GKE cluster autoscaler</a> which automatically adds nodes when pods cannot be scheduled.</p>
+<h2 id="enable-gke-node-autoscaler-required">Enable GKE Node Autoscaler (Required)<a class="headerlink" href="#enable-gke-node-autoscaler-required" title="Permanent link">&para;</a></h2>
+<p>The SC4S Helm chart enforces <strong>hard pod anti-affinity</strong> — each SC4S pod must run on its own dedicated node. This prevents CPU saturation caused by multiple SC4S pods sharing a node, which would cause new pods to crash-loop during scale-up.</p>
+<p>Because of this, when HPA requests more pods than there are available nodes, the new pods stay in <code>Pending</code> state. The GKE Node Autoscaler detects <code>Pending</code> pods and automatically adds new nodes to the cluster — allowing the pods to start cleanly.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Without the Node Autoscaler enabled, new pods will stay <code>Pending</code> indefinitely when all nodes are occupied — HPA cannot scale beyond the initial node count. Previously, without hard pod anti-affinity, new pods were scheduled on already-saturated nodes and entered <code>CrashLoopBackOff</code> because syslog-ng could not initialize under CPU contention. Hard anti-affinity (built into the chart) prevents this by blocking co-location, but requires the Node Autoscaler to provide new nodes on demand.</p>
 </div>
+<p>Enable the Node Autoscaler with the following example:</p>
+<div class="highlight"><pre><span></span><code>gcloud<span class="w"> </span>container<span class="w"> </span>clusters<span class="w"> </span>update<span class="w"> </span>&lt;your-cluster-name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--enable-autoscaling<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--min-nodes<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--max-nodes<span class="o">=</span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--region<span class="o">=</span>&lt;your-region&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--node-pool<span class="o">=</span>default-pool
+</code></pre></div>
+<p>Refer to the <a href="https://cloud.google.com/kubernetes-engine/docs/concepts/cluster-autoscaler">GKE cluster autoscaler documentation</a> for more details.</p>
+<p><strong>How HPA + Node Autoscaler work together:</strong></p>
+<ol>
+<li>Traffic increases → CPU rises above 50% threshold</li>
+<li>HPA requests more SC4S pods</li>
+<li>Hard anti-affinity blocks scheduling on existing nodes → pods go <code>Pending</code></li>
+<li>Node Autoscaler detects <code>Pending</code> pods → adds a new node</li>
+<li>Pod schedules on the new dedicated node → starts cleanly</li>
+<li>Traffic decreases → HPA scales pods back down → Node Autoscaler removes unused nodes</li>
+</ol>
 <h1 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h1>
 <p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk. To do this, execute the following search in Splunk:</p>
 <div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
