@@ -12,6 +12,20 @@ The repository root is the plugin root, and `skills/` is the single source of sk
 - `manage-splunk-metadata` safely manages full-replacement Splunk metadata overrides.
 - `manage-sc4s-parsers` lists, inspects, deploys, updates, and deletes custom parsers with job polling and health verification.
 
+## Use the skills
+
+The agent can select a skill automatically when your request matches its description. To choose one explicitly, use the invocation syntax for your client:
+
+| Client | Syntax | Example |
+| --- | --- | --- |
+| Codex | `$sc4s-plugin:<skill-name>` | `$sc4s-plugin:create-parser Create a parser for these log samples: ...` |
+| Claude Code | `/sc4s-plugin:<skill-name>` | `/sc4s-plugin:create-parser Create a parser for these log samples: ...` |
+| Cursor | `/<skill-name>` | `/create-parser Create a parser for these log samples: ...` |
+
+In Codex, type `$` and select the skill from the suggestions. In Claude Code or Cursor, type `/` and select it from the command menu. Add the task details after the selected skill, including raw log samples, symptoms, or the configuration outcome you want.
+
+You can also ask naturally without invoking a skill explicitly, for example: `Troubleshoot why SC4S is receiving events but not forwarding them to Splunk.` The client can then select `troubleshoot-sc4s` from its description.
+
 ## Install with Codex
 
 Add this repository as a marketplace:
