@@ -1,4 +1,0 @@
-interface:
-  display_name: "Manage SC4S Parsers"
-  short_description: "Safely inspect and manage custom SC4S parsers"
-  default_prompt: "Use $manage-sc4s-parsers to inspect or update my custom SC4S parsers."
