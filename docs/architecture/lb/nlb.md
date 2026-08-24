@@ -2,7 +2,7 @@
 
 If you choose an AWS Network Load Balancer (NLB) as a solution for SC4S on Amazon EKS, consider the following:
 
-- **Uneven TCP traffic distribution**: NLB load balancing is flow based, not message based. A high-volume syslog sender using one long-lived TCP connection can be routed to one SC4S pod while other pods remain underused.
+- **Uneven flow-based traffic distribution**: NLB load balancing is flow based, not message based. A high-volume TCP sender using one long-lived connection, or a UDP sender using the same source IP and source port, can be routed to one SC4S pod while other pods remain underused.
 
 - **Connection lifecycle behavior**: Missing events can occur when a syslog sender breaks or closes TCP connections before SC4S and Splunk finish processing the traffic. This NLB Service avoids connection termination during deregistration by setting `deregistration_delay.connection_termination.enabled=false`.
 
@@ -345,9 +345,6 @@ This configuration uses:
 
 Verify source IP behavior in Splunk for the specific EKS, NLB, and Service configuration before relying on source-IP based parsing, host enrichment, or compliance reporting.
 
-!!! note "Note"
-    The NLB Service documented below exposes TCP 514, UDP 514, and healthcheck 8080.
-
 ### Configuration
 
 Use the following Service manifest:
@@ -419,7 +416,7 @@ for i in {1..5}; do echo "nlb tcp validation $i" | nc -w2 "$NLB_HOST" 514; done
 Send several validation UDP messages:
 
 ```bash
-for i in {1..5}; do echo "nlb udp validation $i" | nc -u -w1 "$NLB_HOST" 514; done
+for i in {1..5}; do echo "nlb udp validation $i" | nc -u -w2 "$NLB_HOST" 514; done
 ```
 
 Verify the results in Splunk:
@@ -435,7 +432,7 @@ With this AWS NLB configuration:
 
 - Broken or closed TCP connections from a syslog sender can result in missing events.
 - The Service keeps stickiness disabled and explicitly sets `deregistration_delay.timeout_seconds=300` and `deregistration_delay.connection_termination.enabled=false`.
-- NLB distributes TCP flows, not individual syslog messages. A small number of high-volume or long-lived TCP connections can still create uneven pod utilization.
+- NLB distributes flows, not individual syslog messages. A small number of high-volume TCP connections or consistent UDP flows can still create uneven pod utilization.
 - UDP ingestion can be enabled, but missing events can occur because UDP does not provide retransmission, delivery acknowledgement, or connection-level backpressure. Validate UDP capacity and loss tolerance before production use.
 - Source IP behavior must be verified in Splunk for the specific EKS, NLB, and Service configuration before relying on source-IP based enrichment.
 
