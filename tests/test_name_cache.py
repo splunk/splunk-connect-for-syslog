@@ -5,6 +5,7 @@
 # https://opensource.org/licenses/BSD-2-Clause
 
 import datetime
+import os
 import pickle
 import random
 import re
@@ -19,6 +20,32 @@ from .sendmessage import sendsingle
 from .splunkutils import splunk_single
 from package.shared.pylib.parser_source_cache import ip2int, int2ip
 from sqlitedict import SqliteDict
+
+_CONF_DIR = os.path.join(
+    os.path.dirname(__file__),
+    "..",
+    "package",
+    "shared",
+    "conf.d",
+    "log_paths",
+    "2",
+)
+
+_MATCH_PATTERN = re.compile(
+    r'match\(\s*"([^"]+)"\s+template\([^)]+\)\s+flags\(ignore-case\)\s*\)'
+)
+
+TRUTHY_VALUES = ["yes", "true", "1", "t", "y", "YES", "TRUE", "True", "Y", "T"]
+FALSY_VALUES  = ["no", "false", "0", "n", "NO", "FALSE", "False", "N", "", "maybe"]
+
+
+def _extract_filter_regex(conf_file: str) -> re.Pattern:
+    """Read a conf file and return the compiled regex from its match() filter."""
+    with open(os.path.join(_CONF_DIR, conf_file)) as f:
+        content = f.read()
+    m = _MATCH_PATTERN.search(content)
+    assert m, f"Could not find match() filter in {conf_file}"
+    return re.compile(m.group(1), re.IGNORECASE)
 
 env = Environment()
 
@@ -94,6 +121,46 @@ def test_restricted_sqlitedict_stores_and_retrieves_string():
         cache = SqliteDict(f"{temp_db_file.name}.db")
         assert cache["key"] == "value"
         cache.close()
+
+
+@pytest.mark.name_cache
+@pytest.mark.parametrize("value", TRUTHY_VALUES)
+def test_name_cache_filter_accepts_truthy_value(value):
+    """lp-dest-psc.conf filter must match every value normalize_env_variable_input accepts."""
+    pattern = _extract_filter_regex("lp-dest-psc.conf")
+    assert pattern.fullmatch(value), (
+        f"lp-dest-psc.conf filter did not match truthy value {value!r}"
+    )
+
+
+@pytest.mark.name_cache
+@pytest.mark.parametrize("value", FALSY_VALUES)
+def test_name_cache_filter_rejects_falsy_value(value):
+    """lp-dest-psc.conf filter must not match values that normalize_env_variable_input rejects."""
+    pattern = _extract_filter_regex("lp-dest-psc.conf")
+    assert not pattern.fullmatch(value), (
+        f"lp-dest-psc.conf filter unexpectedly matched falsy value {value!r}"
+    )
+
+
+@pytest.mark.name_cache
+@pytest.mark.parametrize("value", TRUTHY_VALUES)
+def test_vps_cache_filter_accepts_truthy_value(value):
+    """lp-dest-vpsc.conf filter must match every value normalize_env_variable_input accepts."""
+    pattern = _extract_filter_regex("lp-dest-vpsc.conf")
+    assert pattern.fullmatch(value), (
+        f"lp-dest-vpsc.conf filter did not match truthy value {value!r}"
+    )
+
+
+@pytest.mark.name_cache
+@pytest.mark.parametrize("value", FALSY_VALUES)
+def test_vps_cache_filter_rejects_falsy_value(value):
+    """lp-dest-vpsc.conf filter must not match values that normalize_env_variable_input rejects."""
+    pattern = _extract_filter_regex("lp-dest-vpsc.conf")
+    assert not pattern.fullmatch(value), (
+        f"lp-dest-vpsc.conf filter unexpectedly matched falsy value {value!r}"
+    )
 
 
 @pytest.mark.name_cache
