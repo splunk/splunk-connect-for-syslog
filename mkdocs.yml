@@ -45,6 +45,7 @@ nav:
           - Fine-Tuning: "architecture/fine-tuning.md"
       - Load Balancers:
           - Overview: "architecture/lb/index.md"
+          - AWS Network Load Balancer: "architecture/lb/nlb.md"
           - Nginx: "architecture/lb/nginx.md"
           - F5: "architecture/lb/f5.md"
   - Getting Started:
