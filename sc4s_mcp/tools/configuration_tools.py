@@ -1,10 +1,178 @@
+import os
 import re
+import subprocess
+from pathlib import Path
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from app import mcp, REPO_ROOT
 from utils.http import sc4s_request as _sc4s_request
 
-
 SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
+_CONFIG_SCRIPT: Path = REPO_ROOT / "configuration-tool.sh"
+
+
+def _yes_no(value: bool) -> str:
+    return "yes" if value else "no"
+
+
+class SC4SConfiguratorInput(BaseModel):
+    """Inputs accepted by ``configuration-tool.sh`` in non-interactive mode."""
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    sc4s_hec_url: str = Field(alias="SC4S_HEC_URL", description="Splunk HEC URL.")
+    sc4s_hec_token: str = Field(
+        alias="SC4S_HEC_TOKEN", description="UUID-form Splunk HEC token."
+    )
+    sc4s_tls_verify: bool = Field(default=True, alias="SC4S_TLS_VERIFY")
+    protocol: Literal["udp", "tcp", "both"] = Field(default="both")
+    mode: Literal["1", "2"] = Field(
+        default="1", description="1 for custom tuning or 2 for hardware-based tuning."
+    )
+    hardware: Literal["16vCPUs", "8vCPUs", "4vCPUs"] = Field(
+        default="8vCPUs",
+        description="Closest hardware profile for automatic tuning.",
+    )
+    expected_eps: int = Field(default=1000, ge=0, alias="expectedEps")
+    sc4s_default_timezone: str = Field(default="", alias="SC4S_DEFAULT_TIMEZONE")
+    adjust_fetch_limit: bool = False
+    sc4s_source_udp_fetch_limit: int = Field(
+        default=1000, alias="SC4S_SOURCE_UDP_FETCH_LIMIT"
+    )
+    adjust_listen_sockets: bool = False
+    sc4s_source_listen_udp_sockets: int = Field(
+        default=4, alias="SC4S_SOURCE_LISTEN_UDP_SOCKETS"
+    )
+    sc4s_source_udp_so_rcvbuff: int = Field(
+        default=-1, alias="SC4S_SOURCE_UDP_SO_RCVBUFF"
+    )
+    sc4s_enable_ebpf: bool = Field(default=False, alias="SC4S_ENABLE_EBPF")
+    sc4s_ebpf_no_sockets: int = Field(default=4, alias="SC4S_EBPF_NO_SOCKETS")
+    sc4s_source_udp_iw_use: bool = Field(default=False, alias="SC4S_SOURCE_UDP_IW_USE")
+    sc4s_source_udp_iw_size: int = Field(
+        default=250000, alias="SC4S_SOURCE_UDP_IW_SIZE"
+    )
+    sc4s_source_tcp_so_rcvbuff: int = Field(
+        default=-1, alias="SC4S_SOURCE_TCP_SO_RCVBUFF"
+    )
+    sc4s_parallelize: bool = Field(default=False, alias="SC4S_PARALLELIZE")
+    sc4s_parallelize_no_partition: int = Field(
+        default=4, alias="SC4S_PARALLELIZE_NO_PARTITION"
+    )
+    customize_tcp_input_window_size: bool = False
+    sc4s_source_tcp_iw_size: int = Field(
+        default=20000000, alias="SC4S_SOURCE_TCP_IW_SIZE"
+    )
+    adjust_disk_buffer: bool = False
+    sc4s_dest_splunk_hec_default_diskbuff_enable: bool = Field(
+        default=True, alias="SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE"
+    )
+    sc4s_dest_splunk_hec_default_diskbuff_reliable: bool = Field(
+        default=False, alias="SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE"
+    )
+    sc4s_dest_splunk_hec_default_diskbuff_membufsize: int = Field(
+        default=163840000, alias="SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE"
+    )
+    sc4s_dest_splunk_hec_default_diskbuff_diskbufsize: int = Field(
+        default=53687091200, alias="SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE"
+    )
+
+
+@mcp.tool
+def sc4s_build_config(config: SC4SConfiguratorInput) -> dict:
+    """Generate an env_file by executing the actual configuration-tool.sh.
+
+    This tool only generates content. It does not modify a running SC4S
+    instance; live changes require the separate get_env and set_env tools.
+    """
+    if not _CONFIG_SCRIPT.exists():
+        return {"error": f"Configuration script not found at {_CONFIG_SCRIPT}"}
+
+    env = {
+        key: value for key, value in os.environ.items() if not key.startswith("SC4S_")
+    }
+    env.update(
+        {
+            "SC4S_NON_INTERACTIVE": "1",
+            "SC4S_HEC_URL": config.sc4s_hec_url,
+            "SC4S_HEC_TOKEN": config.sc4s_hec_token,
+            "SC4S_TLS_VERIFY": _yes_no(config.sc4s_tls_verify),
+            "SC4S_PROTOCOL": config.protocol,
+            "SC4S_MODE": config.mode,
+            "SC4S_HARDWARE": config.hardware,
+            "SC4S_EXPECTED_EPS": str(config.expected_eps),
+            "SC4S_DEFAULT_TIMEZONE": config.sc4s_default_timezone,
+            "SC4S_ADJUST_FETCH_LIMIT": _yes_no(config.adjust_fetch_limit),
+            "SC4S_SOURCE_UDP_FETCH_LIMIT": str(config.sc4s_source_udp_fetch_limit),
+            "SC4S_ADJUST_LISTEN_SOCKETS": _yes_no(config.adjust_listen_sockets),
+            "SC4S_SOURCE_LISTEN_UDP_SOCKETS": str(
+                config.sc4s_source_listen_udp_sockets
+            ),
+            "SC4S_SOURCE_UDP_SO_RCVBUFF": str(config.sc4s_source_udp_so_rcvbuff),
+            "SC4S_ENABLE_EBPF": _yes_no(config.sc4s_enable_ebpf),
+            "SC4S_EBPF_NO_SOCKETS": str(config.sc4s_ebpf_no_sockets),
+            "SC4S_SOURCE_UDP_IW_USE": _yes_no(config.sc4s_source_udp_iw_use),
+            "SC4S_SOURCE_UDP_IW_SIZE": str(config.sc4s_source_udp_iw_size),
+            "SC4S_SOURCE_TCP_SO_RCVBUFF": str(config.sc4s_source_tcp_so_rcvbuff),
+            "SC4S_PARALLELIZE": _yes_no(config.sc4s_parallelize),
+            "SC4S_PARALLELIZE_NO_PARTITION": str(config.sc4s_parallelize_no_partition),
+            "SC4S_SOURCE_TCP_IW_USE": _yes_no(
+                config.customize_tcp_input_window_size
+            ),
+            "SC4S_SOURCE_TCP_IW_SIZE": str(config.sc4s_source_tcp_iw_size),
+            "SC4S_ADJUST_DISKBUFF": _yes_no(config.adjust_disk_buffer),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE": _yes_no(
+                config.sc4s_dest_splunk_hec_default_diskbuff_enable
+            ),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE": _yes_no(
+                config.sc4s_dest_splunk_hec_default_diskbuff_reliable
+            ),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_MEMBUFSIZE": str(
+                config.sc4s_dest_splunk_hec_default_diskbuff_membufsize
+            ),
+            "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE": str(
+                config.sc4s_dest_splunk_hec_default_diskbuff_diskbufsize
+            ),
+        }
+    )
+    try:
+        result = subprocess.run(
+            ["bash", str(_CONFIG_SCRIPT)],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return {"error": "Configuration script timed out after 30 seconds."}
+    except OSError as exc:
+        return {"error": f"Failed to run configuration script: {exc}"}
+
+    if result.returncode != 0:
+        detail = result.stderr.strip()
+        suffix = f": {detail}" if detail else ""
+        return {
+            "error": f"Configuration script failed (exit {result.returncode}){suffix}"
+        }
+
+    warnings = []
+    if result.stderr.strip():
+        warnings.append(result.stderr.strip())
+    if not config.sc4s_tls_verify:
+        warnings.append(
+            "TLS verification is disabled; use this only for development or "
+            "trusted self-signed certificates."
+        )
+    if config.sc4s_hec_url.startswith("http://"):
+        warnings.append(
+            "The HEC URL uses plaintext HTTP; the token and log data will be "
+            "unencrypted."
+        )
+
+    return {"config": result.stdout, "warnings": warnings}
 
 
 @mcp.tool

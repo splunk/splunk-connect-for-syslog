@@ -149,7 +149,7 @@ def test_udp_sockets_default():
 @pytest.mark.features("udp_sockets")
 def test_udp_sockets_custom():
     result = run_plugin({
-        "SC4S_SOURCE_LISTEN_UDP_SOCKETS": "2",
+        "SC4S_SOURCE_LISTEN_UDP_SOCKETS": "4",
     })
 
     assert result.returncode == 0, f"Failed to generate config: {result.stderr}"
