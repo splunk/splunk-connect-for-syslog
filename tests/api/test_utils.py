@@ -1,9 +1,9 @@
 import subprocess
-from unittest.mock import call, patch
+from unittest.mock import Mock, call, patch
 
 import pytest
 
-from utils import apply_with_rollback, restart_syslog_ng
+from utils import apply_with_rollback, reload_syslog_ng, restart_syslog_ng
 
 
 def completed(args, returncode=0, stdout="", stderr=""):
@@ -127,49 +127,102 @@ def test_restart_fails_immediately_when_kill_fails(mock_run):
         restart_syslog_ng()
 
 
-def test_apply_restart_failure_restores_files_and_restarts_runtime(tmp_path):
+@patch("utils.time.sleep")
+@patch("utils.time.monotonic", side_effect=[0, 0, 0.5])
+@patch("utils.subprocess.run")
+def test_reload_accepts_healthy_process_with_unchanged_pid(
+    mock_run, _clock, mock_sleep
+):
+    mock_run.side_effect = [
+        completed(["pgrep"], stdout="101\n"),
+        completed(["syslog-ng-ctl", "reload"]),
+        completed(["pgrep"], stdout="101\n"),
+        completed(["syslog-ng-ctl", "healthcheck"]),
+    ]
+
+    reload_syslog_ng()
+
+    assert mock_run.call_args_list == [
+        call(
+            ["pgrep", "-x", "syslog-ng"],
+            capture_output=True,
+            text=True,
+            timeout=1,
+        ),
+        call(
+            ["syslog-ng-ctl", "reload"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        ),
+        call(
+            ["pgrep", "-x", "syslog-ng"],
+            capture_output=True,
+            text=True,
+            timeout=1,
+        ),
+        call(
+            ["syslog-ng-ctl", "healthcheck", "--timeout", "1"],
+            capture_output=True,
+            text=True,
+            timeout=2,
+        ),
+    ]
+    mock_sleep.assert_not_called()
+
+
+@patch("utils.subprocess.run")
+def test_reload_reports_error_from_stdout_when_stderr_is_empty(mock_run):
+    mock_run.side_effect = [
+        completed(["pgrep"], stdout="101\n"),
+        completed(
+            ["syslog-ng-ctl", "reload"],
+            returncode=1,
+            stdout="configuration reload rejected",
+        ),
+    ]
+
+    with pytest.raises(RuntimeError, match="configuration reload rejected"):
+        reload_syslog_ng()
+
+
+def test_restart_failure_restores_files_and_restarts_runtime(tmp_path):
     existing = tmp_path / "existing.conf"
     existing.write_text("old\n", encoding="utf-8")
     created = tmp_path / "created.conf"
 
+    restart_func = Mock(side_effect=[RuntimeError("restart timed out"), None])
     with (
         patch("utils.syntax_check"),
-        patch(
-            "utils.restart_syslog_ng",
-            side_effect=[RuntimeError("restart timed out"), None],
-        ) as mock_restart,
         pytest.raises(RuntimeError, match="restart timed out"),
     ):
         apply_with_rollback(
             {
                 existing: "new\n",
                 created: "created\n",
-            }
+            },
+            restart_func,
         )
 
     assert existing.read_text(encoding="utf-8") == "old\n"
     assert not created.exists()
     assert not existing.with_suffix(".conf.backup").exists()
     assert not created.with_suffix(".conf.backup").exists()
-    assert mock_restart.call_count == 2
+    assert restart_func.call_count == 2
 
 
 def test_apply_reports_original_and_runtime_rollback_failures(tmp_path):
     config = tmp_path / "parser.conf"
     config.write_text("old\n", encoding="utf-8")
 
-    with (
-        patch("utils.syntax_check"),
-        patch(
-            "utils.restart_syslog_ng",
-            side_effect=[
-                RuntimeError("apply restart timed out"),
-                RuntimeError("rollback restart timed out"),
-            ],
-        ),
-        pytest.raises(RuntimeError) as exc_info,
-    ):
-        apply_with_rollback({config: "new\n"})
+    restart_func = Mock(
+        side_effect=[
+            RuntimeError("apply restart timed out"),
+            RuntimeError("rollback restart timed out"),
+        ]
+    )
+    with patch("utils.syntax_check"), pytest.raises(RuntimeError) as exc_info:
+        apply_with_rollback({config: "new\n"}, restart_func)
 
     assert config.read_text(encoding="utf-8") == "old\n"
     assert str(exc_info.value) == (
@@ -182,51 +235,46 @@ def test_syntax_failure_restores_files_without_restarting_runtime(tmp_path):
     config = tmp_path / "parser.conf"
     config.write_text("old\n", encoding="utf-8")
 
+    restart_func = Mock()
     with (
         patch("utils.syntax_check", side_effect=RuntimeError("syntax error")),
-        patch("utils.restart_syslog_ng") as mock_restart,
         pytest.raises(RuntimeError, match="syntax error"),
     ):
-        apply_with_rollback({config: "invalid\n"})
+        apply_with_rollback({config: "invalid\n"}, restart_func)
 
     assert config.read_text(encoding="utf-8") == "old\n"
     assert not config.with_suffix(".conf.backup").exists()
-    mock_restart.assert_not_called()
+    restart_func.assert_not_called()
 
 
 def test_apply_reports_original_and_file_restore_failures(tmp_path):
     config = tmp_path / "parser.conf"
     config.write_text("old\n", encoding="utf-8")
 
+    restart_func = Mock(side_effect=RuntimeError("apply restart timed out"))
     with (
         patch("utils.syntax_check"),
-        patch(
-            "utils.restart_syslog_ng",
-            side_effect=RuntimeError("apply restart timed out"),
-        ) as mock_restart,
         patch("utils.rollback", side_effect=OSError("restore denied")),
         pytest.raises(RuntimeError) as exc_info,
     ):
-        apply_with_rollback({config: "new\n"})
+        apply_with_rollback({config: "new\n"}, restart_func)
 
     assert str(exc_info.value) == (
         "configuration apply failed: apply restart timed out; "
         "rollback failed: restore denied"
     )
-    mock_restart.assert_called_once_with()
+    restart_func.assert_called_once_with()
 
 
 def test_successful_apply_keeps_new_files_and_restarts_once(tmp_path):
     config = tmp_path / "parser.conf"
     config.write_text("old\n", encoding="utf-8")
 
-    with (
-        patch("utils.syntax_check") as mock_syntax_check,
-        patch("utils.restart_syslog_ng") as mock_restart,
-    ):
-        apply_with_rollback({config: "new\n"})
+    restart_func = Mock()
+    with patch("utils.syntax_check") as mock_syntax_check:
+        apply_with_rollback({config: "new\n"}, restart_func)
 
     assert config.read_text(encoding="utf-8") == "new\n"
     assert not config.with_suffix(".conf.backup").exists()
     mock_syntax_check.assert_called_once_with()
-    mock_restart.assert_called_once_with()
+    restart_func.assert_called_once_with()
