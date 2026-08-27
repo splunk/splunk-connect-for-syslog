@@ -5,13 +5,16 @@ from pathlib import Path
 import subprocess
 import shutil
 import time
+from typing import Callable
 
-from constants import BACKUP_FILE, ENV_FILE
+from constants import ENV_FILE
 
 logger = logging.getLogger(__name__)
 
 RESTART_TIMEOUT_SECONDS = 30
+RELOAD_TIMEOUT_SECONDS = 30
 RESTART_POLL_INTERVAL_SECONDS = 0.5
+RELOAD_POLL_INTERVAL_SECONDS = 0.5
 
 
 def build_env_from_file():
@@ -91,14 +94,34 @@ def restart_syslog_ng():
     )
 
 
-def rollback_env():
-    """Restore env_file from backup and restart syslog-ng."""
-    if BACKUP_FILE.exists():
-        shutil.copy(BACKUP_FILE, ENV_FILE)
-        try:
-            restart_syslog_ng()
-        except Exception:
-            logger.exception("Rollback also failed")
+def reload_syslog_ng():
+    """Reload syslog-ng using syslog-ng-ctl reload command, aka send SIGHUP."""
+    previous_pids = _get_syslog_ng_pids()
+    result = subprocess.run(
+        ["syslog-ng-ctl", "reload"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    if result.returncode != 0:
+        error = result.stderr.strip() or result.stdout.strip()
+        raise RuntimeError(f"syslog-ng reload failed: {error}")
+    deadline = time.monotonic() + RELOAD_TIMEOUT_SECONDS
+    while time.monotonic() < deadline:
+        current_pids = _get_syslog_ng_pids()
+        replacement_is_healthy = (
+            bool(current_pids == previous_pids) and _syslog_ng_is_healthy()
+        )
+        remaining = deadline - time.monotonic()
+        if replacement_is_healthy and remaining > 0:
+            return
+        if remaining <= 0:
+            break
+        time.sleep(min(RELOAD_POLL_INTERVAL_SECONDS, remaining))
+
+    raise RuntimeError(
+        f"syslog-ng reload timed out after {RELOAD_TIMEOUT_SECONDS} seconds"
+    )
 
 
 def syntax_check():
@@ -151,7 +174,9 @@ def cleanup_backups_files(backups: list[tuple[Path, Path]]):
             backup.unlink()
 
 
-def apply_with_rollback(files_to_write: dict[Path, str | None]):
+def apply_with_rollback(
+    files_to_write: dict[Path, str | None], restart_func: Callable[[], None]
+):
     """Write files, validate and restart.
 
     Restore both files and runtime on failure.
@@ -168,13 +193,13 @@ def apply_with_rollback(files_to_write: dict[Path, str | None]):
 
         syntax_check()
         runtime_restart_started = True
-        restart_syslog_ng()
+        restart_func()
     except Exception as apply_error:
         logger.exception("Apply failed, rolling back")
         try:
             rollback(backups)
             if runtime_restart_started:
-                restart_syslog_ng()
+                restart_func()
         except Exception as rollback_error:
             logger.exception("Rollback failed")
             raise RuntimeError(
