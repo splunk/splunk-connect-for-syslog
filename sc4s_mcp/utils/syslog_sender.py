@@ -1,7 +1,6 @@
 """Small raw-text syslog sender used by the MCP event tool."""
 
 import os
-import logging
 import socket
 import time
 from urllib.parse import urlparse
@@ -9,13 +8,10 @@ from urllib.parse import urlparse
 DEFAULT_ALLOWED_PORTS = {514, 601}
 MAX_EVENT_BYTES = 65_507
 
-logger = logging.getLogger(__name__)
-
 def _host():
     hostname = urlparse(os.getenv("SC4S_API_URL", "")).hostname
     if not hostname:
         raise ValueError("SC4S_API_URL must contain a hostname")
-    logger.debug(f"Hostname: {hostname}")
     return hostname
 
 
@@ -41,8 +37,6 @@ def _payloads(text):
         raise ValueError("No syslog events found in raw text input")
     if any(len(payload) > MAX_EVENT_BYTES for payload in payloads):
         raise ValueError("event exceeds maximum size of 65507 bytes")
-    logger.debug(f"Payload size: {len(payloads)}")
-    logger.debug(f"Payload: {payloads}")
     return payloads
 
 
