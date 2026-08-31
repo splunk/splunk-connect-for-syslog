@@ -10,8 +10,8 @@ connected through MCP.
 
 ## Discover the tool
 
-Find a callable tool whose name ends with `sc4s_send_syslog`. Store everything
-before that suffix as `{SC4S_NS}` and call `{SC4S_NS}sc4s_send_syslog`.
+Find a callable tool whose name ends with `send_syslog_text`. Store everything
+before that suffix as `{SC4S_NS}` and call `{SC4S_NS}send_syslog_text`.
 
 If the tool is unavailable, explain that sending requires an SC4S MCP
 connection with the event-sending tool enabled. Do not substitute a shell
@@ -36,7 +36,7 @@ host.
 
 Sending injects events into a running SC4S instance. Before the tool call,
 show the event count, protocol, port, and framing, then obtain explicit
-confirmation. 
+confirmation.
 
 ## Send and report
 

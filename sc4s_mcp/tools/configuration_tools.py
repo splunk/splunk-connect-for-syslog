@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app import mcp, REPO_ROOT
 from utils.http import sc4s_request as _sc4s_request
 
-SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
+SKILL_DIR = REPO_ROOT / "skills" / "parser-creator"
 _CONFIG_SCRIPT: Path = REPO_ROOT / "configuration-tool.sh"
 
 
@@ -184,7 +184,7 @@ def get_parser_creation_guide() -> str:
     sections = []
     for path in [
         SKILL_DIR / "SKILL.md",
-        SKILL_DIR / "references" / "testing-parsers.md",
+        SKILL_DIR / "parser-guide.md",
     ]:
         if path.exists():
             sections.append(path.read_text(encoding="utf-8"))
