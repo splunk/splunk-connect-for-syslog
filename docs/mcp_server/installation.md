@@ -65,6 +65,8 @@ The MCP server is configured through environment variables.
 | `MCP_LOG_LEVEL`             | `INFO`                  | Logging verbosity. Accepts standard Python log level names: `DEBUG`, `INFO`, `WARNING`, `ERROR`.                                                                                                                                                                                                                             |
 | `SC4S_API_URL`              | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools.                                                                                                                                                                                                                                 |
 | `SC4S_MCP_ALLOWED_SYSLOG_PORTS` | `514,601` | Comma-separated syslog destination ports permitted for event-sending tools. Set to `*` to allow every valid port. The destination host always remains the hostname from `SC4S_API_URL`. |
+| `SC4S_MCP_ALLOWED_HOSTS`     | loopback hosts          | Additional comma-separated HTTP `Host` values accepted by the MCP server. `localhost`, `127.0.0.1`, and `[::1]` are always allowed. A value without a port accepts that host on any port; include a port to restrict it. Required when clients connect using a non-loopback hostname or address. |
+| `SC4S_MCP_ALLOWED_ORIGINS`   |                         | Comma-separated browser origins accepted by the MCP server, using exact `http://host[:port]` or `https://host[:port]` values. Requests without an `Origin` header, including normal native MCP clients, remain allowed. |
 | `SC4S_API_TOKEN`            |                         | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication-optional) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
 | `SC4S_API_TOKEN_FILE`       |                         | Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings.                                                                                                                      |
 | `SC4S_MCP_AUTH_TOKEN`       |                         | Clients must present auth token in `Authorization: Bearer <token>` on every request to `/mcp`. See [Authentication](#authentication-optional).                                                                                                                                                                               |
@@ -118,6 +120,31 @@ podman run -d --network host \
   --name sc4s-mcp \
   ghcr.io/splunk/splunk-connect-for-syslog/container3mcp
 ```
+
+## Host and Origin validation
+
+The HTTP transport validates every request before it reaches `/mcp` or
+`/health`. By default, only the loopback hosts `localhost`, `127.0.0.1`, and
+`[::1]` are accepted. Native MCP clients normally omit the `Origin` header and
+continue to work without additional configuration.
+
+For a remote deployment explicitly allow the hostname clients use:
+
+```bash
+-e SC4S_MCP_ALLOWED_HOSTS=mcp.example.com
+```
+
+Requests with any other `Host` are rejected with HTTP 421. If a browser-based
+client connects directly to the MCP server, also allow its exact origin:
+
+```bash
+-e SC4S_MCP_ALLOWED_ORIGINS=https://browser.example.com
+```
+
+Origins include the scheme and, when non-default or explicitly sent, the port.
+For example, `https://browser.example.com` and
+`https://browser.example.com:8443` are different allowed origins. An
+unlisted or malformed `Origin` is rejected with HTTP 403. Wildcards are not supported. 
 
 The image ships a healthcheck that verifies the SSE endpoint is up. Check
 the container status with:
@@ -225,6 +252,7 @@ TOKEN=$(python -c "import secrets; print(secrets.token_urlsafe(32))")
 
 docker run -d \
   -p 8000:8000 \
+  -e SC4S_MCP_ALLOWED_HOSTS=<MCP_HOST> \
   -v /opt/sc4s-mcp/tls:/etc/sc4s-mcp/tls:ro \
   -e SC4S_MCP_TLS_CERT=/etc/sc4s-mcp/tls/server.crt \
   -e SC4S_MCP_TLS_KEY=/etc/sc4s-mcp/tls/server.key \
