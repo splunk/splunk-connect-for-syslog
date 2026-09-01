@@ -80,8 +80,35 @@ The MCP server is configured through environment variables.
 You can pull the latest SC4S MCP image from the registry:
 `ghcr.io/splunk/splunk-connect-for-syslog/container3mcp`.
 The examples below assume the SC4S container is reachable at
-`http://<SC4S_HOST>:8080`. If SC4S runs on the same host, use
-`--network host` and point `SC4S_API_URL` to `http://127.0.0.1:8080`.
+`http://<SC4S_HOST>:8080`.
+
+If SC4S and the MCP server run as separate containers on the same host,
+choose one of these networking options:
+
+* **Host networking:** Use this when SC4S already runs with `--network host`,
+  or when its management API is reachable only through the host loopback
+  interface. Run the MCP container with `--network host` and set
+  `SC4S_API_URL=http://127.0.0.1:8080`. In this mode, `127.0.0.1` refers to
+  the shared host network namespace.
+* **Shared container network:** Create a user-defined Docker or Podman network
+  and attach both containers to it. Set `SC4S_API_URL` to the SC4S container
+  name, for example `http://SC4S:8080`. Container DNS resolves `SC4S` on the
+  shared network, and port 8080 does not need to be published on the host.
+
+Create the shared network once:
+
+```bash
+docker network create sc4s-network
+# or: podman network create sc4s-network
+```
+
+Add `--network sc4s-network` when starting both SC4S and the MCP server. For
+the MCP container, use:
+
+```bash
+--network sc4s-network \
+-e SC4S_API_URL=http://SC4S:8080
+```
 
 Docker:
 
