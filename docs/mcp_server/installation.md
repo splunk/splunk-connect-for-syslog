@@ -315,8 +315,10 @@ process and communicates via standard input/output. Provide:
 
 ## Upgrading
 
-To upgrade the MCP server, pull a newer image and recreate the container with
-the same configuration options. No data migration is required.
+The MCP server version must match the SC4S version it manages. Before upgrading,
+record the image tag or digest used by the running MCP container and keep its
+current configuration. Pull the replacement image before stopping the existing
+container. No data migration is required.
 
 Docker:
 

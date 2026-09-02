@@ -1,5 +1,10 @@
 # SC4S MCP Server
 
+!!! warning "Beta feature"
+    The SC4S MCP server and AI agent plugin are beta features. They are
+    currently supported only with SC4S `3.46.0`, and their interfaces may
+    change between releases.
+
 The **SC4S MCP Server** is a [Model Context Protocol](https://modelcontextprotocol.io) server
 that exposes Splunk Connect for Syslog (SC4S) knowledge and a safe management
 API to any MCP-compatible AI assistant or agent (for example: Cursor,
@@ -82,6 +87,33 @@ Additional the shipped image:
   bind mount described in
   [Installation](installation.md#prepare-your-sc4s-instance) applies
   to the SC4S container, not to the MCP server container.
+
+## Beta status and support
+
+The SC4S MCP server is currently available as a beta feature. Use the MCP
+server version that matches the SC4S version it manages; this beta release
+supports SC4S `3.46.0` only. Compatibility with earlier or later SC4S versions
+is not guaranteed.
+
+Known limitations:
+
+* Management tools require the SC4S management API to be enabled. Applying an
+  `env_file` can restart SC4S, while parser and metadata changes can reload it.
+* Tool schemas, prompts, and plugin workflows may change during the beta.
+
+Beta support is provided by the SC4S community on a best-effort basis. Report
+bugs through the
+[SC4S GitHub issue tracker](https://github.com/splunk/splunk-connect-for-syslog/issues)
+or ask for help in the SC4S community channel in Splunk Community Slack. Never
+include authentication tokens, `env_file` secrets, customer data, or other
+sensitive information in an issue or Slack message.
+
+Before upgrading, record the currently deployed MCP image tag or digest and
+keep the existing container configuration. Upgrade SC4S and its MCP server to
+matching versions. If verification
+fails, recreate the MCP container with the previously recorded image. See
+[Upgrading](installation.md#upgrading) for the full
+procedure.
 
 ## Next steps
 

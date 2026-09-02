@@ -95,5 +95,5 @@ adding support for a new vendor might look like this:
 
 Throughout this flow the MCP server itself only reads files from its own
 container and makes HTTP calls to `SC4S_API_URL`. See
-[Security model](index.md#security-model-no-host-command-execution) for
+[Security model](index.md#security-model) for
 details.
