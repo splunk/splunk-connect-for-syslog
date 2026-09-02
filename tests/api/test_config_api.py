@@ -4,6 +4,8 @@ from io import BytesIO
 from unittest.mock import patch
 import pytest
 
+import config_api
+
 
 @pytest.fixture
 def ctx_dir(tmp_path):
@@ -136,9 +138,7 @@ def test_add_parser_not_conf(client):
 
 @patch("config_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("config_api.apply_with_rollback", side_effect=RuntimeError("syntax error"))
-def test_add_parser_rollback_on_syntax_fail(
-    mock_apply, mock_submit, client, ctx_dir
-):
+def test_add_parser_rollback_on_syntax_fail(mock_apply, mock_submit, client, ctx_dir):
     resp = client.post(
         "/config/parser",
         data={"file": (BytesIO(b"bad content"), "bad.conf")},
@@ -211,9 +211,7 @@ def test_delete_parser_not_found(client):
 
 @patch("config_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("config_api.apply_with_rollback", side_effect=RuntimeError("syntax error"))
-def test_delete_parser_rollback_on_failure(
-    mock_apply, mock_submit, client, ctx_dir
-):
+def test_delete_parser_rollback_on_failure(mock_apply, mock_submit, client, ctx_dir):
     parser_file = ctx_dir / "parsers" / "my_parser.conf"
     parser_file.write_text("block parser my_parser {}")
 
@@ -260,14 +258,15 @@ def test_set_env_submits_background_work(mock_apply, mock_submit, client, ctx_di
     assert response.status_code == 202
     work = mock_submit.call_args.args[0]
     assert work() == {"status": "env_file updated successfully"}
-    mock_apply.assert_called_once_with({ctx_dir / "env_file": "NEW=value\n"})
+    mock_apply.assert_called_once_with(
+        {ctx_dir / "env_file": "NEW=value\n"},
+        config_api.restart_syslog_ng,
+    )
 
 
 @patch("config_api.submit_job", return_value=({"job_id": "job-2"}, 202))
 @patch("config_api.apply_with_rollback")
-def test_add_parser_submits_background_work(
-    mock_apply, mock_submit, client, ctx_dir
-):
+def test_add_parser_submits_background_work(mock_apply, mock_submit, client, ctx_dir):
     response = client.post(
         "/config/parser",
         data={"file": (BytesIO(b"block parser test {}"), "test.conf")},
@@ -281,7 +280,8 @@ def test_add_parser_submits_background_work(
         "path": str(ctx_dir / "parsers" / "test.conf"),
     }
     mock_apply.assert_called_once_with(
-        {ctx_dir / "parsers" / "test.conf": "block parser test {}"}
+        {ctx_dir / "parsers" / "test.conf": "block parser test {}"},
+        config_api.reload_syslog_ng,
     )
 
 
@@ -298,4 +298,4 @@ def test_delete_parser_submits_background_work(
     assert response.status_code == 202
     work = mock_submit.call_args.args[0]
     assert work() == {"status": "parser deleted successfully"}
-    mock_apply.assert_called_once_with({parser_file: None})
+    mock_apply.assert_called_once_with({parser_file: None}, config_api.reload_syslog_ng)

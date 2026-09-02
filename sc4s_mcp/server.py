@@ -7,10 +7,12 @@ import uvicorn
 
 from app import mcp
 from tls import TlsConfigError, build_uvicorn_ssl_kwargs
+from transport_security import TransportSecurityMiddleware
 from utils.transport import TransportMode, resolve_transport
 
 import resources.docs  # noqa: F401
 import tools.configuration_tools  # noqa: F401
+import tools.event_tools  # noqa: F401
 import tools.metadata_tools  # noqa: F401
 import prompts.workflows  # noqa: F401
 
@@ -25,6 +27,7 @@ MCP_MOUNT_PATH = "/mcp"
 def _build_api() -> FastAPI:
     mcp_app = mcp.http_app(path="/")
     api = FastAPI(lifespan=mcp_app.lifespan)
+    api.add_middleware(TransportSecurityMiddleware)
 
     @api.get(HEALTH_PATH, include_in_schema=False)
     async def health() -> dict[str, str]:
