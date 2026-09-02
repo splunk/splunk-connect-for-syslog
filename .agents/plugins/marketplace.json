@@ -1,0 +1,20 @@
+{
+  "name": "sc4s-plugins",
+  "interface": {
+    "displayName": "SC4S Plugins"
+  },
+  "plugins": [
+    {
+      "name": "sc4s-plugin",
+      "source": {
+        "source": "url",
+        "url": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

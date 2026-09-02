@@ -1,0 +1,36 @@
+{
+  "name": "sc4s-plugin",
+  "version": "3.46.0",
+  "description": "Create, configure, troubleshoot, and safely manage SC4S.",
+  "author": {
+    "name": "Karol Wrona"
+  },
+  "homepage": "https://github.com/splunk/splunk-connect-for-syslog",
+  "repository": "https://github.com/splunk/splunk-connect-for-syslog",
+  "keywords": [
+    "sc4s",
+    "splunk",
+    "syslog",
+    "parser",
+    "observability"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SC4S Plugin",
+    "shortDescription": "Create, configure, and manage SC4S.",
+    "longDescription": "Create deployable SC4S syslog-ng parsers, guide env_file configuration, troubleshoot live instances, and safely manage custom parsers and Splunk metadata overrides.",
+    "developerName": "Karol Wrona",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Create an SC4S parser from my raw log sample.",
+      "Troubleshoot why my SC4S events are missing.",
+      "Safely update my SC4S Splunk metadata overrides."
+    ],
+    "websiteURL": "https://github.com/splunk/splunk-connect-for-syslog"
+  }
+}

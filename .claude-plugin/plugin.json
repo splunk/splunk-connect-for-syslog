@@ -1,0 +1,17 @@
+{
+  "name": "sc4s-plugin",
+  "version": "3.46.0",
+  "description": "Create, configure, troubleshoot, and safely manage SC4S.",
+  "author": {
+    "name": "Karol Wrona"
+  },
+  "homepage": "https://github.com/splunk/splunk-connect-for-syslog",
+  "repository": "https://github.com/splunk/splunk-connect-for-syslog",
+  "keywords": [
+    "sc4s",
+    "splunk",
+    "syslog",
+    "parser",
+    "observability"
+  ]
+}
