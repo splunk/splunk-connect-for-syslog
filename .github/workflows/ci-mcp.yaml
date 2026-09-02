@@ -30,12 +30,6 @@ on:
       - "next*"
       - "feat/mcp-feature-branch"
 
-permissions:
-  actions: read
-  contents: write
-  deployments: write
-  packages: write
-
 jobs:
   meta:
     runs-on: ubuntu-latest
@@ -46,6 +40,8 @@ jobs:
       container_version: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_revision: ${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.revision'] }}
       container_base: ${{ fromJSON(steps.docker_action_meta.outputs.json).tags[0] }}
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -89,6 +85,9 @@ jobs:
     name: Build Action
     needs:
       - meta
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -208,6 +207,8 @@ jobs:
       - scan-docker-image-cves
       - test-mcp-unit-tests
       - test-mcp-container-health
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
         with:
