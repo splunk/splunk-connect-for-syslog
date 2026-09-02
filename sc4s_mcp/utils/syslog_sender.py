@@ -60,15 +60,23 @@ def send_text(*, text, protocol, port, framing=None, timeout=5.0):
                     if framing == "octet-counting"
                     else payload + b"\n"
                 )
-                sock.sendall(framed)
-                sent += 1
-                bytes_sent += len(framed)
+                try:
+                    sock.sendall(framed)
+                except OSError:
+                    failed += 1
+                else:
+                    sent += 1
+                    bytes_sent += len(framed)
         else:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(timeout)
             for payload in payloads:
-                bytes_sent += sock.sendto(payload, destination)
-                sent += 1
+                try:
+                    bytes_sent += sock.sendto(payload, destination)
+                except OSError:
+                    failed += 1
+                else:
+                    sent += 1
     finally:
         if sock:
             sock.close()
