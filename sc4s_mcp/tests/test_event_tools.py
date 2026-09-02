@@ -28,6 +28,26 @@ def test_send_text_sends_non_empty_lines_over_udp(monkeypatch):
     ]
 
 
+def test_send_text_reports_failed_udp_payloads(monkeypatch):
+    sock = Mock()
+    sock.sendto.side_effect = [len(b"<14>one"), OSError("send failed"), len(b"<14>three")]
+    monkeypatch.setattr(syslog_sender.socket, "socket", Mock(return_value=sock))
+    monkeypatch.setenv("SC4S_API_URL", "http://sc4s.example:8080")
+
+    result = syslog_sender.send_text(
+        text="<14>one\n<14>two\n<14>three",
+        protocol="udp",
+        port=514,
+        timeout=5,
+    )
+
+    assert result["status"] == "partial"
+    assert result["attempted"] == 3
+    assert result["sent"] == 2
+    assert result["failed"] == 1
+    assert result["bytes_sent"] == len(b"<14>one") + len(b"<14>three")
+
+
 def test_send_text_rejects_an_empty_request(monkeypatch):
     monkeypatch.setenv("SC4S_API_URL", "http://sc4s.example:8080")
 
