@@ -198,7 +198,7 @@ For example, `https://browser.example.com` and
 unlisted or malformed `Origin` is rejected with HTTP 403. Wildcard syntax is
 not supported; list each host or origin explicitly.
 
-The image ships a healthcheck that verifies the SSE endpoint is up. Check
+The image ships a healthcheck that verifies the `/health` endpoint. Check
 the container status with:
 
 ```bash

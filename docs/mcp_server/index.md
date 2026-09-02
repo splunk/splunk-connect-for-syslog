@@ -41,7 +41,7 @@ communicates with:
 
 ## Security model
 
-!!! note "The MCP server never runs commands outside its container"
+!!! note "The MCP server never runs commands on the host"
     The SC4S MCP server does **not** execute shell commands, scripts, or
     binaries on your host. It does **not** invoke `docker`, `podman`,
     `systemctl`, `syslog-ng`, `bash`, or any other process outside the
@@ -52,17 +52,20 @@ communicates with:
     that API, decides what configuration is accepted, validates syntax,
     and restarts `syslog-ng` inside the SC4S container when needed.
 
-Concretely, the MCP server only does two kinds of I/O:
+Concretely, the MCP server performs these kinds of I/O:
 
 * **Reads** a small, read-only set of files that are baked into its own
   container image at build time: the documentation under `docs/`, the
-  parser library under `package/lite/etc/addons/`, and the parser-creator
+  parser library under `package/shared/addons/`, and the parser-creator
   knowledge base. These are static; the MCP server does not reach into
   your host filesystem.
 * **Makes HTTP(S) requests** to `SC4S_API_URL`, the REST API running
   inside the SC4S container. Every "management" tool is a thin wrapper
-  over a single HTTP call. There is no shell, no `exec`, and no process
-  spawning.
+  over a single HTTP call.
+* **Runs the bundled configuration generator** when `sc4s_build_config`
+  is called. This tool starts `configuration-tool.sh` with `bash` inside
+  the MCP container. The script generates an `env_file` preview; it does
+  not execute commands on the host or modify the running SC4S instance.
 
 Additional the shipped image:
 

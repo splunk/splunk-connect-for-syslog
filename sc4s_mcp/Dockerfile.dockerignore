@@ -13,7 +13,7 @@
 !docs/
 !package/shared/addons/
 !skills/parser-creator/
-!skills/sc4s-configurator/
+!skills/sc4s-guided-configuration/
 !configuration-tool.sh
 **/__pycache__
 **/*.pyc

@@ -8,6 +8,7 @@ The repository root is the plugin root, and `skills/` is the single source of sk
 
 - `create-parser` creates SC4S syslog-ng parsers from raw log samples.
 - `sc4s-guided-configuration` guides SC4S `env_file` configuration and tuning.
+- `sc4s-send-syslog` sends raw-text test events to the configured SC4S instance.
 - `troubleshoot-sc4s` diagnoses health, ingestion, routing, parser, and configuration-job problems.
 - `manage-splunk-metadata` safely manages full-replacement Splunk metadata overrides.
 - `manage-sc4s-parsers` lists, inspects, deploys, updates, and deletes custom parsers with job polling and health verification.

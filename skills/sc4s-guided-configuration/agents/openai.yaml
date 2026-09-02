@@ -1,4 +1,4 @@
 interface:
-  display_name: "Configure SC4S"
+  display_name: "SC4S Guided Configuration"
   short_description: "Guide SC4S env_file setup and performance tuning"
   default_prompt: "Use $sc4s-guided-configuration to guide me through creating and optionally applying an SC4S env_file."
