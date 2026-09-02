@@ -6,6 +6,7 @@
 !sc4s_mcp/health_probe.py
 !sc4s_mcp/server.py
 !sc4s_mcp/tls.py
+!sc4s_mcp/transport_security.py
 !sc4s_mcp/resources/
 !sc4s_mcp/tools/
 !sc4s_mcp/prompts/
