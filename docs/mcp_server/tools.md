@@ -30,7 +30,7 @@ outbound calls and cannot modify anything.
 | Tool | Description |
 |---|---|
 | `list_vendors()` | Lists all vendors supported by SC4S, based on the subdirectories of `docs/sources/vendor/`. |
-| `list_all_parsers()` | Lists all `.conf` parser files from `package/lite/etc/addons/`. |
+| `list_all_parsers()` | Lists all `.conf` parser files from `package/shared/addons/`. |
 | `list_vendor_parsers(vendor)` | Lists parser files whose contents reference a vendor name (case-insensitive whole-word match). |
 | `get_parser(parser_name)` | Returns the content of a parser file. Accepts either the file name (`foo.conf`) or the stem (`foo`). Returns `{ "found": bool, "path": ..., "content": ... }`. |
 | `search_docs(query)` | Regex search across every markdown file under `docs/`. Returns `path:line: snippet` entries. |
