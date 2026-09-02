@@ -3,7 +3,7 @@ name: sc4s-send-syslog
 description: Send raw-text test syslog events to the SC4S host through its MCP tool. Use when a user wants to inject sample syslog lines for parser, routing, or ingestion testing; not for PCAP replay or arbitrary hosts.
 ---
 
-# Send Syslog Text
+# SC4S Send Syslog
 
 Use this skill to inject user-supplied test events into the SC4S instance
 connected through MCP.
