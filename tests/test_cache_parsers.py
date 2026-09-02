@@ -57,7 +57,7 @@ def test_name_cache_miss_preserves_message_without_logging_traceback():
 
 
 def test_name_cache_hit_applies_cached_host():
-    parser = make_name_cache_parser({3221225994: "cache-host"})
+    parser = make_name_cache_parser({"v4:192.0.2.10": "cache-host"})
     message = LogMessage(
         {
             "SOURCEIP": "192.0.2.10",
@@ -73,7 +73,7 @@ def test_name_cache_hit_applies_cached_host():
 
 
 def test_name_cache_unexpected_hit_failure_logs_traceback():
-    parser = make_name_cache_parser({3221225994: "cache-host"})
+    parser = make_name_cache_parser({"v4:192.0.2.10": "cache-host"})
     message = RejectingLogMessage(
         {
             "SOURCEIP": "192.0.2.10",

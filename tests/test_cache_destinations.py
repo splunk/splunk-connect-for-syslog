@@ -120,7 +120,7 @@ def test_name_cache_new_entry_is_published_only_when_batch_is_flushed(
     assert destination.init({}) is True
     assert destination.open() is True
     reader = SqliteDict(database_file, outer_stack=False)
-    database_key = 3221225986
+    database_key = "v4:192.0.2.2"
 
     try:
         result = destination.send(
@@ -153,7 +153,7 @@ def test_name_cache_changed_entry_is_published_only_after_flush(
     )
     assert destination.init({}) is True
     assert destination.open() is True
-    database_key = 3221225986
+    database_key = "v4:192.0.2.2"
     destination.db[database_key] = "old-cache-host"
     destination.db.commit()
     reader = SqliteDict(database_file, outer_stack=False)
