@@ -1,7 +1,6 @@
 site_name: Splunk Connect for Syslog
-plugins: 
+plugins:
   - search
-  - include_dir_to_nav
 extra:
   version:
     provider: mike
@@ -72,9 +71,200 @@ nav:
           - GKE (Experimental): "gettingstarted/gke.md"
   - Sources:
       - Read First: "sources/index.md"
-      - Message Formats: "sources/base"
+      - Message Formats:
+          # <<< AUTOGEN:base >>>
+          - "sources/base/cef.md"
+          - "sources/base/leef.md"
+          - "sources/base/nix.md"
+          # <<< /AUTOGEN:base >>>
       - Simple Source: "sources/simple.md"
-      - Known Vendors: "sources/vendor"
+      - Known Vendors:
+          # <<< AUTOGEN:vendor >>>
+          - a10networks: "sources/vendor/a10networks/vthunder.md"
+          - Akamai: "sources/vendor/Akamai/index.md"
+          - Alcatel: "sources/vendor/Alcatel/Switch.md"
+          - Alsid: "sources/vendor/Alsid/Alsid.md"
+          - Arista: "sources/vendor/Arista/index.md"
+          - Aruba:
+              - "sources/vendor/Aruba/ap.md"
+              - "sources/vendor/Aruba/clearpass.md"
+              - "sources/vendor/Aruba/silverpeak.md"
+          - Avaya: "sources/vendor/Avaya/index.md"
+          - AVI: "sources/vendor/AVI/index.md"
+          - Aviatrix: "sources/vendor/Aviatrix/aviatrix.md"
+          - Barracuda:
+              - "sources/vendor/Barracuda/waf.md"
+              - "sources/vendor/Barracuda/waf_on_prem.md"
+          - BeyondTrust: "sources/vendor/BeyondTrust/sra.md"
+          - Broadcom:
+              - "sources/vendor/Broadcom/brightmail.md"
+              - "sources/vendor/Broadcom/dlp.md"
+              - "sources/vendor/Broadcom/ep.md"
+              - "sources/vendor/Broadcom/layer7_api_gateway.md"
+              - "sources/vendor/Broadcom/proxy.md"
+              - "sources/vendor/Broadcom/sslva.md"
+          - Brocade: "sources/vendor/Brocade/switch.md"
+          - Buffalo: "sources/vendor/Buffalo/index.md"
+          - Checkpoint:
+              - "sources/vendor/Checkpoint/firewallos.md"
+              - "sources/vendor/Checkpoint/logexporter_5424.md"
+              - "sources/vendor/Checkpoint/logexporter_legacy.md"
+          - Cisco:
+              - "sources/vendor/Cisco/cisco_ace.md"
+              - "sources/vendor/Cisco/cisco_acs.md"
+              - "sources/vendor/Cisco/cisco_asa.md"
+              - "sources/vendor/Cisco/cisco_dna.md"
+              - "sources/vendor/Cisco/cisco_esa.md"
+              - "sources/vendor/Cisco/cisco_imc.md"
+              - "sources/vendor/Cisco/cisco_ios.md"
+              - "sources/vendor/Cisco/cisco_ise.md"
+              - "sources/vendor/Cisco/cisco_meraki.md"
+              - "sources/vendor/Cisco/cisco_mm.md"
+              - "sources/vendor/Cisco/cisco_ms.md"
+              - "sources/vendor/Cisco/cisco_tvcs.md"
+              - "sources/vendor/Cisco/cisco_ucm.md"
+              - "sources/vendor/Cisco/cisco_ucshx.md"
+              - "sources/vendor/Cisco/cisco_viptela.md"
+              - "sources/vendor/Cisco/cisco_wsa.md"
+          - Citrix: "sources/vendor/Citrix/netscaler.md"
+          - Clearswift: "sources/vendor/Clearswift/index.md"
+          - Cohesity: "sources/vendor/Cohesity/cluster.md"
+          - CyberArk:
+              - "sources/vendor/CyberArk/epv.md"
+              - "sources/vendor/CyberArk/pta.md"
+          - Cylance: "sources/vendor/Cylance/protect.md"
+          - DARKTRACE: "sources/vendor/DARKTRACE/darktrace.md"
+          - Dell:
+              - "sources/vendor/Dell/avamar.md"
+              - "sources/vendor/Dell/cmc.md"
+              - "sources/vendor/Dell/emc_powerstore.md"
+              - "sources/vendor/Dell/emc_powerswitchn.md"
+              - "sources/vendor/Dell/idrac.md"
+              - "sources/vendor/Dell/ome.md"
+              - "sources/vendor/Dell/rsa_secureid.md"
+              - "sources/vendor/Dell/sonic.md"
+              - "sources/vendor/Dell/sonicwall.md"
+          - epic: "sources/vendor/epic/epic_ehr.md"
+          - F5: "sources/vendor/F5/bigip.md"
+          - FireEye:
+              - "sources/vendor/FireEye/cms.md"
+              - "sources/vendor/FireEye/emps.md"
+              - "sources/vendor/FireEye/etp.md"
+              - "sources/vendor/FireEye/hx.md"
+          - Forcepoint:
+              - "sources/vendor/Forcepoint/index.md"
+              - "sources/vendor/Forcepoint/webprotect.md"
+          - Fortinet:
+              - "sources/vendor/Fortinet/fortimail.md"
+              - "sources/vendor/Fortinet/fortios.md"
+              - "sources/vendor/Fortinet/fortiweb.md"
+          - GitHub: "sources/vendor/GitHub/index.md"
+          - HAProxy: "sources/vendor/HAProxy/syslog.md"
+          - HPe:
+              - "sources/vendor/HPe/ilo.md"
+              - "sources/vendor/HPe/jedirect.md"
+              - "sources/vendor/HPe/procurve.md"
+          - IBM: "sources/vendor/IBM/datapower.md"
+          - Imperva:
+              - "sources/vendor/Imperva/incapusla.md"
+              - "sources/vendor/Imperva/waf.md"
+          - InfoBlox: "sources/vendor/InfoBlox/index.md"
+          - ISC:
+              - "sources/vendor/ISC/bind.md"
+              - "sources/vendor/ISC/dhcpd.md"
+          - Juniper:
+              - "sources/vendor/Juniper/junos.md"
+              - "sources/vendor/Juniper/netscreen.md"
+          - Kaspersky:
+              - "sources/vendor/Kaspersky/es.md"
+              - "sources/vendor/Kaspersky/es_cef.md"
+              - "sources/vendor/Kaspersky/es_leef.md"
+          - Liveaction: "sources/vendor/Liveaction/liveaction_livenx.md"
+          - McAfee:
+              - "sources/vendor/McAfee/epo.md"
+              - "sources/vendor/McAfee/nsp.md"
+              - "sources/vendor/McAfee/wg.md"
+          - Microfocus:
+              - "sources/vendor/Microfocus/arcsight.md"
+              - "sources/vendor/Microfocus/windows.md"
+          - Microsoft: "sources/vendor/Microsoft/index.md"
+          - Mikrotik: "sources/vendor/Mikrotik/routeros.md"
+          - NetApp:
+              - "sources/vendor/NetApp/ontap.md"
+              - "sources/vendor/NetApp/storage-grid.md"
+          - Netmotion:
+              - "sources/vendor/Netmotion/mobilityserver.md"
+              - "sources/vendor/Netmotion/reporting.md"
+          - NetScout: "sources/vendor/NetScout/arbor_edge.md"
+          - Netwrix: "sources/vendor/Netwrix/endpoint_protector.md"
+          - Novell: "sources/vendor/Novell/netiq.md"
+          - Nutanix: "sources/vendor/Nutanix/cvm.md"
+          - OPSWAT: "sources/vendor/OPSWAT/metadefender_core.md"
+          - Ossec: "sources/vendor/Ossec/ossec.md"
+          - PaloaltoNetworks:
+              - "sources/vendor/PaloaltoNetworks/cortexxdr.md"
+              - "sources/vendor/PaloaltoNetworks/panos.md"
+              - "sources/vendor/PaloaltoNetworks/prisma.md"
+              - "sources/vendor/PaloaltoNetworks/traps.md"
+          - Pfsense: "sources/vendor/Pfsense/firewall.md"
+          - Polycom: "sources/vendor/Polycom/rprm.md"
+          - Powertech: "sources/vendor/Powertech/interact.md"
+          - Proofpoint: "sources/vendor/Proofpoint/index.md"
+          - Pulse: "sources/vendor/Pulse/connectsecure.md"
+          - PureStorage: "sources/vendor/PureStorage/array.md"
+          - Qumulo: "sources/vendor/Qumulo/storage.md"
+          - Radware: "sources/vendor/Radware/defensepro.md"
+          - Raritan: "sources/vendor/Raritan/dsx.md"
+          - Ricoh: "sources/vendor/Ricoh/mfp.md"
+          - Riverbed:
+              - "sources/vendor/Riverbed/index.md"
+              - "sources/vendor/Riverbed/steelconnect.md"
+              - "sources/vendor/Riverbed/steelhead.md"
+          - Ruckus: "sources/vendor/Ruckus/SmartZone.md"
+          - Schneider: "sources/vendor/Schneider/apc.md"
+          - SecureAuthIdP: "sources/vendor/SecureAuthIdP/secureauth_idp.md"
+          - Semperis: "sources/vendor/Semperis/DSP.md"
+          - Solace: "sources/vendor/Solace/evenbroker.md"
+          - Sophos:
+              - "sources/vendor/Sophos/Firewall.md"
+              - "sources/vendor/Sophos/webappliance.md"
+          - Spectracom: "sources/vendor/Spectracom/index.md"
+          - Splunk:
+              - "sources/vendor/Splunk/heavyforwarder.md"
+              - "sources/vendor/Splunk/sc4s.md"
+          - StealthWatch: "sources/vendor/StealthWatch/StealthIntercept.md"
+          - Suricata: "sources/vendor/Suricata/Suricata.md"
+          - syslog-ng: "sources/vendor/syslog-ng/loggen.md"
+          - Tanium: "sources/vendor/Tanium/platform.md"
+          - Tenable:
+              - "sources/vendor/Tenable/ad.md"
+              - "sources/vendor/Tenable/nnm.md"
+          - Thales:
+              - "sources/vendor/Thales/thales_sta.md"
+              - "sources/vendor/Thales/thales_vormetric.md"
+          - Thycotic: "sources/vendor/Thycotic/secretserver.md"
+          - Tintri: "sources/vendor/Tintri/syslog.md"
+          - Trellix:
+              - "sources/vendor/Trellix/cms.md"
+              - "sources/vendor/Trellix/mps.md"
+          - Trend: "sources/vendor/Trend/deepsecurity.md"
+          - Ubiquiti: "sources/vendor/Ubiquiti/unifi.md"
+          - Varonis: "sources/vendor/Varonis/datadvantage.md"
+          - Vectra:
+              - "sources/vendor/Vectra/cognito.md"
+              - "sources/vendor/Vectra/cognito_json.md"
+          - Veeam: "sources/vendor/Veeam/veeam.md"
+          - VMWare:
+              - "sources/vendor/VMWare/airwatch.md"
+              - "sources/vendor/VMWare/carbonblack.md"
+              - "sources/vendor/VMWare/horizonview.md"
+              - "sources/vendor/VMWare/vsphere.md"
+          - Wallix: "sources/vendor/Wallix/bastion.md"
+          - XYPro: "sources/vendor/XYPro/mergedaudit.md"
+          - Zscaler:
+              - "sources/vendor/Zscaler/lss.md"
+              - "sources/vendor/Zscaler/nss.md"
+          # <<< /AUTOGEN:vendor >>>
   - Create a parser:
       - Read First: "creating_parsers/index.md"
       - Filter Messages: "creating_parsers/filter_message.md"

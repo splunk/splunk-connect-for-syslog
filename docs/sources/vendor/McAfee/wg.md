@@ -1,4 +1,4 @@
-## Web Gateway
+# Web Gateway
 
 ## Key facts
 
