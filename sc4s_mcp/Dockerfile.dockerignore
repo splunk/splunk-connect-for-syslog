@@ -6,14 +6,15 @@
 !sc4s_mcp/health_probe.py
 !sc4s_mcp/server.py
 !sc4s_mcp/tls.py
+!sc4s_mcp/transport_security.py
 !sc4s_mcp/resources/
 !sc4s_mcp/tools/
 !sc4s_mcp/prompts/
 !sc4s_mcp/utils/
 !docs/
 !package/shared/addons/
-!.agents/skills/parser-creator/
-!.agents/skills/sc4s-configurator/
+!skills/parser-creator/
+!skills/sc4s-configurator/
 !configuration-tool.sh
 **/__pycache__
 **/*.pyc

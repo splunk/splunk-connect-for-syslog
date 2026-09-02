@@ -1,0 +1,4 @@
+interface:
+  display_name: "SC4S Send Syslog"
+  short_description: "Inject raw-text test events through SC4S MCP"
+  default_prompt: "Use $send-syslog-text to send these sample syslog events to my SC4S instance."

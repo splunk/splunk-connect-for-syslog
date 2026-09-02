@@ -66,7 +66,7 @@ sudo systemctl restart sc4s
 ```
 
 !!! note "Connecting the MCP server"
-    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication-optional).
+    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication).
 
 The MCP server's configuration and metadata tools also require `SC4S_API_MANAGEMENT_ENABLED=true` on the SC4S side; without it, those tools will receive HTTP 404 responses from the SC4S API.
 
@@ -496,5 +496,4 @@ This feature can be used with `SC4S_PARALLELIZE_NO_PARTITION`.
 |----------|---------------|-------------|
 | SC4S_ENABLE_PARALLELIZE=yes  | yes or no(default) | Use parallelize to leverage multithreading when consuming from a single TCP connection. |
 |SC4S_PARALLELIZE_NO_PARTITION=4 | Integer | Set the number of threads to use, the default value is 4. |
-
 

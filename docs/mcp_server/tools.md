@@ -12,6 +12,8 @@ categories:
   `syslog-ng` restart **inside the SC4S container**.
 * **Splunk and compliance metadata**: specialized management tools for
   `splunk_metadata.csv` and `compliance_meta_by_source` overrides.
+* **Syslog event sending**: sends caller-supplied raw-text test events to the
+  SC4S host identified by `SC4S_API_URL`.
 
 !!! important "How tools make changes"
     Management tools never execute shell commands. They send a single
@@ -32,7 +34,6 @@ outbound calls and cannot modify anything.
 | `list_vendor_parsers(vendor)` | Lists parser files whose contents reference a vendor name (case-insensitive whole-word match). |
 | `get_parser(parser_name)` | Returns the content of a parser file. Accepts either the file name (`foo.conf`) or the stem (`foo`). Returns `{ "found": bool, "path": ..., "content": ... }`. |
 | `search_docs(query)` | Regex search across every markdown file under `docs/`. Returns `path:line: snippet` entries. |
-| `get_parser_creation_guide()` | Returns the full parser-creation guide (`SKILL.md` + testing reference). The assistant calls this automatically when a user asks to create a parser. |
 
 ## SC4S instance management tools
 
@@ -89,6 +90,24 @@ is `in_progress`, `success`, or `failed`.
 If you try to start another job while one is already running, the API returns
 HTTP `409 Conflict` with details about the active job. Wait for that job to
 finish before retrying.
+
+## Syslog event-sending tools
+
+These tools open TCP or UDP sockets to the hostname in `SC4S_API_URL`; they do
+not send through the management REST API. Neither tool accepts a destination
+host, so it cannot be redirected to another system. By default, only ports
+`514` and `601` are allowed. Configure `SC4S_MCP_ALLOWED_SYSLOG_PORTS` with a
+comma-separated allowlist, or `*` for any valid port.
+
+| Tool | Description |
+|---|---|
+| `send_syslog_text(text, protocol="udp", port=514, framing=None, timeout_seconds=5)` | Sends one event per non-empty line in `text`. With no framing, TCP uses `newline` and UDP uses raw datagrams. TCP also supports explicit `newline` or `octet-counting`. |
+
+Individual events are limited to 65,507 bytes and connection timeouts must be
+from 0.1 to 30 seconds.
+
+Successful responses report socket-send statistics only. They do not prove
+that SC4S parsed, routed, indexed, or otherwise delivered an event.
 
 Example `conf_content`:
 

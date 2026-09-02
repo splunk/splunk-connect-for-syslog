@@ -11,6 +11,8 @@ RUN poetry install --no-interaction --no-ansi --only main \
 
 FROM python:3.14-alpine3.24
 
+ARG VERSION
+
 RUN apk add --no-cache bash ca-certificates
 
 RUN python -m pip install --no-cache-dir --upgrade pip==26.1
@@ -22,11 +24,12 @@ WORKDIR /app
 
 COPY --from=builder --chown=mcp:mcp /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
+ENV SC4S_MCP_VERSION=${VERSION}
 
 COPY --chown=mcp:mcp sc4s_mcp/ ./sc4s_mcp/
 COPY --chown=mcp:mcp docs/ ./docs/
 COPY --chown=mcp:mcp package/shared/addons/ ./package/shared/addons/
-COPY --chown=mcp:mcp .agents/skills/parser-creator/ ./.agents/skills/parser-creator/
+COPY --chown=mcp:mcp skills/parser-creator/ ./skills/parser-creator/
 COPY --chown=mcp:mcp configuration-tool.sh ./configuration-tool.sh
 
 ENV MCP_TRANSPORT=http
