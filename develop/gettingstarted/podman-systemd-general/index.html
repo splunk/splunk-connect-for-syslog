@@ -11583,19 +11583,19 @@ automatically downloaded at each restart. As a best practice, check back here re
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 
 <span class="k">[Service]</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"</span>
 
 <span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"</span>
 
 <span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z"</span>
 
 <span class="c1"># Optional mount point for local disk archive (EWMM output) files</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z"</span>
 
 <span class="c1"># Map location of TLS custom TLS</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z"</span>
 
 <span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
 
@@ -11603,18 +11603,18 @@ automatically downloaded at each restart. As a best practice, check back here re
 
 <span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span>
 <span class="c1"># when startup fails on running bash check if the path is correct</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"</span>
 
-<span class="c1"># Note: Prevent the error &#39;The container name &quot;/SC4S&quot; is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.&#39;</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true&quot;</span>
+<span class="c1"># Note: Prevent the error 'The container name "/SC4S" is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.'</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c "/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true"</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/podman run </span>\
-<span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_LOCAL_MOUNT&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_TLS_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-e "SC4S_CONTAINER_HOST=${SC4SHOST}" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_PERSIST_MOUNT" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_LOCAL_MOUNT" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_ARCHIVE_MOUNT" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_TLS_MOUNT" </span>\
 <span class="w">        </span><span class="s">--env-file=/opt/sc4s/env_file </span>\
-<span class="w">        </span><span class="s">--health-cmd=&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5&quot; </span>\
+<span class="w">        </span><span class="s">--health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" </span>\
 <span class="w">        </span><span class="s">--health-interval=2m --health-retries=6 --health-timeout=5s </span>\
 <span class="w">        </span><span class="s">--network host </span>\
 <span class="w">        </span><span class="s">--name SC4S </span>\
@@ -11676,10 +11676,10 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 <p>SC4S has a number of &ldquo;preflight&rdquo; checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct.  After this step is complete, verify SC4S is properly communicating with Splunk by
 executing the following search in Splunk:</p>
-<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events "starting up"</span>
 </code></pre></div>
 <p>This should yield an event similar to the following when the startup process proceeds normally (without syntax errors). </p>
-<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;4.xx.x&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">'4.xx.x'</span>
 </code></pre></div>
 <p>If you do not see this, try the following before proceeding to deeper-level troubleshooting:</p>
 <ul>
@@ -11711,7 +11711,7 @@ and <a href="../../troubleshooting/troubleshoot_resources/">&ldquo;Troubleshoot 
 <ol>
 <li>
 <p>Increase the number of user namespaces. Execute the following with sudo privileges:
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;user.max_user_namespaces=28633&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/sysctl.d/userns.conf<span class="w">      </span>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"user.max_user_namespaces=28633"</span><span class="w"> </span>&gt;<span class="w"> </span>/etc/sysctl.d/userns.conf<span class="w">      </span>
 $<span class="w"> </span>sysctl<span class="w"> </span>-p<span class="w"> </span>/etc/sysctl.d/userns.conf
 </code></pre></div></p>
 </li>
@@ -11739,31 +11739,31 @@ After=NetworkManager.service network-online.target
 [Install]
 WantedBy=multi-user.target
 [Service]
-Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
 # Required mount point for syslog-ng persist data (including disk buffer)
-Environment=&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;
+Environment="SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"
 # Optional mount point for local overrides and configuration
-Environment=&quot;SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;
+Environment="SC4S_LOCAL_MOUNT=/home/sc4s/local:/etc/syslog-ng/conf.d/local:z"
 # Optional mount point for local disk archive (EWMM output) files
-Environment=&quot;SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;
+Environment="SC4S_ARCHIVE_MOUNT=/home/sc4s/archive:/var/lib/syslog-ng/archive:z"
 # Map location of TLS custom TLS
-Environment=&quot;SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z&quot;
+Environment="SC4S_TLS_MOUNT=/home/sc4s/tls:/etc/syslog-ng/tls:z"
 TimeoutStartSec=0
 ExecStartPre=/usr/bin/podman pull $SC4S_IMAGE
 # Note: The path /usr/bin/bash may vary based on your operating system.
 # when startup fails on running bash check if the path is correct
-ExecStartPre=/usr/bin/bash -c &quot;/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)&quot;
+ExecStartPre=/usr/bin/bash -c "/usr/bin/systemctl --user set-environment SC4SHOST=$(hostname -s)"
 
-# Note: Prevent the error &#39;The container name &quot;/SC4S&quot; is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.&#39;
-ExecStartPre=/usr/bin/bash -c &quot;/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true&quot;
+# Note: Prevent the error 'The container name "/SC4S" is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.'
+ExecStartPre=/usr/bin/bash -c "/usr/bin/podman rm SC4S &gt; /dev/null 2&gt;&amp;1 || true"
 ExecStart=/usr/bin/podman run -p 2514:514 -p 2514:514/udp -p 6514:6514  \
-        -e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; \
-        -v &quot;$SC4S_PERSIST_MOUNT&quot; \
-        -v &quot;$SC4S_LOCAL_MOUNT&quot; \
-        -v &quot;$SC4S_ARCHIVE_MOUNT&quot; \
-        -v &quot;$SC4S_TLS_MOUNT&quot; \
+        -e "SC4S_CONTAINER_HOST=${SC4SHOST}" \
+        -v "$SC4S_PERSIST_MOUNT" \
+        -v "$SC4S_LOCAL_MOUNT" \
+        -v "$SC4S_ARCHIVE_MOUNT" \
+        -v "$SC4S_TLS_MOUNT" \
         --env-file=/home/sc4s/env_file \
-        --health-cmd=&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5&quot; \
+        --health-cmd="/usr/sbin/syslog-ng-ctl healthcheck --timeout 5" \
         --health-interval=2m --health-retries=6 --health-timeout=5s \
         --network host \
         --name SC4S \

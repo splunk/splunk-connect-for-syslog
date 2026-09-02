@@ -11602,7 +11602,7 @@ maintained by the One Identity team. </p>
 <p>Enable EPEL (CentOS 8).</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code>dnf<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;dnf-command(copr)&#39;</span><span class="w"> </span>-y
+<div class="highlight"><pre><span></span><code>dnf<span class="w"> </span>install<span class="w"> </span><span class="s1">'dnf-command(copr)'</span><span class="w"> </span>-y
 dnf<span class="w"> </span>install<span class="w"> </span>epel-release<span class="w"> </span>-y
 dnf<span class="w"> </span>copr<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>czanik/syslog-ng336<span class="w">  </span>-y
 dnf<span class="w"> </span>install<span class="w"> </span>syslog-ng<span class="w"> </span>syslog-ng-python<span class="w"> </span>syslog-ng-http<span class="w"> </span>python3-pip<span class="w"> </span>gcc<span class="w"> </span>python3-devel<span class="w"> </span>-y
@@ -11681,7 +11681,7 @@ orchestration methodology. These are not the only ways to run in a custom enviro
 <ol start="9">
 <li>Create the file <code>/etc/syslog-ng/env_file</code> and add the following environment variables. Adjust the URL/TOKEN as needed.</li>
 </ol>
-<div class="highlight"><pre><span></span><code># The following &quot;path&quot; variables can differ from the container defaults specified in the entrypoint.sh script. 
+<div class="highlight"><pre><span></span><code># The following "path" variables can differ from the container defaults specified in the entrypoint.sh script. 
 # These are *optional* for most BYOE installations, which do not differ from the install location used.
 # in the container version of SC4S.  Failure to properly set these will cause startup failure.
 #SC4S_ETC=/etc/syslog-ng

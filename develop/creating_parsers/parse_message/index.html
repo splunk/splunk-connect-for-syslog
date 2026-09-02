@@ -11864,19 +11864,19 @@
 <p><strong><code>r_set_splunk_dest_default</code></strong> — sets all base Splunk metadata. Includes <code>index</code>, <code>sourcetype</code>, <code>vendor</code>, <code>product</code>, and optionally <code>source</code> and <code>template</code>.</p>
 <div class="highlight"><pre><span></span><code>rewrite {
     r_set_splunk_dest_default(
-        index(&quot;netops&quot;)
-        sourcetype(&quot;alcatel:switch&quot;)
-        vendor(&quot;alcatel&quot;)
-        product(&quot;switch&quot;)
-        template(&quot;t_hdr_msg&quot;)
+        index("netops")
+        sourcetype("alcatel:switch")
+        vendor("alcatel")
+        product("switch")
+        template("t_hdr_msg")
     );
 };
 </code></pre></div>
 <p><strong><code>r_set_splunk_dest_update_v2</code></strong> — overrides specific fields already set by <code>r_set_splunk_dest_default</code>. It accepts <code>index</code>, <code>source</code>, <code>sourcetype</code>, <code>class</code>, and <code>template</code> options. You can also use the <code>condition</code> option for a conditional expression.</p>
 <div class="highlight"><pre><span></span><code>rewrite {
     r_set_splunk_dest_update_v2(
-        sourcetype(&#39;citrix:netscaler:appfw&#39;)
-        condition(message(&#39;:(\s+\S+)?\s+APPFW(\s+\S+){3}\s+:&#39;))
+        sourcetype('citrix:netscaler:appfw')
+        condition(message(':(\s+\S+)?\s+APPFW(\s+\S+){3}\s+:'))
     );
 };
 </code></pre></div>
@@ -11940,7 +11940,7 @@
 </ul>
 <div class="highlight"><pre><span></span><code># parsing HDR + MSG of the log and prepending parsed values with `.values.`
 parser {
-    kv-parser(prefix(&quot;.values.&quot;) template(&quot;$(template t_hdr_msg)&quot;));
+    kv-parser(prefix(".values.") template("$(template t_hdr_msg)"));
 };
 </code></pre></div>
 <p><strong><code>csv-parser</code></strong> — use when logs are consistently delimited with stable column order.</p>
@@ -11960,10 +11960,10 @@ parser {
 </ul>
 <div class="highlight"><pre><span></span><code>parser {
     csv-parser(
-        columns(&quot;col1&quot;,&quot;col2&quot;,&quot;col3&quot;,&quot;col4&quot;)
-        prefix(&quot;.values.&quot;)
-        delimiters(&#39;,&#39;)
-        quote-pairs(&#39;&quot;&quot;&#39;)
+        columns("col1","col2","col3","col4")
+        prefix(".values.")
+        delimiters(',')
+        quote-pairs('""')
         flags(escape-double-char)
     );
 };
@@ -11977,9 +11977,9 @@ parser {
 </ul>
 <div class="highlight"><pre><span></span><code>parser {
     regexp-parser(
-        template(&quot;${MESSAGE}&quot;)
-        patterns(&#39;^(?&lt;field1&gt;\d+) (?&lt;field2&gt;[^ ]+) (?&lt;field3&gt;.*)&#39;)
-        prefix(&quot;.parsed.&quot;)
+        template("${MESSAGE}")
+        patterns('^(?&lt;field1&gt;\d+) (?&lt;field2&gt;[^ ]+) (?&lt;field3&gt;.*)')
+        prefix(".parsed.")
     );
 };
 </code></pre></div>
@@ -11990,7 +11990,7 @@ parser {
 <li><code>template()</code> — which field to parse as JSON (default is <code>${MESSAGE}</code>).</li>
 </ul>
 <div class="highlight"><pre><span></span><code>parser {
-    json-parser(prefix(&#39;.values.&#39;));
+    json-parser(prefix('.values.'));
 };
 </code></pre></div>
 <p><strong><code>date-parser</code></strong> — use when the timestamp needs to be explicitly parsed from a field, e.g., from a non-syslog message.</p>
@@ -12001,8 +12001,8 @@ parser {
 </ul>
 <div class="highlight"><pre><span></span><code>parser {
     date-parser(
-        format(&#39;%s.%f&#39;, &#39;%s&#39;)
-        template(&quot;${.tmp.timestamp}&quot;)
+        format('%s.%f', '%s')
+        template("${.tmp.timestamp}")
     );
 };
 </code></pre></div>
@@ -12021,7 +12021,7 @@ parser {
 parser {
     syslog-parser(
         flags(assume-utf8, guess-timezone)
-        template(&quot;${.tmp.pri} $S_ISODATE ${.tmp.message}&quot;)
+        template("${.tmp.pri} $S_ISODATE ${.tmp.message}")
     );
 };
 </code></pre></div>
@@ -12035,15 +12035,15 @@ There are two ways fields extracted by a parser can appear in Splunk search resu
 <div class="highlight"><pre><span></span><code>block parser app-syslog-vendor_product() {
     channel {
         parser {
-            kv-parser(prefix(&quot;.values.&quot;));
+            kv-parser(prefix(".values."));
         };
         rewrite {
             r_set_splunk_dest_default(
-                index(&#39;netfw&#39;)
-                sourcetype(&#39;vendor:product&#39;)
-                vendor(&#39;vendor&#39;)
-                product(&#39;product&#39;)
-                template(&#39;t_json_values&#39;)
+                index('netfw')
+                sourcetype('vendor:product')
+                vendor('vendor')
+                product('product')
+                template('t_json_values')
             );
         };
     };
@@ -12053,7 +12053,7 @@ There are two ways fields extracted by a parser can appear in Splunk search resu
 <h3 id="2-via-fields-mapping">2. Via <code>fields.*</code> mapping<a class="headerlink" href="#2-via-fields-mapping" title="Permanent link">&para;</a></h3>
 <p>Extract fields directly into the <code>fields.*</code> namespace. SC4S includes all <code>fields.*</code> name-value pairs in the HEC payload as indexed fields.</p>
 <div class="highlight"><pre><span></span><code>parser {
-    kv-parser(prefix(&quot;fields.&quot;));
+    kv-parser(prefix("fields."));
 };
 </code></pre></div>
 <h3 id="when-to-use-raw-message-templates-with-field-extraction-parsers">When to use raw message templates with field extraction parsers<a class="headerlink" href="#when-to-use-raw-message-templates-with-field-extraction-parsers" title="Permanent link">&para;</a></h3>
@@ -12063,28 +12063,28 @@ There are two ways fields extracted by a parser can appear in Splunk search resu
 <p><strong><code>set()</code></strong> — sets a field to a value. Supports macro expansion and conditions.</p>
 <div class="highlight"><pre><span></span><code>rewrite {
     # copy a parsed field into HOST
-    set(&quot;${.values.hostname}&quot;, value(&quot;HOST&quot;));
+    set("${.values.hostname}", value("HOST"));
 
     # conditional set
-    set(&quot;new_value&quot;, value(&quot;PROGRAM&quot;) condition(program(&#39;old_value&#39; type(string))));
+    set("new_value", value("PROGRAM") condition(program('old_value' type(string))));
 };
 </code></pre></div>
 <p><strong><code>subst()</code></strong> — performs string substitution on a field value. Supports regex.</p>
 <div class="highlight"><pre><span></span><code>rewrite {
-    # strip leading &quot;: &quot; from MESSAGE
-    subst(&#39;^: &#39;, &quot;&quot;, value(&quot;MESSAGE&quot;));
+    # strip leading ": " from MESSAGE
+    subst('^: ', "", value("MESSAGE"));
 
-    # strip path prefix from PROGRAM (e.g., &quot;/usr/bin/app&quot; -&gt; &quot;app&quot;)
-    subst(&#39;^\/(?:[^\/]+\/)+&#39;, &quot;&quot;, value(&quot;PROGRAM&quot;));
+    # strip path prefix from PROGRAM (e.g., "/usr/bin/app" -&gt; "app")
+    subst('^\/(?:[^\/]+\/)+', "", value("PROGRAM"));
 
     # global flag to replace all occurrences
-    subst(&#39;\t&#39;, &quot; &quot;, value(&quot;MESSAGE&quot;) flags(global));
+    subst('\t', " ", value("MESSAGE") flags(global));
 };
 </code></pre></div>
 <p><strong><code>unset()</code></strong> — removes a field entirely.</p>
 <div class="highlight"><pre><span></span><code>rewrite {
-    unset(value(&quot;PROGRAM&quot;));
-    unset(value(&quot;PID&quot;));
+    unset(value("PROGRAM"));
+    unset(value("PID"));
 };
 </code></pre></div>
 <p><strong><code>r_set_dest_splunk_null_queue</code></strong> — tags the message for dropping (null queue). Used in post-filters to discard noise or incomplete events.</p>
@@ -12094,7 +12094,7 @@ There are two ways fields extracted by a parser can appear in Splunk search resu
 <div class="highlight"><pre><span></span><code># map all .values.* to .SDATA.sc4sfields@27389.*, e.g., .values.src -&gt; .SDATA.sc4sfields@27389.src
 rewrite {
     map-value-pairs(
-        key(&#39;.values.*&#39; rekey(shift-levels(2) add-prefix(&quot;.SDATA.sc4sfields@27389.&quot;)))
+        key('.values.*' rekey(shift-levels(2) add-prefix(".SDATA.sc4sfields@27389.")))
     );
 };
 </code></pre></div>
@@ -12104,11 +12104,11 @@ rewrite {
     channel {
         rewrite {
             r_set_splunk_dest_default(
-                index(&#39;netops&#39;)
-                sourcetype(&#39;alcatel:switch&#39;)
-                vendor(&quot;alcatel&quot;)
-                product(&quot;switch&quot;)
-                template(&#39;t_hdr_msg&#39;)
+                index('netops')
+                sourcetype('alcatel:switch')
+                vendor("alcatel")
+                product("switch")
+                template('t_hdr_msg')
             );
         };
     };
@@ -12118,18 +12118,18 @@ rewrite {
 <div class="highlight"><pre><span></span><code>block parser app-syslog-vendor_product() {
     channel {
         parser {
-            kv-parser(prefix(&quot;.values.&quot;) template(&quot;$(template t_hdr_msg)&quot;));
+            kv-parser(prefix(".values.") template("$(template t_hdr_msg)"));
         };
         filter {
-            &quot;${.values.some_required_field}&quot; ne &quot;&quot;
+            "${.values.some_required_field}" ne ""
         };
         rewrite {
             r_set_splunk_dest_default(
-                index(&#39;netfw&#39;)
-                sourcetype(&#39;vendor:product&#39;)
-                vendor(&quot;vendor&quot;)
-                product(&quot;product&quot;)
-                template(&#39;t_kv_values&#39;)
+                index('netfw')
+                sourcetype('vendor:product')
+                vendor("vendor")
+                product("product")
+                template('t_kv_values')
             );
         };
     };
@@ -12140,36 +12140,36 @@ rewrite {
     channel {
         rewrite {
             r_set_splunk_dest_default(
-                index(&quot;netops&quot;)
-                sourcetype(&#39;vendor:log&#39;)
-                vendor(&quot;vendor&quot;)
-                product(&#39;product&#39;)
-                template(&#39;t_msg_only&#39;)
+                index("netops")
+                sourcetype('vendor:log')
+                vendor("vendor")
+                product('product')
+                template('t_msg_only')
             );
         };
 
-        if (message(&#39;,TRAFFIC,&#39; type(string) flags(substring))) {
+        if (message(',TRAFFIC,' type(string) flags(substring))) {
             parser {
                 csv-parser(
-                    delimiters(chars(&#39;&#39;) strings(&#39;|&#39;))
-                    columns(&#39;version&#39;, &#39;device_vendor&#39;, &#39;device_product&#39;, &#39;device_version&#39;, &#39;device_event_class&#39;, &#39;name&#39;, &#39;severity&#39;, &#39;ext&#39;)
-                    prefix(&#39;.metadata.cef.&#39;)
+                    delimiters(chars('') strings('|'))
+                    columns('version', 'device_vendor', 'device_product', 'device_version', 'device_event_class', 'name', 'severity', 'ext')
+                    prefix('.metadata.cef.')
                     flags(greedy));
              };
             rewrite {
                 r_set_splunk_dest_update_v2(
-                    index(&#39;netfw&#39;)
-                    class(&#39;traffic&#39;)
-                    sourcetype(&#39;vendor:traffic&#39;)
+                    index('netfw')
+                    class('traffic')
+                    sourcetype('vendor:traffic')
                 );
             };
-        } elif (message(&#39;,SYSTEM,&#39; type(string) flags(substring))) {
-            parser { csv-parser(columns(...) prefix(&quot;.values.&quot;) delimiters(&#39;,&#39;)); };
+        } elif (message(',SYSTEM,' type(string) flags(substring))) {
+            parser { csv-parser(columns(...) prefix(".values.") delimiters(',')); };
             rewrite {
                 r_set_splunk_dest_update_v2(
-                    index(&#39;netops&#39;)
-                    class(&#39;system&#39;)
-                    sourcetype(&#39;vendor:system&#39;)
+                    index('netops')
+                    class('system')
+                    sourcetype('vendor:system')
                 );
             };
         } else { };

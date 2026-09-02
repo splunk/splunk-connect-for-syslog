@@ -11765,9 +11765,9 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 <li>Provide the hec_token. You can find this token on the Edge Processor&rsquo;s &ldquo;global settings&rdquo; page.</li>
 </ol>
 <div class="highlight"><pre><span></span><code>splunk:
-  hec_url: &quot;http://x.x.x.x:8088&quot;
-  hec_token: &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;
-  hec_verify_tls: &quot;no&quot;
+  hec_url: "http://x.x.x.x:8088"
+  hec_token: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  hec_verify_tls: "no"
 </code></pre></div>
 </div>
 </div>
@@ -11796,15 +11796,15 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 <li>Add the secret name of the mTLS certificates to the <code>values.yaml</code> file:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>splunk:
-  hec_url: &quot;https://x.x.x.x:8088&quot;
-  hec_token: &quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;
-  hec_tls: &quot;hec-tls-secret&quot;
+  hec_url: "https://x.x.x.x:8088"
+  hec_token: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  hec_tls: "hec-tls-secret"
 </code></pre></div>
 <ol start="2">
 <li>Add your mTLS certificates to the <code>charts/splunk-connect-for-syslog/secrets.yaml</code> file:</li>
 </ol>
 <div class="highlight"><pre><span></span><code>hec_tls:
-  secret: &quot;hec-tls-secret&quot;
+  secret: "hec-tls-secret"
   value:
     key: |
       -----BEGIN PRIVATE KEY-----
@@ -11849,7 +11849,7 @@ SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
 <div class="tabbed-block">
 <p>Update HEC URL in <code>values.yaml</code>:</p>
 <div class="highlight"><pre><span></span><code>splunk:
-  hec_url: &quot;http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088&quot;
+  hec_url: "http://x.x.x.x:8088,http://x.x.x.x:8088,http://x.x.x.x:8088"
 </code></pre></div>
 </div>
 </div>

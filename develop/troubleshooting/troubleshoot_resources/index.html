@@ -11888,7 +11888,7 @@ podman volume create splunk-sc4s-var
 </ul>
 <h3 id="test-commands">Test commands<a class="headerlink" href="#test-commands" title="Permanent link">&para;</a></h3>
 <p>Check your SC4S port using the <code>nc</code> command. Run this command where SC4S is hosted and check data in Splunk for success and failure:
-<div class="highlight"><pre><span></span><code>echo &#39;&lt;raw_sample&gt;&#39; |nc &lt;host&gt; &lt;port&gt;
+<div class="highlight"><pre><span></span><code>echo '&lt;raw_sample&gt;' |nc &lt;host&gt; &lt;port&gt;
 </code></pre></div></p>
 <h2 id="obtain-raw-message-events">Obtain raw message events<a class="headerlink" href="#obtain-raw-message-events" title="Permanent link">&para;</a></h2>
 <p>During development or troubleshooting, you may need to obtain samples of the messages exactly as they are received by
@@ -11900,7 +11900,7 @@ needed for playback when testing. The community supporting SC4S will always firs
 <ul>
 <li>
 <p>Run <code>tcpdump</code> on the collection interface and display the results in ASCII. You will see events similar to the following buried in the packet contents:
-<div class="highlight"><pre><span></span><code>&lt;165&gt;1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username=&quot;user&quot;] User &#39;user&#39; exiting configuration mode
+<div class="highlight"><pre><span></span><code>&lt;165&gt;1 2007-02-15T09:17:15.719Z router1 mgd 3046 UI_DBASE_LOGOUT_EVENT [junos@2636.1.1.1.2.18 username="user"] User 'user' exiting configuration mode
 </code></pre></div></p>
 </li>
 <li>
@@ -11925,7 +11925,7 @@ more details.</p>
     channel {
         rewrite {
             r_set_splunk_dest_default(
-                template(&#39;t_fallback_kv&#39;)
+                template('t_fallback_kv')
             );
         };
     };
@@ -11970,15 +11970,15 @@ create a filter using <code>sc4s-lp-dest-format-d_hec_fmt</code>, for example:</
 
 block parser app-dest-rewrite-checkpoint_drop-d_fmt_hec_default() {    
     channel {
-            rewrite { fix-time-zone(&quot;EST5EDT&quot;); };
+            rewrite { fix-time-zone("EST5EDT"); };
     };
 };
 application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-format-d_hec_fmt] {
     filter {
-        match(&#39;checkpoint&#39; value(&#39;fields.sc4s_vendor&#39;) type(string))                 &lt;- this must be customized
-        and match(&#39;syslog&#39; value(&#39;fields.sc4s_product&#39;) type(string))                &lt;- this must be customized
-        and match(&#39;Drop&#39; value(&#39;.SDATA.sc4s@2620.action&#39;) type(string))              &lt;- this must be customized
-        and match(&#39;12.&#39; value(&#39;.SDATA.sc4s@2620.src&#39;) type(string) flags(prefix) );  &lt;- this must be customized
+        match('checkpoint' value('fields.sc4s_vendor') type(string))                 &lt;- this must be customized
+        and match('syslog' value('fields.sc4s_product') type(string))                &lt;- this must be customized
+        and match('Drop' value('.SDATA.sc4s@2620.action') type(string))              &lt;- this must be customized
+        and match('12.' value('.SDATA.sc4s@2620.src') type(string) flags(prefix) );  &lt;- this must be customized
 
     };    
     parser { app-dest-rewrite-checkpoint_drop-d_fmt_hec_default(); };   
@@ -11990,14 +11990,14 @@ application app-dest-rewrite-fix_tz_something-d_fmt_hec_default[sc4s-lp-dest-for
 block parser app-dest-rewrite-fortinet_fortios-d_fmt_hec_default() {
     channel {
             rewrite {
-                  fix-time-zone(&quot;EST5EDT&quot;);
+                  fix-time-zone("EST5EDT");
             };
     };
 };
 
 application app-dest-rewrite-device-d_fmt_hec_default[sc4s-postfilter] {
     filter {
-         match(&quot;xxxx&quot;, value(&quot;fields.sc4s_destport&quot;) type(glob));  &lt;- this must be customized
+         match("xxxx", value("fields.sc4s_destport") type(glob));  &lt;- this must be customized
     };
     parser { app-dest-rewrite-fortinet_fortios-d_fmt_hec_default(); };
 };

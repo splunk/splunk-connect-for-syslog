@@ -11824,7 +11824,7 @@
 <div class="highlight"><pre><span></span><code>wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://ose-repo.syslog-ng.com/apt/syslog-ng-ose-pub.asc<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>add<span class="w"> </span>-
 
 <span class="c1"># Update distribution name</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb https://ose-repo.syslog-ng.com/apt/ stable ubuntu-noble&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/apt/sources.list.d/syslog-ng-ose.list
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"deb https://ose-repo.syslog-ng.com/apt/ stable ubuntu-noble"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/apt/sources.list.d/syslog-ng-ose.list
 
 sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>syslog-ng-core
@@ -11961,7 +11961,7 @@ The number of errors should match the number of missing messages in Splunk.</p>
 </tbody>
 </table>
 <p>When running your tests, make sure to monitor the queues. The easiest way to do this is by accessing your server’s SC4S container and running:
-<div class="highlight"><pre><span></span><code>watch<span class="w"> </span><span class="s2">&quot;syslog-ng-ctl stats | grep &#39;^dst.\+\(processed\|queued\|dropped\|written\)&#39;&quot;</span>
+<div class="highlight"><pre><span></span><code>watch<span class="w"> </span><span class="s2">"syslog-ng-ctl stats | grep '^dst.\+\(processed\|queued\|dropped\|written\)'"</span>
 </code></pre></div></p>
 <p>If the destination is undersized or connections are slow, the number of queued events will increase, potentially reaching thousands or millions. Buffering is an effective solution for handling temporary data peaks, but constant input overflows will eventually fill up the buffers, leading to disk or memory issues or dropped messages. Ensure that you assess your SC4S capacity based on the number of messages that can be processed without putting undue pressure on the buffers.</p>
 

@@ -11771,19 +11771,19 @@ to the provided template unit file. Make sure these changes are incorporated int
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
 
 <span class="k">[Service]</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"</span>
 
 <span class="c1"># Required mount point for syslog-ng persist data (including disk buffer)</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_PERSIST_MOUNT=splunk-sc4s-var:/var/lib/syslog-ng"</span>
 
 <span class="c1"># Optional mount point for local overrides and configurations; see notes in docs</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_LOCAL_MOUNT=/opt/sc4s/local:/etc/syslog-ng/conf.d/local:z"</span>
 
 <span class="c1"># Optional mount point for local disk archive (EWMM output) files</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_ARCHIVE_MOUNT=/opt/sc4s/archive:/var/lib/syslog-ng/archive:z"</span>
 
 <span class="c1"># Map location of TLS custom TLS</span>
-<span class="na">Environment</span><span class="o">=</span><span class="s">&quot;SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z&quot;</span>
+<span class="na">Environment</span><span class="o">=</span><span class="s">"SC4S_TLS_MOUNT=/opt/sc4s/tls:/etc/syslog-ng/tls:z"</span>
 
 <span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
 
@@ -11791,16 +11791,16 @@ to the provided template unit file. Make sure these changes are incorporated int
 
 <span class="c1"># Note: /usr/bin/bash will not be valid path for all OS</span>
 <span class="c1"># when startup fails on running bash check if the path is correct</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)&quot;</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c "/usr/bin/systemctl set-environment SC4SHOST=$(hostname -s)"</span>
 
-<span class="c1"># Note: Prevent the error &#39;The container name &quot;/SC4S&quot; is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.&#39;</span>
-<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c &quot;/usr/bin/docker rm SC4S &gt; /dev/null 2&gt;&amp;1 || true&quot;</span>
+<span class="c1"># Note: Prevent the error 'The container name "/SC4S" is already in use by container &lt;container_id&gt;. You have to remove (or rename) that container to be able to reuse that name.'</span>
+<span class="na">ExecStartPre</span><span class="o">=</span><span class="s">/usr/bin/bash -c "/usr/bin/docker rm SC4S &gt; /dev/null 2&gt;&amp;1 || true"</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/usr/bin/docker run </span>\
-<span class="w">        </span><span class="s">-e &quot;SC4S_CONTAINER_HOST=${SC4SHOST}&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_PERSIST_MOUNT&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_LOCAL_MOUNT&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_ARCHIVE_MOUNT&quot; </span>\
-<span class="w">        </span><span class="s">-v &quot;$SC4S_TLS_MOUNT&quot; </span>\
+<span class="w">        </span><span class="s">-e "SC4S_CONTAINER_HOST=${SC4SHOST}" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_PERSIST_MOUNT" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_LOCAL_MOUNT" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_ARCHIVE_MOUNT" </span>\
+<span class="w">        </span><span class="s">-v "$SC4S_TLS_MOUNT" </span>\
 <span class="w">        </span><span class="s">--env-file=/opt/sc4s/env_file </span>\
 <span class="w">        </span><span class="s">--network host </span>\
 <span class="w">        </span><span class="s">--name SC4S </span>\
@@ -11874,10 +11874,10 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w
 <p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct. Once the checks are complete, validate that SC4S properly communicate with Splunk.
 To do this, execute the following search in Splunk:</p>
-<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events "starting up"</span>
 </code></pre></div>
 <p>You should see an event similar to the following:</p>
-<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;4.xx.x&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">'4.xx.x'</span>
 </code></pre></div>
 <p>The startup process should proceed normally without syntax errors. If it does not,
 follow the steps below before proceeding to deeper-level troubleshooting:</p>

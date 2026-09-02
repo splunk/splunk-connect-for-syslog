@@ -11577,7 +11577,7 @@
 <li>
 <p>Create a <code>docker-compose.yml</code> file in your new directory, based on the provided template. By default, the latest container is automatically downloaded at each restart. As a best practice, consult this topic at the time of any new upgrade to check for any changes in the latest template.
 <div class="highlight"><pre><span></span><code><span class="nn">---</span>
-<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.7&quot;</span>
+<span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.7"</span>
 <span class="nt">services</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">deploy</span><span class="p">:</span>
@@ -11687,10 +11687,10 @@ or </p>
 <h1 id="verify-proper-operation">Verify Proper Operation<a class="headerlink" href="#verify-proper-operation" title="Permanent link">&para;</a></h1>
 <p>SC4S performs automatic checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng
 configuration is correct. Once these checks are complete, verify that SC4S is properly communicating with Splunk:</p>
-<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events "starting up"</span>
 </code></pre></div>
 <p>When the startup process proceeds normally, you should see an event similar to the following:</p>
-<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">&#39;4.xx.x&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="na">syslog-ng starting up; version</span><span class="o">=</span><span class="s">'4.xx.x'</span>
 </code></pre></div>
 <p>If you do not see this, try the following steps to troubleshoot:</p>
 <ol>

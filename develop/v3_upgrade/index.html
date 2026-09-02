@@ -11633,7 +11633,7 @@ NOTE: Version 3 of SC4S is using alpine linux distribution as base image in oppo
 <h4 id="update-container-image-version">Update container image version<a class="headerlink" href="#update-container-image-version" title="Permanent link">&para;</a></h4>
 <p>In the service file: <code>/lib/systemd/system/sc4s.service</code> container image reference should be updated to version 3 with <code>latest</code> tag:
 <div class="highlight"><pre><span></span><code>[Service]
-Environment=&quot;SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;
+Environment="SC4S_IMAGE=ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"
 </code></pre></div></p>
 <h4 id="restart-sc4s-service">Restart sc4s service<a class="headerlink" href="#restart-sc4s-service" title="Permanent link">&para;</a></h4>
 <p>Restart the service:

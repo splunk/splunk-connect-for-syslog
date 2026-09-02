@@ -11599,31 +11599,31 @@ from .timeutils import time_operations
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
-@pytest.mark.addons(&quot;&lt;addon-name&gt;&quot;)
+@pytest.mark.addons("&lt;addon-name&gt;")
 def test_&lt;vendor_name&gt;_&lt;product_name&gt;(
     record_property, setup_splunk, setup_sc4s, get_host_key
 ):
     host = get_host_key
     mt = env.from_string(
-        &quot;{{ mark }}{{ bsd }} {{ host }} &lt;test-message&gt;&quot;
+        "{{ mark }}{{ bsd }} {{ host }} &lt;test-message&gt;"
     )
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, _, _, _, _, epoch = time_operations(dt)
-    message = mt.render(mark=&quot;&lt;134&gt;&quot;, bsd=bsd, host=host)
+    message = mt.render(mark="&lt;134&gt;", bsd=bsd, host=host)
 
     # Tune time functions
     epoch = epoch[:-7]
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
     st = env.from_string(
-        f&#39;search _time={epoch} index=netfw host=&quot;{host}&quot; sourcetype=&quot;&lt;sourcetype&gt;&quot;&#39;
+        f'search _time={epoch} index=netfw host="{host}" sourcetype="&lt;sourcetype&gt;"'
     )
     search = st.render(epoch=epoch)
 
     result_count, _ = splunk_single(setup_splunk, search)
 
-    record_property(&quot;resultCount&quot;, result_count)
-    record_property(&quot;message&quot;, message)
+    record_property("resultCount", result_count)
+    record_property("message", message)
 
     assert result_count == 1
 </code></pre></div>
@@ -11647,7 +11647,7 @@ def test_&lt;vendor_name&gt;_&lt;product_name&gt;(
 </ul>
 <p>When creating a message template, make sure the format matches the original message. In some cases, the timestamp is not part of the header. For example, in this CEF message the timestamp is part of the <code>rt</code> field:</p>
 <div class="highlight"><pre><span></span><code>mt = env.from_string(
-    &quot;{{ mark }} CEF:0|A10|vThunder|4.1.4-GR1-P12|WAF|session-id|2|rt={{ bsd }} src=1.1.1.1 spt=34860 dst=1.1.1.1 dpt=80 dhost=test.host.local cs1=uiext_sec_waf cs2=1 act=learn cs3=learn app=HTTP requestMethod=GET cn1=0 request=/sales/ msg=New session created: Id\=1\n&quot;
+    "{{ mark }} CEF:0|A10|vThunder|4.1.4-GR1-P12|WAF|session-id|2|rt={{ bsd }} src=1.1.1.1 spt=34860 dst=1.1.1.1 dpt=80 dhost=test.host.local cs1=uiext_sec_waf cs2=1 act=learn cs3=learn app=HTTP requestMethod=GET cn1=0 request=/sales/ msg=New session created: Id\=1\n"
 )
 </code></pre></div>
 

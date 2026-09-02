@@ -11849,16 +11849,16 @@
 
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">netapp_ontap</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">host</span><span class="p">(</span><span class="s">&quot;netapp-ontap-&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+<span class="w">        </span><span class="n">host</span><span class="p">(</span><span class="s">"netapp-ontap-"</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
 <span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="p">(</span>
-<span class="w">            </span><span class="n">message</span><span class="p">(</span><span class="s">&quot;netapp-ontap-&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
-<span class="w">            </span><span class="n">and</span><span class="w"> </span><span class="n">program</span><span class="p">(</span><span class="s">&quot;netapp-ontap-&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+<span class="w">            </span><span class="n">message</span><span class="p">(</span><span class="s">"netapp-ontap-"</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+<span class="w">            </span><span class="n">and</span><span class="w"> </span><span class="n">program</span><span class="p">(</span><span class="s">"netapp-ontap-"</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
 <span class="w">        </span><span class="p">)</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span>
-<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">netapp</span><span class="err">&#39;</span><span class="p">)</span>
-<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">ontap</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">'</span><span class="n">netapp</span><span class="err">'</span><span class="p">)</span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">'</span><span class="n">ontap</span><span class="err">'</span><span class="p">)</span>
 <span class="w">        </span><span class="p">);</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="p">};</span>

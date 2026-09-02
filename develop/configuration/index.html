@@ -12519,12 +12519,12 @@ corresponding <code>filter name</code> rows in the <code>csv</code> file.  The <
 </ul>
 <p>This file construct is best shown by an example. Here is an example of a <code>compliance_meta_by_source.conf</code> file and its corresponding <code>compliance_meta_by_source.csv</code> file:</p>
 <div class="highlight"><pre><span></span><code>filter f_test_test {
-   host(&quot;something-*&quot; type(glob)) or
+   host("something-*" type(glob)) or
    netmask(192.168.100.1/24)
 };
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>f_test_test,.splunk.index,&quot;pciindex&quot;
-f_test_test,fields.compliance,&quot;pci&quot;
+<div class="highlight"><pre><span></span><code>f_test_test,.splunk.index,"pciindex"
+f_test_test,fields.compliance,"pci"
 </code></pre></div>
 <p>Ensure that the filter names in the <code>conf</code> file match
 one or more rows in the <code>csv</code> file. Any incoming message with a hostname starting with <code>something-</code> or arriving from a netmask
@@ -12661,14 +12661,14 @@ To leverage this feature you need your host OS to be able to use eBPF and must r
 </table>
 <p>To run Docker or Podman in privileged mode, edit the service file <code>/lib/systemd/system/sc4s.service</code> to add the <code>--privileged</code> flag to the Docker or Ppodman run command:
 <div class="highlight"><pre><span></span><code><span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/podman<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>-e<span class="w"> </span><span class="s2">&quot;SC4S_CONTAINER_HOST=</span><span class="si">${</span><span class="nv">SC4SHOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SC4S_PERSIST_MOUNT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SC4S_LOCAL_MOUNT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SC4S_ARCHIVE_MOUNT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>-v<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SC4S_TLS_MOUNT</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-e<span class="w"> </span><span class="s2">"SC4S_CONTAINER_HOST=</span><span class="si">${</span><span class="nv">SC4SHOST</span><span class="si">}</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$SC4S_PERSIST_MOUNT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$SC4S_LOCAL_MOUNT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$SC4S_ARCHIVE_MOUNT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$SC4S_TLS_MOUNT</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--privileged<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--env-file<span class="o">=</span>/opt/sc4s/env_file<span class="w"> </span><span class="se">\</span>
-<span class="w">        </span>--health-cmd<span class="o">=</span><span class="s2">&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">        </span>--health-cmd<span class="o">=</span><span class="s2">"/usr/sbin/syslog-ng-ctl healthcheck --timeout 5"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--health-interval<span class="o">=</span>2m<span class="w"> </span>--health-retries<span class="o">=</span><span class="m">6</span><span class="w"> </span>--health-timeout<span class="o">=</span>5s<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--network<span class="w"> </span>host<span class="w"> </span><span class="se">\</span>
 <span class="w">        </span>--name<span class="w"> </span>SC4S<span class="w"> </span><span class="se">\</span>

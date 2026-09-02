@@ -11820,9 +11820,9 @@ microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
-<span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
+<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://xxx.xxx.xxx.xxx:8088/services/collector/event"</span>
+<span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">"00000000-0000-0000-0000-000000000000"</span>
+<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">"yes"</span>
 </code></pre></div>
 <ol start="2">
 <li>Install SC4S:
@@ -11835,12 +11835,12 @@ microk8s<span class="w"> </span>helm3<span class="w"> </span>repo<span class="w"
 </ol>
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">splunk</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
-<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
+<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://xxx.xxx.xxx.xxx:8088/services/collector/event"</span>
+<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">"yes"</span>
 </code></pre></div>
 <ol start="2">
 <li>Install SC4S:
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HEC_TOKEN</span><span class="o">=</span><span class="s2">"00000000-0000-0000-0000-000000000000"</span>
 microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class="w"> </span>sc4s<span class="w"> </span>--set<span class="w"> </span>splunk.hec_token<span class="o">=</span><span class="nv">$HEC_TOKEN</span><span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span>-f<span class="w"> </span>values.yaml
 </code></pre></div></li>
 </ol>
@@ -11856,9 +11856,9 @@ microk8s<span class="w"> </span>helm3<span class="w"> </span>install<span class=
 <div class="highlight"><pre><span></span><code><span class="c1">#values.yaml</span>
 <span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">6</span><span class="w"> </span><span class="c1">#2x node count</span>
 <span class="nt">splunk</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://xxx.xxx.xxx.xxx:8088/services/collector/event&quot;</span>
-<span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;00000000-0000-0000-0000-000000000000&quot;</span>
-<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span>
+<span class="w">    </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://xxx.xxx.xxx.xxx:8088/services/collector/event"</span>
+<span class="w">    </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">"00000000-0000-0000-0000-000000000000"</span>
+<span class="w">    </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">"yes"</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -11882,7 +11882,7 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
 <span class="w">        </span><span class="nt">udp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">options</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">listen</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">old_host_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span>
+<span class="w">          </span><span class="nt">old_host_rules</span><span class="p">:</span><span class="w"> </span><span class="s">"yes"</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">infoblox</span>
 <span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
@@ -11915,7 +11915,7 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
 <span class="w">        </span><span class="nt">udp</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">9000</span><span class="p p-Indicator">]</span>
 <span class="w">      </span><span class="nt">options</span><span class="p">:</span>
 <span class="w">        </span><span class="nt">listen</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">old_host_rules</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span>
+<span class="w">          </span><span class="nt">old_host_rules</span><span class="p">:</span><span class="w"> </span><span class="s">"yes"</span><span class="w"> </span><span class="c1">#Same as SC4S_LISTEN_CHECKPOINT_OLD_HOST_RULES=yes</span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fortinet</span>
 <span class="w">      </span><span class="nt">ports</span><span class="p">:</span>
@@ -11931,14 +11931,14 @@ context files directly. Instead, use the <code>values.yaml</code> file to update
 <span class="w">      </span><span class="no">block parser app-postfilter-cisco_asa_metadata() {</span>
 <span class="w">        </span><span class="no">channel {</span>
 <span class="w">          </span><span class="no">rewrite {</span>
-<span class="w">            </span><span class="no">unset(value(&#39;fields.sc4s_recv_time&#39;));</span>
+<span class="w">            </span><span class="no">unset(value('fields.sc4s_recv_time'));</span>
 <span class="w">          </span><span class="no">};</span>
 <span class="w">        </span><span class="no">};</span>
 <span class="w">       </span><span class="no">};</span>
 <span class="w">      </span><span class="no">application app-postfilter-cisco_asa_metadata[sc4s-postfilter] {</span>
 <span class="w">        </span><span class="no">filter {</span>
-<span class="w">          </span><span class="no">&#39;cisco&#39; eq &quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">          </span><span class="no">and &#39;asa&#39; eq &quot;${fields.sc4s_product}&quot;</span>
+<span class="w">          </span><span class="no">'cisco' eq "${fields.sc4s_vendor}"</span>
+<span class="w">          </span><span class="no">and 'asa' eq "${fields.sc4s_product}"</span>
 <span class="w">        </span><span class="no">};</span>
 <span class="w">        </span><span class="no">parser { app-postfilter-cisco_asa_metadata(); };</span>
 <span class="w">       </span><span class="no">};</span>
@@ -12011,9 +12011,9 @@ container <code>securityContext</code> verbatim.</p>
 <p>To enable proxy support, update your values.yaml as follows:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">sc4s</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">proxy</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://example.com&quot;</span>
-<span class="w">    </span><span class="nt">https</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://example.com&quot;</span>
-<span class="w">    </span><span class="nt">no_proxy</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone&quot;</span>
+<span class="w">    </span><span class="nt">http</span><span class="p">:</span><span class="w"> </span><span class="s">"http://example.com"</span>
+<span class="w">    </span><span class="nt">https</span><span class="p">:</span><span class="w"> </span><span class="s">"http://example.com"</span>
+<span class="w">    </span><span class="nt">no_proxy</span><span class="p">:</span><span class="w"> </span><span class="s">"localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"</span>
 </code></pre></div>
 
 

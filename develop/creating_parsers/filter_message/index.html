@@ -11651,7 +11651,7 @@
 <p><strong>sc4s-syslog-sdata</strong> - matches by structured data (often a Private Enterprise Number, PEN). Example:
 <div class="highlight"><pre><span></span><code>application app-syslog-f5_bigip_structured[sc4s-syslog-sdata] {
     filter {
-        match(&#39;^\[F5@12276&#39; value(&quot;SDATA&quot;));
+        match('^\[F5@12276' value("SDATA"));
     };
     parser { app-syslog-f5_bigip_structured(); };
 };
@@ -11663,7 +11663,7 @@
 </ul>
 <div class="highlight"><pre><span></span><code>application app-syslog-alcatel_switch[sc4s-syslog-pgm] {
     filter {
-        program(&#39;swlogd&#39; type(string) flags(prefix));
+        program('swlogd' type(string) flags(prefix));
     };
     parser { app-syslog-alcatel_switch(); };
 };
@@ -11673,8 +11673,8 @@
 </ul>
 <div class="highlight"><pre><span></span><code>application app-syslog-arista_eos[sc4s-syslog] {
     filter {
-        program(&#39;^[A-Z]\S+$&#39;)
-        and message(&#39;%&#39; type(string) flags(prefix));
+        program('^[A-Z]\S+$')
+        and message('%' type(string) flags(prefix));
     };
     parser { app-syslog-arista_eos(); };
 };
@@ -11687,12 +11687,12 @@
         not filter(f_is_source_identified)
         and (
             (
-                match(&quot;brocade&quot;, value(&#39;.netsource.sc4s_vendor&#39;), type(string))
-                and match(&quot;syslog&quot;, value(&#39;.netsource.sc4s_product&#39;), type(string))
+                match("brocade", value('.netsource.sc4s_vendor'), type(string))
+                and match("syslog", value('.netsource.sc4s_product'), type(string))
             )
-            or (tags(&quot;ns_vendor:brocade&quot;) and tags(&quot;ns_product:syslog&quot;))
-            or tags(&quot;.source.s_BROCADE&quot;)
-            or &quot;${.netsource.sc4s_vendor_product}&quot; eq &quot;brocade_syslog&quot;
+            or (tags("ns_vendor:brocade") and tags("ns_product:syslog"))
+            or tags(".source.s_BROCADE")
+            or "${.netsource.sc4s_vendor_product}" eq "brocade_syslog"
         )
     };
     parser { app-netsource-brocade_syslog(); };
@@ -11703,8 +11703,8 @@
 </ul>
 <div class="highlight"><pre><span></span><code>application app-cef-a10_vthunder[cef] {
     filter{
-        match(&quot;A10&quot; value(&quot;.metadata.cef.device_vendor&quot;))
-        and match(&quot;vThunder&quot; value(&quot;.metadata.cef.device_product&quot;));
+        match("A10" value(".metadata.cef.device_vendor"))
+        and match("vThunder" value(".metadata.cef.device_product"));
     };
     parser { app-cef-a10_vthunder(); };
 };
@@ -11736,12 +11736,12 @@
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code># using type(string) and flags(substring, ignore-case)
 filter {
-    program(&#39;avx-gw-state-sync&#39; type(string) flags(substring, ignore-case))
+    program('avx-gw-state-sync' type(string) flags(substring, ignore-case))
 };
 
 # using default options (pcre regex)
 filter {
-    program(&#39;^[A-Z]\S+$&#39;)
+    program('^[A-Z]\S+$')
 };
 </code></pre></div>
 <p><strong>match()</strong></p>
@@ -11774,24 +11774,24 @@ filter {
 <p>Examples:</p>
 <div class="highlight"><pre><span></span><code># match by message body using regex (default type)
 filter {
-    message(&#39;^time=\d{10}\|hostname=&#39;)
+    message('^time=\d{10}\|hostname=')
 };
 
 # match a specific field using a literal string
 # common use case for CEF-formatted logs
 filter {
-    match(&quot;A10&quot; value(&quot;.metadata.cef.device_vendor&quot;))
-    and match(&quot;vThunder&quot; value(&quot;.metadata.cef.device_product&quot;));
+    match("A10" value(".metadata.cef.device_vendor"))
+    and match("vThunder" value(".metadata.cef.device_product"));
 };
 
 # match against MSGHDR with regex
 filter {
-    match(&#39;(SYS|WF|TR|AUDIT|NF) ?$&#39;, value(&quot;MSGHDR&quot;))
+    match('(SYS|WF|TR|AUDIT|NF) ?$', value("MSGHDR"))
 };
 
 # match against structured data (SDATA)
 filter {
-    match(&#39;^\[F5@12276&#39; value(&quot;SDATA&quot;))
+    match('^\[F5@12276' value("SDATA"))
 };
 </code></pre></div>
 <p><strong>message()</strong></p>
@@ -11799,14 +11799,14 @@ filter {
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code># literal substring match
 filter {
-    message(&#39;: Avi-Controller: &#39; type(string) flags(substring))
+    message(': Avi-Controller: ' type(string) flags(substring))
 };
 </code></pre></div>
 <p><strong>host()</strong></p>
 <p>Matches against the hostname field (<code>HOST</code>). Supports the same <code>type()</code> and <code>flags()</code> options as <code>program()</code>.</p>
 <p>Example:</p>
 <div class="highlight"><pre><span></span><code>filter {
-    host(&#39;myserver&#39; type(string))
+    host('myserver' type(string))
 };
 </code></pre></div>
 <p><strong>String comparison operators (<code>eq</code>, <code>ne</code>)</strong></p>
@@ -11823,19 +11823,19 @@ filter {
 <p>Examples:</p>
 <div class="highlight"><pre><span></span><code># check vendor_product from netsource enrichment
 filter {
-    &quot;${.netsource.sc4s_vendor_product}&quot; eq &quot;aruba_clearpass&quot;
+    "${.netsource.sc4s_vendor_product}" eq "aruba_clearpass"
 };
 
 # check if an env variable is set
 filter {
-    &quot;`SC4S_DEST_BEYONDTRUST_SRA_SYSLOG_FMT`&quot; eq &quot;SDATA&quot;
+    "`SC4S_DEST_BEYONDTRUST_SRA_SYSLOG_FMT`" eq "SDATA"
 };
 </code></pre></div>
 <p><strong>tags()</strong></p>
 <p>Used for filtering messages by tags. Tags are labels attached to messages and are fast to filter on compared to string matching. Custom tags can be added using <code>set-tag()</code> in rewrite rules.</p>
 <p>Tags are set with:</p>
 <div class="highlight"><pre><span></span><code>rewrite r_set_my_tag {
-    set-tag(&quot;my_tag&quot;);
+    set-tag("my_tag");
 };
 </code></pre></div>
 <p>Syntax:</p>
@@ -11845,17 +11845,17 @@ filter {
 <p>Examples:</p>
 <div class="highlight"><pre><span></span><code># match by source tag
 filter {
-    tags(&quot;.source.s_VMWARE_VCENTER&quot;)
+    tags(".source.s_VMWARE_VCENTER")
 };
 
 # match by vendor/product tags
 filter {
-    tags(&quot;ns_vendor:vmware&quot;) and tags(&quot;ns_product:vsphere&quot;)
+    tags("ns_vendor:vmware") and tags("ns_product:vsphere")
 };
 
 # match by wire format
 filter {
-    tags(&quot;wireformat:rfc3164_isodate&quot;)
+    tags("wireformat:rfc3164_isodate")
 };
 </code></pre></div>
 <p><strong>Conditional statements</strong></p>
@@ -11864,10 +11864,10 @@ filter {
 <div class="highlight"><pre><span></span><code># Match messages from the VMware vCenter source
 # or by a combination of vendor and product tags
 filter {
-    tags(&quot;.source.s_VMWARE_VCENTER&quot;)
+    tags(".source.s_VMWARE_VCENTER")
     or (
-        tags(&quot;ns_vendor:vmware&quot;)
-        and tags(&quot;ns_product:vsphere&quot;)
+        tags("ns_vendor:vmware")
+        and tags("ns_product:vsphere")
     )
 };
 </code></pre></div>
@@ -11875,7 +11875,7 @@ filter {
 <p>After creating filter, specify what parser should be use for further processing:</p>
 <div class="highlight"><pre><span></span><code>application app-syslog-vmware_cb-protect[sc4s-syslog] {
     filter {
-        message(&#39;Carbon Black App Control event:  &#39;  type(string)  flags(prefix));
+        message('Carbon Black App Control event:  '  type(string)  flags(prefix));
     };  
     parser { app-syslog-vmware_cb-protect(); }; # If filtering succeeds send data to this parser
 };

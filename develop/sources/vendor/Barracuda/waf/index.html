@@ -11788,12 +11788,12 @@
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">barracuda_syslog</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
 <span class="w">        </span><span class="n">netmask</span><span class="p">(</span><span class="mf">169.254.100.1</span><span class="o">/</span><span class="mi">24</span><span class="p">)</span>
-<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="n">host</span><span class="p">(</span><span class="s">&quot;barracuda&quot;</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">ignore</span><span class="o">-</span><span class="k">case</span><span class="p">))</span>
+<span class="w">        </span><span class="n">or</span><span class="w"> </span><span class="n">host</span><span class="p">(</span><span class="s">"barracuda"</span><span class="w"> </span><span class="n">type</span><span class="p">(</span><span class="n">string</span><span class="p">)</span><span class="w"> </span><span class="n">flags</span><span class="p">(</span><span class="n">ignore</span><span class="o">-</span><span class="k">case</span><span class="p">))</span>
 <span class="w">    </span><span class="err">};</span><span class="w"> </span>
 <span class="w">    </span><span class="no">parser</span><span class="w"> </span><span class="err">{</span><span class="w"> </span>
 <span class="w">        </span><span class="no">p_set_netsource_fields</span><span class="p">(</span>
-<span class="w">            </span><span class="no">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="no">barracuda</span><span class="err">&#39;</span><span class="p">)</span>
-<span class="w">            </span><span class="no">product</span><span class="p">(</span><span class="err">&#39;</span><span class="no">syslog</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="no">vendor</span><span class="p">(</span><span class="err">'</span><span class="no">barracuda</span><span class="err">'</span><span class="p">)</span>
+<span class="w">            </span><span class="no">product</span><span class="p">(</span><span class="err">'</span><span class="no">syslog</span><span class="err">'</span><span class="p">)</span>
 <span class="w">        </span><span class="p">)</span><span class="err">;</span><span class="w"> </span>
 <span class="w">    </span><span class="err">};</span><span class="w">   </span>
 <span class="err">};</span>

@@ -11616,18 +11616,18 @@ not use CloudWatch, remove the <code>logConfiguration</code> block from the task
 <li><strong>Task role</strong> (<code>taskRoleArn</code>) - this is the identity SC4S itself runs as. If you disable the disk buffer there is no IAM-authorized mount, so SC4S needs no AWS permissions at all and you can skip this role. If you plan on using EFS it needs EFS client access to your file system and access point.</li>
 </ul>
 <p>Both roles share the same trust policy (<code>trust.json</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span><span class="nt">&quot;Statement&quot;</span><span class="p">:[{</span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span><span class="nt">&quot;Principal&quot;</span><span class="p">:{</span><span class="nt">&quot;Service&quot;</span><span class="p">:</span><span class="s2">&quot;ecs-tasks.amazonaws.com&quot;</span><span class="p">},</span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">}]}</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"Version"</span><span class="p">:</span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="nt">"Statement"</span><span class="p">:[{</span><span class="nt">"Effect"</span><span class="p">:</span><span class="s2">"Allow"</span><span class="p">,</span><span class="nt">"Principal"</span><span class="p">:{</span><span class="nt">"Service"</span><span class="p">:</span><span class="s2">"ecs-tasks.amazonaws.com"</span><span class="p">},</span><span class="nt">"Action"</span><span class="p">:</span><span class="s2">"sts:AssumeRole"</span><span class="p">}]}</span>
 </code></pre></div>
 <p>Task-role EFS permissions example (<code>efs-policy.json</code>): replace the region, account, and EFS IDs:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;Version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;Statement&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
-<span class="w">    </span><span class="nt">&quot;Effect&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;Action&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;elasticfilesystem:ClientMount&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;elasticfilesystem:ClientWrite&quot;</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">&quot;Resource&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:elasticfilesystem:&lt;AWS_REGION&gt;:&lt;ACCOUNT_ID&gt;:file-system/&lt;EFS_FILE_SYSTEM_ID&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;Condition&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;StringEquals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;elasticfilesystem:AccessPointArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:elasticfilesystem:&lt;AWS_REGION&gt;:&lt;ACCOUNT_ID&gt;:access-point/&lt;EFS_ACCESS_POINT_ID&gt;&quot;</span>
+<span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">    </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"elasticfilesystem:ClientMount"</span><span class="p">,</span><span class="w"> </span><span class="s2">"elasticfilesystem:ClientWrite"</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:elasticfilesystem:&lt;AWS_REGION&gt;:&lt;ACCOUNT_ID&gt;:file-system/&lt;EFS_FILE_SYSTEM_ID&gt;"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"elasticfilesystem:AccessPointArn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:elasticfilesystem:&lt;AWS_REGION&gt;:&lt;ACCOUNT_ID&gt;:access-point/&lt;EFS_ACCESS_POINT_ID&gt;"</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}]</span>
@@ -11654,67 +11654,67 @@ aws<span class="w"> </span>iam<span class="w"> </span>put-role-policy<span class
 <li>
 <p>Create the task definition. The following is a complete example for a single SC4S container on Fargate. It mounts an EFS access point at <code>/var/lib/syslog-ng</code> so the disk buffer keeps working (see <a href="#storage-and-the-disk-buffer">Storage and the disk buffer</a>). Replace every <code>&lt;...&gt;</code> placeholder with your own values.</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;family&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;networkMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;awsvpc&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;requiresCompatibilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;FARGATE&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;cpu&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;512&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;memory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1024&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/sc4s-execution-role&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;taskRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/sc4s-task-role&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;runtimePlatform&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;cpuArchitecture&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X86_64&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;operatingSystemFamily&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LINUX&quot;</span>
+<span class="w">  </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"networkMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"awsvpc"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"requiresCompatibilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"FARGATE"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"cpu"</span><span class="p">:</span><span class="w"> </span><span class="s2">"512"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"memory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1024"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"executionRoleArn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/sc4s-execution-role"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"taskRoleArn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/sc4s-task-role"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"runtimePlatform"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"cpuArchitecture"</span><span class="p">:</span><span class="w"> </span><span class="s2">"X86_64"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"operatingSystemFamily"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LINUX"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;volumes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"volumes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s-var&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;efsVolumeConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;fileSystemId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;EFS_FILE_SYSTEM_ID&gt;&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;transitEncryption&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;authorizationConfig&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;accessPointId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;EFS_ACCESS_POINT_ID&gt;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;iam&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ENABLED&quot;</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s-var"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"efsVolumeConfiguration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"fileSystemId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;EFS_FILE_SYSTEM_ID&gt;"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"transitEncryption"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ENABLED"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"authorizationConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"accessPointId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;EFS_ACCESS_POINT_ID&gt;"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"iam"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ENABLED"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;containerDefinitions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"containerDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;essential&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;portMappings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;udp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">601</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6514</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"essential"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"portMappings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"udp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">601</span><span class="p">,</span><span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">6514</span><span class="p">,</span><span class="w"> </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;mountPoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="nt">"mountPoints"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;sourceVolume&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s-var&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;containerPath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/var/lib/syslog-ng&quot;</span>
+<span class="w">          </span><span class="nt">"sourceVolume"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s-var"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"containerPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/lib/syslog-ng"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;environment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_URL&quot;</span><span class="p">,</span><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;SPLUNK_HEC_HOST&gt;:8088&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN&quot;</span><span class="p">,</span><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;SPLUNK_HEC_TOKEN&gt;&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yes&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"environment"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_URL"</span><span class="p">,</span><span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;SPLUNK_HEC_HOST&gt;:8088"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN"</span><span class="p">,</span><span class="w">      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;SPLUNK_HEC_TOKEN&gt;"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yes"</span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;logConfiguration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;logDriver&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;awslogs&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nt">&quot;awslogs-group&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/ecs/sc4s&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;awslogs-region&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;AWS_REGION&gt;&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nt">&quot;awslogs-stream-prefix&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s&quot;</span>
+<span class="w">      </span><span class="nt">"logConfiguration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"logDriver"</span><span class="p">:</span><span class="w"> </span><span class="s2">"awslogs"</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">          </span><span class="nt">"awslogs-group"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ecs/sc4s"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"awslogs-region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;AWS_REGION&gt;"</span><span class="p">,</span>
+<span class="w">          </span><span class="nt">"awslogs-stream-prefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s"</span>
 <span class="w">        </span><span class="p">}</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;healthCheck&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CMD-SHELL&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5 || exit 1&quot;</span><span class="p">],</span>
-<span class="w">        </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;retries&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;startPeriod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<span class="w">      </span><span class="nt">"healthCheck"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"CMD-SHELL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/usr/sbin/syslog-ng-ctl healthcheck --timeout 5 || exit 1"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"retries"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"startPeriod"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
@@ -11726,40 +11726,40 @@ aws<span class="w"> </span>iam<span class="w"> </span>put-role-policy<span class
 </div>
 <p>Below you can find a minimal working example of a task definition, this one doesn&rsquo;t have any diskbuffer or task log configuration:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;family&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;networkMode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;awsvpc&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;requiresCompatibilities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;FARGATE&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;cpu&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;512&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;memory&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1024&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;executionRoleArn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;SC4S_EXECUTION_ROLE&gt;&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;runtimePlatform&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;cpuArchitecture&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X86_64&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;operatingSystemFamily&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LINUX&quot;</span>
+<span class="w">  </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"networkMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"awsvpc"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"requiresCompatibilities"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"FARGATE"</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"cpu"</span><span class="p">:</span><span class="w"> </span><span class="s2">"512"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"memory"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1024"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"executionRoleArn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;SC4S_EXECUTION_ROLE&gt;"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"runtimePlatform"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"cpuArchitecture"</span><span class="p">:</span><span class="w"> </span><span class="s2">"X86_64"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"operatingSystemFamily"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LINUX"</span>
 <span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;containerDefinitions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="nt">"containerDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sc4s&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;image&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ghcr.io/splunk/splunk-connect-for-syslog/container3:latest&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;essential&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;portMappings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;udp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">601</span><span class="p">,</span><span class="w">  </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6514</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;containerPort&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tcp&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sc4s"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ghcr.io/splunk/splunk-connect-for-syslog/container3:latest"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"essential"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"portMappings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"udp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">514</span><span class="p">,</span><span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">601</span><span class="p">,</span><span class="w">  </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">6514</span><span class="p">,</span><span class="w"> </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"containerPort"</span><span class="p">:</span><span class="w"> </span><span class="mi">8080</span><span class="p">,</span><span class="w"> </span><span class="nt">"protocol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp"</span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;environment&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_URL&quot;</span><span class="p">,</span><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://&lt;SPLUNK_HEC_HOST&gt;:8088&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN&quot;</span><span class="p">,</span><span class="w">      </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;SPLUNK_HEC_TOKEN&gt;&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;no&quot;</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;no&quot;</span><span class="p">}</span>
+<span class="w">      </span><span class="nt">"environment"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_URL"</span><span class="p">,</span><span class="w">        </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;SPLUNK_HEC_HOST&gt;:8088"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN"</span><span class="p">,</span><span class="w">      </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;SPLUNK_HEC_TOKEN&gt;"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">}</span>
 <span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="nt">&quot;healthCheck&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;CMD-SHELL&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;/usr/sbin/syslog-ng-ctl healthcheck --timeout 5 || exit 1&quot;</span><span class="p">],</span>
-<span class="w">        </span><span class="nt">&quot;interval&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;retries&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;startPeriod&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<span class="w">      </span><span class="nt">"healthCheck"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"CMD-SHELL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/usr/sbin/syslog-ng-ctl healthcheck --timeout 5 || exit 1"</span><span class="p">],</span>
+<span class="w">        </span><span class="nt">"interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"retries"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"startPeriod"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">]</span>
@@ -11775,7 +11775,7 @@ aws<span class="w"> </span>iam<span class="w"> </span>put-role-policy<span class
 <h2 id="option-a-mount-efs">Option A: Mount EFS<a class="headerlink" href="#option-a-mount-efs" title="Permanent link">&para;</a></h2>
 <p>Mount an Amazon EFS access point at <code>/var/lib/syslog-ng</code>. EFS supports the locking syslog-ng needs, so the disk buffer stays enabled and you keep full outage protection.</p>
 <p>First create the file system and an access point. The syslog-ng process in the container runs as the non-root <code>syslog</code> user, UID/GID 1024, so the access point owns its root directory as <code>1024</code> and forces that identity on every task:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Create the file system -&gt; returns &quot;FileSystemId&quot;: &quot;fs-0123456789abcdef0&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Create the file system -&gt; returns "FileSystemId": "fs-0123456789abcdef0"</span>
 aws<span class="w"> </span>efs<span class="w"> </span>create-file-system<span class="w"> </span>--encrypted<span class="w"> </span>--tags<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Name,Value<span class="o">=</span>sc4s-var
 
 <span class="c1"># 2. A mount target in each subnet/AZ your tasks run in (repeat per subnet).</span>
@@ -11784,10 +11784,10 @@ aws<span class="w"> </span>efs<span class="w"> </span>create-mount-target<span c
 <span class="w">  </span>--subnet-id<span class="w"> </span>&lt;SUBNET_ID&gt;<span class="w"> </span>--security-groups<span class="w"> </span>&lt;EFS_SG&gt;
 
 <span class="c1"># 3. An access point rooted at /sc4s, owned and entered as UID/GID 1024</span>
-<span class="c1">#    -&gt; returns &quot;AccessPointId&quot;: &quot;fsap-0123456789abcdef0&quot;</span>
+<span class="c1">#    -&gt; returns "AccessPointId": "fsap-0123456789abcdef0"</span>
 aws<span class="w"> </span>efs<span class="w"> </span>create-access-point<span class="w"> </span>--file-system-id<span class="w"> </span>&lt;EFS_FILE_SYSTEM_ID&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--posix-user<span class="w"> </span><span class="nv">Uid</span><span class="o">=</span><span class="m">1024</span>,Gid<span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--root-directory<span class="w"> </span><span class="s1">&#39;Path=/sc4s,CreationInfo={OwnerUid=1024,OwnerGid=1024,Permissions=0755}&#39;</span>
+<span class="w">  </span>--root-directory<span class="w"> </span><span class="s1">'Path=/sc4s,CreationInfo={OwnerUid=1024,OwnerGid=1024,Permissions=0755}'</span>
 </code></pre></div>
 <p>The two IDs those commands return are what you paste into the task definition&rsquo;s <code>volumes</code> block.</p>
 <p>Setup notes:</p>
@@ -11811,7 +11811,7 @@ this means you have to choose:</p>
 </div>
 <h2 id="option-b-disable-the-disk-buffer">Option B: Disable the disk buffer<a class="headerlink" href="#option-b-disable-the-disk-buffer" title="Permanent link">&para;</a></h2>
 <p>If you do not need on-disk buffering, disable it and SC4S will start on ephemeral storage with no persistent volume. Add this environment variable to the container definition and remove the <code>volumes</code> and <code>mountPoints</code> blocks:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;no&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE"</span><span class="p">,</span><span class="w"> </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">}</span>
 </code></pre></div>
 <div class="admonition danger">
 <p class="admonition-title">Data-loss without disk buffer</p>
@@ -11836,9 +11836,9 @@ fail:</p>
 <span class="w">  </span>--service-name<span class="w"> </span>sc4s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--task-definition<span class="w"> </span>sc4s<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--desired-count<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--deployment-configuration<span class="w"> </span><span class="s2">&quot;maximumPercent=100,minimumHealthyPercent=0&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--deployment-configuration<span class="w"> </span><span class="s2">"maximumPercent=100,minimumHealthyPercent=0"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--launch-type<span class="w"> </span>FARGATE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--network-configuration<span class="w"> </span><span class="s2">&quot;awsvpcConfiguration={subnets=[&lt;SUBNET_ID&gt;],securityGroups=[&lt;SECURITY_GROUP_ID&gt;],assignPublicIp=ENABLED}&quot;</span>
+<span class="w">  </span>--network-configuration<span class="w"> </span><span class="s2">"awsvpcConfiguration={subnets=[&lt;SUBNET_ID&gt;],securityGroups=[&lt;SECURITY_GROUP_ID&gt;],assignPublicIp=ENABLED}"</span>
 </code></pre></div>
 <p>To front the service with the NLB, add <code>--load-balancers</code> and <code>--health-check-grace-period-seconds 60</code>
 (SC4S needs roughly 30–60s to boot before <code>/health</code> answers).</p>
@@ -11847,7 +11847,7 @@ fail:</p>
 <li>
 <p>Confirm the task reaches and stays in the <code>RUNNING</code> state:</p>
 <div class="highlight"><pre><span></span><code>aws<span class="w"> </span>ecs<span class="w"> </span>describe-tasks<span class="w"> </span>--cluster<span class="w"> </span>&lt;CLUSTER_NAME&gt;<span class="w"> </span>--tasks<span class="w"> </span>&lt;TASK_ARN&gt;<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;tasks[0].{lastStatus:lastStatus,health:healthStatus}&#39;</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s1">'tasks[0].{lastStatus:lastStatus,health:healthStatus}'</span>
 </code></pre></div>
 </li>
 <li>
@@ -11863,7 +11863,7 @@ fail:</p>
 </li>
 <li>
 <p>Validate that SC4S is delivering to Splunk. Run this search in Splunk:</p>
-<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events &quot;starting up&quot;</span>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events "starting up"</span>
 </code></pre></div>
 <p>If you run more than one task, confirm traffic is spread across them by checking the indexed
 <code>sc4s_container</code> field - each task reports a distinct value:</p>

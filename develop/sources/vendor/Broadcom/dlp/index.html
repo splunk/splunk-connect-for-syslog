@@ -11885,12 +11885,12 @@
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">symantec_dlp</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
 <span class="w">        </span><span class="cp">#netmask(169.254.100.1/24)</span>
-<span class="w">        </span><span class="cp">#host(&quot;-esx-&quot;)</span>
+<span class="w">        </span><span class="cp">#host("-esx-")</span>
 <span class="w">    </span><span class="p">};</span><span class="w"> </span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
 <span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span>
-<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">symantec</span><span class="err">&#39;</span><span class="p">)</span>
-<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">dlp</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">'</span><span class="n">symantec</span><span class="err">'</span><span class="p">)</span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">'</span><span class="n">dlp</span><span class="err">'</span><span class="p">)</span>
 <span class="w">        </span><span class="p">);</span><span class="w"> </span>
 <span class="w">    </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span>

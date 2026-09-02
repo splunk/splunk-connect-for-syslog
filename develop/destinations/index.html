@@ -11679,8 +11679,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_mysys.conf</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_asa_d_syslog_mysys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_mysys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">        </span><span class="err">'</span><span class="n">cisco</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">'</span><span class="n">asa</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_product}"</span>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
@@ -11698,8 +11698,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_syslog_mysys.conf</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_asa_d_syslog_mysys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_syslog_mysys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">        </span><span class="err">'</span><span class="n">cisco</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">'</span><span class="n">asa</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_product}"</span>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
@@ -11747,8 +11747,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/selectors/sc4s-lp-cisco_asa_d_bsd_mysys.conf</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_asa_d_bsd_mysys</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_bsd_mysys</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">        </span><span class="err">'</span><span class="n">cisco</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">'</span><span class="n">asa</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_product}"</span>
 <span class="w">    </span><span class="p">};</span><span class="w">    </span>
 <span class="p">};</span>
 </code></pre></div>
@@ -11756,7 +11756,7 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <p>SC4S can send data to multiple destinations. In the original setup the default destination accepts all events. This ensures that at least one destination receives the event, helping to avoid data loss due to misconfiguration. The provided examples demonstrate possible options for configuring additional HEC destinations.</p>
 <h2 id="send-all-events-to-the-additional-destination">Send all events to the additional destination<a class="headerlink" href="#send-all-events-to-the-additional-destination" title="Permanent link">&para;</a></h2>
 <p>After adding this example to your basic configuration SC4S will send all events both to <code>SC4S_DEST_SPLUNK_HEC_DEFAULT_URL</code> and <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Note "OTHER" should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
@@ -11764,7 +11764,7 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </code></pre></div></p>
 <h2 id="send-only-selected-events-to-the-additional-destination">Send only selected events to the additional destination<a class="headerlink" href="#send-only-selected-events-to-the-additional-destination" title="Permanent link">&para;</a></h2>
 <p>After adding this example to your basic configuration SC4S will send Cisco IOS events to <code>SC4S_DEST_SPLUNK_HEC_OTHER_URL</code>.
-<div class="highlight"><pre><span></span><code><span class="c1">#Note &quot;OTHER&quot; should be a meaningful name</span>
+<div class="highlight"><pre><span></span><code><span class="c1">#Note "OTHER" should be a meaningful name</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_URL</span><span class="o">=</span>https://splunk:8088
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN</span><span class="o">=</span><span class="si">${</span><span class="nv">SPLUNK_HEC_TOKEN</span><span class="si">}</span>
 <span class="nv">SC4S_DEST_SPLUNK_HEC_OTHER_TLS_VERIFY</span><span class="o">=</span>no
@@ -11772,8 +11772,8 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 </code></pre></div></p>
 <div class="highlight"><pre><span></span><code><span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_ios_dest_fmt_other</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_hec_fmt_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span>
-<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">&#39;</span><span class="n">asa</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_product}&quot;</span>
+<span class="w">        </span><span class="err">'</span><span class="n">cisco</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">'</span><span class="n">asa</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_product}"</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div>
@@ -11792,14 +11792,14 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="n">r_set_splunk_dest_default</span><span class="p">(</span>
-<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">&#39;</span><span class="n">cisco_alt_index</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">                </span><span class="n">index</span><span class="p">(</span><span class="err">'</span><span class="n">cisco_alt_index</span><span class="err">'</span><span class="p">)</span>
 <span class="w">            </span><span class="p">);</span>
 <span class="w">        </span><span class="p">};</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="p">};</span>
 <span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_dest_fmt_other</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_hec_fmt_other</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="err">&#39;</span><span class="n">cisco</span><span class="err">&#39;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;${fields.sc4s_vendor}&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="err">'</span><span class="n">cisco</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span><span class="p">;</span>
 <span class="w">    </span><span class="p">};</span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">cisco_dest_other_parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
 <span class="p">};</span>

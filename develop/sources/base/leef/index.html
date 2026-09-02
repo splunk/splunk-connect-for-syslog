@@ -11797,16 +11797,16 @@ also specify the format of this timestamp in another field called <code>devTimeF
 SC4S uses syslog-ng strptime format which is not directly translatable to the Java Time format. Therefore, SC4S has
 provided support for the following common formats.  If needed, additional time formats can be requested via an issue on
 github.</p>
-<div class="highlight"><pre><span></span><code>    &#39;%s.%f&#39;,
-    &#39;%s&#39;,
-    &#39;%b %d %H:%M:%S.%f&#39;,
-    &#39;%b %d %H:%M:%S&#39;,
-    &#39;%b %d %Y %H:%M:%S.%f&#39;,
-    &#39;%b %e %Y %H:%M:%S&#39;,
-    &#39;%b %e %H:%M:%S.%f&#39;,
-    &#39;%b %e %H:%M:%S&#39;,
-    &#39;%b %e %Y %H:%M:%S.%f&#39;,
-    &#39;%b %e %Y %H:%M:%S&#39;  
+<div class="highlight"><pre><span></span><code>    '%s.%f',
+    '%s',
+    '%b %d %H:%M:%S.%f',
+    '%b %d %H:%M:%S',
+    '%b %d %Y %H:%M:%S.%f',
+    '%b %e %Y %H:%M:%S',
+    '%b %e %H:%M:%S.%f',
+    '%b %e %H:%M:%S',
+    '%b %e %Y %H:%M:%S.%f',
+    '%b %e %Y %H:%M:%S'  
 </code></pre></div>
 <table>
 <thead>

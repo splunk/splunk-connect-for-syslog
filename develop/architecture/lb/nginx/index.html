@@ -11953,7 +11953,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 sudo<span class="w"> </span>cp<span class="w"> </span>nginx-repo.key<span class="w"> </span>nginx-repo.crt<span class="w"> </span>/etc/ssl/nginx/
 
 wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://cs.nginx.com/static/keys/nginx_signing.key<span class="w"> </span><span class="p">|</span><span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/usr/share/keyrings/nginx-archive-keyring.gpg<span class="w"> </span>&gt;/dev/null
-<span class="nb">printf</span><span class="w"> </span><span class="s2">&quot;deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus\n&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/nginx-plus.list
+<span class="nb">printf</span><span class="w"> </span><span class="s2">"deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://pkgs.nginx.com/plus/ubuntu `lsb_release -cs` nginx-plus\n"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/nginx-plus.list
 
 sudo<span class="w"> </span>wget<span class="w"> </span>-P<span class="w"> </span>/etc/apt/apt.conf.d<span class="w"> </span>https://cs.nginx.com/static/files/90pkgs-nginx
 
@@ -12039,7 +12039,7 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
     }
 
     # Define a virtual server for each upstream connection
-    # Ensure &#39;proxy_protocol&#39; is set to &#39;on&#39;
+    # Ensure 'proxy_protocol' is set to 'on'
     server {
         listen        514;
         listen        601;
@@ -12068,9 +12068,9 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
 <h3 id="test-your-configuration">Test your configuration<a class="headerlink" href="#test-your-configuration" title="Permanent link">&para;</a></h3>
 <p>Send TCP messages to the load balancer and verify that they are correctly received in Splunk with the host set to your source IP:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test message without IETF frame for port 514/TCP:</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;hello world&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>netcat<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span><span class="m">514</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"hello world"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>netcat<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span><span class="m">514</span>
 <span class="c1"># Test message with IETF frame for port 601/TCP:</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;11 hello world&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>netcat<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span><span class="m">601</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"11 hello world"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>netcat<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span><span class="m">601</span>
 </code></pre></div>
 <ol start="3">
 <li>Run performance tests based on the <a href="../../performance-tests/#check-your-tcp-performance">Check TCP Performance</a> section.</li>
@@ -12156,8 +12156,8 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
     }
 
     match server_ok {
-        send &quot;GET /health HTTP/1.0\r\n\r\n&quot;;
-        expect ~* &#39;&quot;healthy&quot;&#39;;
+        send "GET /health HTTP/1.0\r\n\r\n";
+        expect ~* '"healthy"';
     }
 
     # Define connections to each of your upstreams.
@@ -12184,7 +12184,7 @@ Load balancer support and fine-tuning is outside the scope of the SC4S team&rsqu
 <ol>
 <li>
 <p>Send UDP messages to the load balancer and verify that they are correctly received in Splunk with the correct host IP:
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;hello world&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/udp/&lt;LB_IP&gt;/514
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s2">"hello world"</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/udp/&lt;LB_IP&gt;/514
 </code></pre></div></p>
 </li>
 <li>

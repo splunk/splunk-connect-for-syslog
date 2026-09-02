@@ -11797,12 +11797,12 @@
 
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">pfsense_firewall</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
 <span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
-<span class="w">        </span><span class="s">&quot;${HOST}&quot;</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">&quot;pfsense_firewall&quot;</span>
+<span class="w">        </span><span class="s">"${HOST}"</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"pfsense_firewall"</span>
 <span class="w">    </span><span class="p">};</span><span class="w"> </span>
 <span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
 <span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span>
-<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">&#39;</span><span class="n">pfsense</span><span class="err">&#39;</span><span class="p">)</span>
-<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">&#39;</span><span class="n">firewall</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">'</span><span class="n">pfsense</span><span class="err">'</span><span class="p">)</span>
+<span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">'</span><span class="n">firewall</span><span class="err">'</span><span class="p">)</span>
 <span class="w">        </span><span class="p">);</span><span class="w"> </span>
 <span class="w">    </span><span class="p">};</span><span class="w">   </span>
 <span class="p">};</span>

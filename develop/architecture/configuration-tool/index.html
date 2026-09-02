@@ -12141,13 +12141,13 @@ For the full list of UDP-related environment variables and their defaults, see t
 <h2 id="testing-the-generated-configuration">Testing the generated configuration<a class="headerlink" href="#testing-the-generated-configuration" title="Permanent link">&para;</a></h2>
 <p>You can verify the generated configuration works by running SC4S and sending test events:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Test with TCP</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello SC4S TCP test&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>&lt;sc4s_host&gt;<span class="w"> </span><span class="m">514</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Hello SC4S TCP test"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>&lt;sc4s_host&gt;<span class="w"> </span><span class="m">514</span>
 
 <span class="c1"># Test with UDP</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello SC4S UDP test&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>-u<span class="w"> </span>&lt;sc4s_host&gt;<span class="w"> </span><span class="m">514</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">"Hello SC4S UDP test"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>-u<span class="w"> </span>&lt;sc4s_host&gt;<span class="w"> </span><span class="m">514</span>
 </code></pre></div>
 <p>Confirm the events appear in Splunk by searching:</p>
-<div class="highlight"><pre><span></span><code>index=* &quot;Hello SC4S&quot;
+<div class="highlight"><pre><span></span><code>index=* "Hello SC4S"
 </code></pre></div>
 <h2 id="further-reading">Further reading<a class="headerlink" href="#further-reading" title="Permanent link">&para;</a></h2>
 <ul>

@@ -11594,7 +11594,7 @@ host machine, for example on an airgapped system, without internet connectivity.
 <p>Use the local label <code>sc4slocal:latest</code> in the relevant unit or YAML file to launch SC4S by setting the <code>SC4S_IMAGE</code> environment variable in the unit file, or the relevant <code>image:</code> tag if you are using Docker Compose/Swarm. This label will cause the runtime to select the locally loaded image, and will not attempt to obtain the container image from the internet.</p>
 </li>
 </ol>
-<p><div class="highlight"><pre><span></span><code>Environment=&quot;SC4S_IMAGE=sc4slocal:latest&quot;
+<p><div class="highlight"><pre><span></span><code>Environment="SC4S_IMAGE=sc4slocal:latest"
 </code></pre></div>
 7. Remove the entry from the relevant unit file when your configuration uses systemd. This is because an external connection to pull the container is no longer needed or available:</p>
 <div class="highlight"><pre><span></span><code>ExecStartPre=/usr/bin/docker pull $SC4S_IMAGE

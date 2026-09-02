@@ -12057,7 +12057,7 @@
 <h2 id="issue-systemd-errors-occur-during-sc4s-startup">Issue: systemd errors occur during SC4S startup<a class="headerlink" href="#issue-systemd-errors-occur-during-sc4s-startup" title="Permanent link">&para;</a></h2>
 <p>If you are running out of systemd, you may see this at startup:</p>
 <p><div class="highlight"><pre><span></span><code><span class="o">[</span>root@sc4s<span class="w"> </span>syslog-ng<span class="o">]</span><span class="c1"># systemctl start sc4s</span>
-Job<span class="w"> </span><span class="k">for</span><span class="w"> </span>sc4s.service<span class="w"> </span>failed<span class="w"> </span>because<span class="w"> </span>the<span class="w"> </span>control<span class="w"> </span>process<span class="w"> </span>exited<span class="w"> </span>with<span class="w"> </span>error<span class="w"> </span>code.<span class="w"> </span>See<span class="w"> </span><span class="s2">&quot;systemctl status sc4s.service&quot;</span><span class="w"> </span>and<span class="w"> </span><span class="s2">&quot;journalctl -xe&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>details.
+Job<span class="w"> </span><span class="k">for</span><span class="w"> </span>sc4s.service<span class="w"> </span>failed<span class="w"> </span>because<span class="w"> </span>the<span class="w"> </span>control<span class="w"> </span>process<span class="w"> </span>exited<span class="w"> </span>with<span class="w"> </span>error<span class="w"> </span>code.<span class="w"> </span>See<span class="w"> </span><span class="s2">"systemctl status sc4s.service"</span><span class="w"> </span>and<span class="w"> </span><span class="s2">"journalctl -xe"</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>details.
 </code></pre></div>
 Most issues that occur with startup and operation of SC4S involve syntax errors or duplicate listening ports.</p>
 <p>Try the following to resolve the issue:</p>
@@ -12081,7 +12081,7 @@ This will print the last 100 lines of the system journal in detail, which should
 </code></pre></div>
 <h3 id="check-that-the-container-is-still-running-when-systemd-indicates-that-its-not-running">Check that the container is still running when systemd indicates that it&rsquo;s not running<a class="headerlink" href="#check-that-the-container-is-still-running-when-systemd-indicates-that-its-not-running" title="Permanent link">&para;</a></h3>
 <p>In some instances, particularly when <code>SC4S_DEBUG_CONTAINER=yes</code>, an SC4S container might not shut down completely when starting/stopping out of systemd, and systemd will attempt to start a new container when one is already running with the <code>SC4S</code> name. You will see this type of output when viewing the journal after a failed start caused by this condition, or a similar message when the container is run directly from the CLI:</p>
-<div class="highlight"><pre><span></span><code>Jul 15 18:45:20 sra-sc4s-alln01-02 podman[11187]: Error: error creating container storage: the container name &quot;SC4S&quot; is already in use by &quot;894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9&quot;. You have to remove that container...
+<div class="highlight"><pre><span></span><code>Jul 15 18:45:20 sra-sc4s-alln01-02 podman[11187]: Error: error creating container storage: the container name "SC4S" is already in use by "894357502b2a7142d097ea3ca1468d1cb4fbc69959a9817a1bbe145a09d37fb9". You have to remove that container...
 Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited, code=exited, status=125/n/a
 </code></pre></div>
 <p>To rectify this, execute:
@@ -12096,20 +12096,20 @@ Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited
 <p>You will see entries similar to the following:</p>
 <div class="highlight"><pre><span></span><code>SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful; checking indexes...
 
-SC4S_ENV_CHECK_INDEX: Checking email {&quot;text&quot;:&quot;Incorrect index&quot;,&quot;code&quot;:7,&quot;invalid-event-number&quot;:1}
-SC4S_ENV_CHECK_INDEX: Checking epav {&quot;text&quot;:&quot;Incorrect index&quot;,&quot;code&quot;:7,&quot;invalid-event-number&quot;:1}
-SC4S_ENV_CHECK_INDEX: Checking main {&quot;text&quot;:&quot;Success&quot;,&quot;code&quot;:0}
+SC4S_ENV_CHECK_INDEX: Checking email {"text":"Incorrect index","code":7,"invalid-event-number":1}
+SC4S_ENV_CHECK_INDEX: Checking epav {"text":"Incorrect index","code":7,"invalid-event-number":1}
+SC4S_ENV_CHECK_INDEX: Checking main {"text":"Success","code":0}
 </code></pre></div>
 <p>Note the specifics of the indexes that are not configured correctly, and rectify this in your Splunk configuration. If this is not addressed properly, you may see output similar to the below when data flows into SC4S:</p>
-<p><div class="highlight"><pre><span></span><code>Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server returned with a 4XX (client errors) status code, which means we are not authorized or the URL is not found.; url=&#39;https://splunk-instance.com:8088/services/collector/event&#39;, status_code=&#39;400&#39;, driver=&#39;d_hec#0&#39;, location=&#39;/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5&#39;
-Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server disconnected while preparing messages for sending, trying again; driver=&#39;d_hec#0&#39;, location=&#39;/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5&#39;, worker_index=&#39;4&#39;, time_reopen=&#39;10&#39;, batch_size=&#39;1000&#39;
+<p><div class="highlight"><pre><span></span><code>Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server returned with a 4XX (client errors) status code, which means we are not authorized or the URL is not found.; url='https://splunk-instance.com:8088/services/collector/event', status_code='400', driver='d_hec#0', location='/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5'
+Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server disconnected while preparing messages for sending, trying again; driver='d_hec#0', location='/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5', worker_index='4', time_reopen='10', batch_size='1000'
 </code></pre></div>
 This is an indication that the standard <code>d_hec</code> destination in syslog-ng, which is the route to Splunk, is rejected by the HEC endpoint. A <code>400</code> error is commonly caused by an index that has not been created in Splunk. One bad index can damage the batch, in this case, 1000 events, and prevent any of the data from being sent to Splunk. Make sure that the container logs are free of these kinds of errors in production. You can use the alternate HEC debug destination to help debug this condition by sending direct &ldquo;curl&rdquo; commands to the HEC endpoint outside of the SC4S setting.</p>
 <h2 id="issue-invalid-sc4s-listening-ports">Issue: Invalid SC4S listening ports<a class="headerlink" href="#issue-invalid-sc4s-listening-ports" title="Permanent link">&para;</a></h2>
 <p><a href="../../sources/#unique-listening-ports">SC4S exclusively grants a port to a device when <code>SC4S_LISTEN_{vendor}_{product}_{TCP/UDP/TLS}_PORT={port}</code></a>.</p>
 <p>During startup, SC4S validates that listening ports are configured correctly, and shows any issues in container logs.</p>
 <p>You will receive an error message similar to the following if listening ports for <code>MERAKI SWITCHES</code> are configured incorrectly:
-<div class="highlight"><pre><span></span><code>SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don&#39;t use default port like (514,614,6514)
+<div class="highlight"><pre><span></span><code>SC4S_LISTEN_MERAKI_SWITCHES_TCP_PORT: Wrong port number, don't use default port like (514,614,6514)
 SC4S_LISTEN_MERAKI_SWITCHES_UDP_PORT: 7000 is not unique and has already been used for another source
 SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the range (0, 10000)
 </code></pre></div></p>
@@ -12138,7 +12138,7 @@ podman volume create splunk-sc4s-var
 <p><div class="highlight"><pre><span></span><code>/usr/bin/&lt;podman<span class="p">|</span>docker&gt;<span class="w"> </span>logs<span class="w"> </span>SC4S
 </code></pre></div>
 The following warning message is not a failure condition unless you are reaching the upper limit of your hardware performance.
-<div class="highlight"><pre><span></span><code>The kernel refused to set the receive buffer (SO_RCVBUF) to the requested size, you probably need to adjust buffer related kernel parameters; so_rcvbuf=&#39;1703936&#39;, so_rcvbuf_set=&#39;425984&#39;
+<div class="highlight"><pre><span></span><code>The kernel refused to set the receive buffer (SO_RCVBUF) to the requested size, you probably need to adjust buffer related kernel parameters; so_rcvbuf='1703936', so_rcvbuf_set='425984'
 </code></pre></div>
 Make changes to <code>/etc/sysctl.conf</code>, changing receive buffer values to 16 MB:</p>
 <p><div class="highlight"><pre><span></span><code>net.core.rmem_default = 17039360
@@ -12156,7 +12156,7 @@ Run the following commands to implement your changes:
 <p>If a data source you are trying to ingest claims it is RFC-5424 compliant but you get an &ldquo;Error processing log message:&rdquo; from SC4S, this message indicates that the data source still violates the RFC-5424 standard in some way. In this case, the underlying syslog-ng process will send an error event, with the location of the error in the original event highlighted with <code>&gt;@&lt;</code> to indicate where the error occurred. Here is an example error message:</p>
 <div class="highlight"><pre><span></span><code>{ [-]
    ISODATE: 2020-05-04T21:21:59.001+00:00
-   MESSAGE: Error processing log message: &lt;14&gt;1 2020-05-04T21:21:58.117351+00:00 arcata-pks-cluster-1 pod.log/cf-workloads/logspinner-testing-6446b8ef - - [kubernetes@47450 cloudfoundry.org/process_type=&quot;web&quot; cloudfoundry.org/rootfs-version=&quot;v75.0.0&quot; cloudfoundry.org/version=&quot;eae53cc3-148d-4395-985c-8fef0606b9e3&quot; controller-revision-hash=&quot;logspinner-testing-6446b8ef05-7db777754c&quot; cloudfoundry.org/app_guid=&quot;f71634fe-34a4-4f89-adac-3e523f61a401&quot; cloudfoundry.org/source_type=&quot;APP&quot; security.istio.io/tlsMode=&quot;istio&quot; statefulset.kubernetes.io/pod-n&gt;@&lt;ame=&quot;logspinner-testing-6446b8ef05-0&quot; cloudfoundry.org/guid=&quot;f71634fe-34a4-4f89-adac-3e523f61a401&quot; namespace_name=&quot;cf-workloads&quot; object_name=&quot;logspinner-testing-6446b8ef05-0&quot; container_name=&quot;opi&quot; vm_id=&quot;vm-e34452a3-771e-4994-666e-bfbc7eb77489&quot;] Duration 10.00299412s TotalSent 10 Rate 0.999701 
+   MESSAGE: Error processing log message: &lt;14&gt;1 2020-05-04T21:21:58.117351+00:00 arcata-pks-cluster-1 pod.log/cf-workloads/logspinner-testing-6446b8ef - - [kubernetes@47450 cloudfoundry.org/process_type="web" cloudfoundry.org/rootfs-version="v75.0.0" cloudfoundry.org/version="eae53cc3-148d-4395-985c-8fef0606b9e3" controller-revision-hash="logspinner-testing-6446b8ef05-7db777754c" cloudfoundry.org/app_guid="f71634fe-34a4-4f89-adac-3e523f61a401" cloudfoundry.org/source_type="APP" security.istio.io/tlsMode="istio" statefulset.kubernetes.io/pod-n&gt;@&lt;ame="logspinner-testing-6446b8ef05-0" cloudfoundry.org/guid="f71634fe-34a4-4f89-adac-3e523f61a401" namespace_name="cf-workloads" object_name="logspinner-testing-6446b8ef05-0" container_name="opi" vm_id="vm-e34452a3-771e-4994-666e-bfbc7eb77489"] Duration 10.00299412s TotalSent 10 Rate 0.999701 
    PID: 33
    PRI: &lt;43&gt;
    PROGRAM: syslog-ng

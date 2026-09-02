@@ -12059,7 +12059,7 @@ Observe that the member temporarily becomes unavailable.
 <li>Navigate to <strong>Local Traffic</strong> &gt; <strong>iRules</strong> &gt; <strong>Create</strong>.  </li>
 <li>Add the following iRule and save it:<br />
 <div class="highlight"><pre><span></span><code><span class="nv">when</span><span class="w"> </span>CLIENT_ACCEPTED<span class="w"> </span><span class="k">{</span>
-<span class="w">    </span><span class="k">set</span><span class="w"> </span>proxyheader<span class="w"> </span><span class="s2">&quot;PROXY TCP[IP::version] [IP::remote_addr] [IP::local_addr] [TCP::remote_port] [TCP::local_port]\r\n&quot;</span>
+<span class="w">    </span><span class="k">set</span><span class="w"> </span>proxyheader<span class="w"> </span><span class="s2">"PROXY TCP[IP::version] [IP::remote_addr] [IP::local_addr] [TCP::remote_port] [TCP::local_port]\r\n"</span>
 <span class="k">}</span>
 
 <span class="nv">when</span><span class="w"> </span>SERVER_CONNECTED<span class="w"> </span><span class="k">{</span>
@@ -12118,7 +12118,7 @@ Observe that the member temporarily becomes unavailable.
 <ol>
 <li>
 <p>From an external location, send several TCP messages to your load balancer:
-<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..5<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span>&lt;PORT&gt;<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">{</span><span class="m">1</span>..5<span class="o">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>nc<span class="w"> </span>&lt;LB_IP&gt;<span class="w"> </span>&lt;PORT&gt;<span class="p">;</span><span class="w"> </span><span class="k">done</span>
 </code></pre></div></p>
 </li>
 <li>
@@ -12200,7 +12200,7 @@ Observe that the member temporarily becomes unavailable.
 <ol>
 <li>
 <p>From an external location, send several UDP messages to your load balancer:
-<div class="highlight"><pre><span></span><code>for i in {1..5}; do echo &quot;$i&quot; &gt; /dev/udp/&lt;LB_IP&gt;/&lt;PORT&gt;; done
+<div class="highlight"><pre><span></span><code>for i in {1..5}; do echo "$i" &gt; /dev/udp/&lt;LB_IP&gt;/&lt;PORT&gt;; done
 </code></pre></div></p>
 </li>
 <li>

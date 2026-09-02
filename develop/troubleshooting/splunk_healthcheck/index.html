@@ -11761,7 +11761,7 @@
     earliest=-15m
 | stats count as error_count by host
 | eval instance=host
-| eval metric=error_count.&quot; HEC errors in last 15 min&quot;
+| eval metric=error_count." HEC errors in last 15 min"
 | eval severity_level=case(
     error_count &gt;= 100, 3,
     error_count &gt;= 10, 2,
