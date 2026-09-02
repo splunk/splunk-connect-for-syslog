@@ -5,7 +5,6 @@ import socket
 import time
 from urllib.parse import urlparse
 
-DEFAULT_ALLOWED_PORTS = {514, 601}
 MAX_EVENT_BYTES = 65_507
 
 def _host():
