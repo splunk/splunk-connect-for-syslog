@@ -33,14 +33,14 @@ lovely-pytest-docker = "^1.0.0"
 pathlib2 = "^2.3.7"
 requests = "^2.33.0"
 junit-xml = "^1.9"
-mkdocs = "^1.4.0"
 scapy = "^2.7.0"
 
-mkdocs-material = "^9.0.0"
-mike = "^2.0.0"
+# Zensical (successor to Material for MkDocs) is the docs generator.
+zensical = ">=0.0.57"
+# Versioning uses the Material team's mike fork.
+mike = {git = "https://github.com/squidfunk/mike.git", rev = "2d4ad799442f4592db8ad53b179bfb33db8c69ac"}
 pre-commit = "^4.0.0"
 typing-extensions = "*"
-mkdocs-include-dir-to-nav = "^1.2.0"
 black = "^26.3.1"
 
 

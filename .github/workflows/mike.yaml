@@ -36,4 +36,5 @@ jobs:
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
           poetry install
+          poetry run python docs/gen_sources_nav.py
           poetry run mike deploy -p $BRANCH

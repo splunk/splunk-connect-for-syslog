@@ -39,6 +39,7 @@ jobs:
           echo $VERSION
           pip3 install --only-binary :all: poetry
           poetry install
+          poetry run python docs/gen_sources_nav.py
           poetry run mike deploy -p $VERSION
   helm:
     runs-on: ubuntu-latest

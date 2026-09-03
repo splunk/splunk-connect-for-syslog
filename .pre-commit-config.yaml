@@ -26,3 +26,12 @@ repos:
     hooks:
       - id: black
         language_version: python3
+  - repo: local
+    hooks:
+      - id: gen-sources-nav
+        name: Regenerate docs Sources nav (mkdocs.yml)
+        description: Keeps the Message Formats / Known Vendors nav in mkdocs.yml in sync with docs/sources/
+        entry: python3 docs/gen_sources_nav.py
+        language: system
+        files: ^(docs/sources/.*\.md|mkdocs\.yml)$
+        pass_filenames: false
