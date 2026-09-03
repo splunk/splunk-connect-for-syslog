@@ -12,8 +12,8 @@
 !sc4s_mcp/utils/
 !docs/
 !package/shared/addons/
-!.agents/skills/parser-creator/
-!.agents/skills/sc4s-configurator/
+!skills/parser-creator/
+!skills/sc4s-configurator/
 !configuration-tool.sh
 **/__pycache__
 **/*.pyc
