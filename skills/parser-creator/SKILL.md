@@ -15,20 +15,20 @@ Ask once for all missing information:
 - Vendor, product, and device or software version. Offer inferred values for confirmation when unknown.
 - Desired Splunk index and sourcetype. Offer a conventional value for confirmation when unknown.
 - Whether the parser should only route events or also extract named values, which values matter, and the exact expected value for each supplied sample.
-- How the final event should appear in Splunk: preserve the original message, replace it with normalized key/value text, or replace it with JSON. Explain that this choice controls the SC4S template and is separate from Splunk search-time field definitions.
+- How the final event should appear in Splunk: preserve only the message body, preserve a reconstructed header plus the message, preserve RFC5424 structured data, replace the body with normalized key/value text, or replace it with JSON. Explain that this choice controls the SC4S template, may not reproduce the original wire bytes, and is separate from Splunk search-time field definitions.
 - When the original message must be preserved, whether extracted values should remain internal to SC4S or be sent as indexed HEC fields.
 
 Do not proceed until at least one complete positive log, vendor, product, index, sourcetype, and desired final event format are known or explicitly confirmed. If only one positive example is available, continue but state that filter confidence is limited and request additional examples before production rollout.
 
 ## 2. Gather parser knowledge
 
-Read `parser-guide.md` next to this file before designing the parser. Treat it as the authoritative reference for SC4S parser structure, filters, rewrites, templates, and deployment layout.
+Read `parser-guide.md` next to this file before designing the parser. It is the bundled baseline for SC4S parser structure, filters, rewrites, templates, and deployment layout.
 
 When the SC4S repository lookup tools are available:
 
-1. Call `list_vendors` to check for existing vendor support.
-2. When the vendor exists, call `list_vendor_parsers(vendor)`, then `get_parser(parser_name)` for the closest parser. Reuse conventions, not product-specific assumptions.
-3. Call `search_docs(query)` with a narrow vendor, product, format, or parser question.
+1. Read the current `sc4s://docs/creating_parsers` resource when the client exposes it. Otherwise call `search_docs(query)` for the relevant format, topic, parser method, or rewrite question.
+2. Call `list_vendors` to check for existing vendor support.
+3. When the vendor exists, call `list_vendor_parsers(vendor)`, then `get_parser(parser_name)` for the closest parser. Reuse conventions, not product-specific assumptions.
 
 Use these lookups to supplement the bundled guide, not replace it.
 
@@ -36,7 +36,7 @@ Use these lookups to supplement the bundled guide, not replace it.
 
 Analyze every supplied sample and create a complete `.conf` file:
 
-1. Identify RFC3164, RFC5424, CEF, or the supported format described by the guide.
+1. Identify RFC3164, RFC5424, CEF, LEEF, JSON, or a supported almost-syslog variant described by the guide.
 2. Select the narrowest reliable application topic and filter. Prefer structured identity or program values over message-text matching. Account for the positive samples and avoid the supplied negative examples.
 3. Select parser stages, namespaces, and an output template together. Keep intermediate fragments in `.tmp.*`; put only intentionally serialized values in `.values.*`; use `fields.*` only when the operator requested indexed HEC fields. Follow the bundled guide's template, namespace, and quoting rules.
 4. Set the confirmed index, sourcetype, vendor, product, and template through SC4S rewrite conventions.
