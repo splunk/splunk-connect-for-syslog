@@ -19,7 +19,7 @@ Before any mutation, read the affected live state, explain the exact change, sho
 and obtain fresh explicit user confirmation immediately before the call. Warn that set_env, set_splunk_metadata,
 and set_compliance_override are full replacements.
 
-Tools: {", ".join(ASYNC_JOB_TOOLS)}, return a job_id and require pooling with get_job_status.
+Tools: {", ".join(ASYNC_JOB_TOOLS)}, return a job_id and require polling with get_job_status.
 Never claim success until the terminal status is success. All other tools are synchronous; do not call get_job_status for them.
 Report failed jobs without retrying or rolling back automatically.
 On a 409 conflict, poll the active job when possible, then re-read state, rebuild the preview,
