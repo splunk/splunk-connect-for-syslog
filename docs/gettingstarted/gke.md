@@ -27,7 +27,7 @@ helm repo add splunk-connect-for-syslog https://splunk.github.io/splunk-connect-
 helm repo update
 ```
 
-3. Create a `values.yaml` file with the following GCP-specific configuration:
+3. Create a `values.yaml` file with the following basic GCP configuration. This deploys a fixed number of pods with no autoscaling:
 
 ```yaml
 replicaCount: 2
@@ -58,12 +58,6 @@ resources:
   limits:
     cpu: "2000m"
     memory: "2Gi"
-
-autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 50
 ```
 
 4. Add firewall rules to allow inbound syslog traffic:
@@ -130,9 +124,76 @@ If a pod does not start, debug it with:
 kubectl describe pod {your_pod_name} -n sc4s
 ```
 
-# Configure HPA (Horizontal Pod Autoscaler)
+# Validate your configuration
 
-HPA is already enabled in the `values.yaml` above. Verify it is active after deployment:
+SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk. To do this, execute the following search in Splunk:
+
+```ini
+index=* sourcetype=sc4s:events "starting up"
+```
+
+# Update SC4S
+
+Whenever the image is upgraded or when you want your configuration changes to be applied, run:
+
+```bash
+helm upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog \
+  -f values.yaml \
+  -n sc4s
+```
+
+# Stop SC4S
+
+To delete the deployment run:
+
+```bash
+helm uninstall sc4s -n sc4s
+```
+
+# Advanced Configuration
+
+## Autoscaling with HPA (Horizontal Pod Autoscaler)
+
+To enable autoscaling, add the following to your `values.yaml`. This configures a Horizontal Pod Autoscaler that scales SC4S pods based on CPU utilization:
+
+```yaml
+replicaCount: 2
+
+splunk:
+  hec_url: "https://<your-splunk-host>:8088"
+  hec_token: "<your-hec-token>"
+  hec_verify_tls: "yes"
+
+image:
+  repository: ghcr.io/splunk/splunk-connect-for-syslog/container3
+  pullPolicy: IfNotPresent
+  tag: ""
+
+service:
+  type: LoadBalancer
+  usemetallb: false
+  externalTrafficPolicy: Local
+
+persistence:
+  enabled: true
+  size: "10Gi"
+
+resources:
+  requests:
+    cpu: "1000m"
+    memory: "512Mi"
+  limits:
+    cpu: "2000m"
+    memory: "2Gi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+```
+
+Verify the HPA is active after deployment:
 
 ```bash
 kubectl get hpa -n sc4s
@@ -140,7 +201,7 @@ kubectl get hpa -n sc4s
 
 You should see `cpu: 1%/50%` with `MINPODS: 2` and `MAXPODS: 10`.
 
-## Enable GKE Node Autoscaler (Required)
+### Enable GKE Node Autoscaler (Required for HPA)
 
 The SC4S Helm chart enforces **hard pod anti-affinity** — each SC4S pod must run on its own dedicated node. This prevents CPU saturation caused by multiple SC4S pods sharing a node, which would cause new pods to crash-loop during scale-up.
 
@@ -170,29 +231,3 @@ Refer to the [GKE cluster autoscaler documentation](https://cloud.google.com/kub
 4. Node Autoscaler detects `Pending` pods → adds a new node
 5. Pod schedules on the new dedicated node → starts cleanly
 6. Traffic decreases → HPA scales pods back down → Node Autoscaler removes unused nodes
-
-# Validate your configuration
-
-SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk. To do this, execute the following search in Splunk:
-
-```ini
-index=* sourcetype=sc4s:events "starting up"
-```
-
-# Update SC4S
-
-Whenever the image is upgraded or when you want your configuration changes to be applied, run:
-
-```bash
-helm upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog \
-  -f values.yaml \
-  -n sc4s
-```
-
-# Stop SC4S
-
-To delete the deployment run:
-
-```bash
-helm uninstall sc4s -n sc4s
-```
