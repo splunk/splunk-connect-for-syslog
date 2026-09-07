@@ -1,5 +1,5 @@
 ---
-name: sc4s-configurator
+name: sc4s-guided-configuration
 description: Use when users ask to configure SC4S, create an env_file, set Splunk HEC details, tune performance, or apply generated settings to a running SC4S instance through natural conversation.
 ---
 
