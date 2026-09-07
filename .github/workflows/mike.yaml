@@ -38,7 +38,7 @@ jobs:
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $BRANCH
           python -m pip install --upgrade pip==26.0
-          pip3 install --only-binary :all: poetry==2.4.3
+          pip3 install --only-binary :all: poetry
           poetry install
           poetry run python docs/gen_sources_nav.py
           poetry run mike deploy -p $BRANCH

@@ -1,12 +1,12 @@
 # install requirements in venv
 FROM python:3.14 AS venv_builder
 
-RUN pip install --only-binary :all: \
-    ansible==6.1.0 --no-cache-dir \
-    && pip install --only-binary :all: \
-    pywinrm==0.5.0 --no-cache-dir \
-    && pip install --only-binary :all: \
-    ansible-lint==26.8.0 --no-cache-dir
+RUN pip install --require-hashes --only-binary :all: \
+    ansible~=6.1.0 --no-cache-dir \
+    && pip install --require-hashes --only-binary :all: \
+    pywinrm>=0.4.2 --no-cache-dir \
+    && pip install --require-hashes --only-binary :all: \
+    ansible-lint>=6.0.0 --no-cache-dir
 
 WORKDIR /opt
 COPY ./ansible .
