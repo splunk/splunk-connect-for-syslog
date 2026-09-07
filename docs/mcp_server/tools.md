@@ -32,7 +32,6 @@ outbound calls and cannot modify anything.
 | `list_vendor_parsers(vendor)` | Lists parser files whose contents reference a vendor name (case-insensitive whole-word match). |
 | `get_parser(parser_name)` | Returns the content of a parser file. Accepts either the file name (`foo.conf`) or the stem (`foo`). Returns `{ "found": bool, "path": ..., "content": ... }`. |
 | `search_docs(query)` | Regex search across every markdown file under `docs/`. Returns `path:line: snippet` entries. |
-| `get_parser_creation_guide()` | Returns the full parser-creation guide (`SKILL.md` + testing reference). The assistant calls this automatically when a user asks to create a parser. |
 
 ## SC4S instance management tools
 

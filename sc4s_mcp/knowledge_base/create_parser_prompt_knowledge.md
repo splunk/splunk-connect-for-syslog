@@ -13,6 +13,8 @@ Collect this information from the user before you start:
 3. `sourcetype`: target Splunk sourcetype using `vendor:product` (for example `acme:firewall`)
 4. `index`: target Splunk index (for example `netfw`)
 5. `sample logs`: one or more raw syslog messages
+6. `final event format`: preserve the message body, replace it with normalized key/value text, or replace it with JSON
+7. `expected fields`: requested field names and their exact expected values for each sample
 
 If any item is missing, ask for it before proceeding. 
 
@@ -144,13 +146,24 @@ rewrite {
 };
 ```
 
-To choose correct template refer to the definitions in file: `t_templates.conf`.
+Choose the event-body template and parser namespaces together:
+
+| Goal | Template | Namespace | Result |
+|------|----------|-----------|--------|
+| Preserve the message body; use parsed data only for routing | `t_msg_only` or another raw-message template | `.tmp.*` | Original message body |
+| Replace the body with normalized key/value text | `t_kv_values` | `.values.*` | WELF key/value event |
+| Replace the body with JSON | `t_json_values` | `.values.*` | JSON event |
+| Add the original message as a field in normalized output | `t_kv_values_msg` or `t_json_values_msg` | `.values.*` | Transformed WELF or JSON event with a `message` field |
+| Preserve the body and add indexed Splunk HEC fields | Raw-message template | `fields.*` | Original message plus indexed HEC fields |
+
+Use `.tmp.*` for intermediate fragments and unparsed tails. Use `.values.*` only for values intentionally serialized into the event body. Never put a complete unparsed key/value tail in `.values.*` when using a values template; it will be serialized as one escaped field alongside any parsed values.
 
 Parser method selection:
 
 Use `kv-parser` when logs contain key/value pairs (`key=value`, quoted values, RFC5424 SDATA blocks).
    - For RFC5424 SDATA, prefer `template("${SDATA}")`.
-   - Use a scoped prefix like `.values.sdata.`.
+   - Use a scoped prefix like `.values.sdata.` for output fields.
+   - For a positional prefix followed by key/value data, first capture the raw tail into `.tmp.*`, then set `template()` to that temporary field.
 
 Example:
 
@@ -202,11 +215,13 @@ Example:
 parser {
     regexp-parser(
         template("${MESSAGE}")
-        patterns("^(?<field1>\\d+) (?<field2>[^ ]+) (?<field3>.*)")
-        prefix(".parsed.")
+        patterns('^(?<field1>\d+) (?<field2>[^ ]+) (?<field3>.*)')
+        prefix(".tmp.")
     );
 };
 ```
+
+Prefer single-quoted syslog-ng strings for regular expressions: write literal double quotes and regex backslashes directly, for example `patterns('rc="(?<rc>[^"]*)" and count=(?<count>\d+)')`. In double-quoted strings, escape both: `patterns("rc=\"(?<rc>[^\"]*)\" and count=(?<count>\\d+)")`. These are final `.conf` forms; do not copy extra backslashes shown by JSON or MCP serialization into the parser.
 
 You can combine all methods and use conditional branches to parse different message variants:
 

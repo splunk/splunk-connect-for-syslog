@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Splunk Metadata"
+  short_description: "Safely manage SC4S Splunk metadata overrides"
+  default_prompt: "Use $manage-splunk-metadata to update my SC4S index override."

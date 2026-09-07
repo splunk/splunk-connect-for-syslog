@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 from tools.configuration_tools import (
-    get_parser_creation_guide,
     list_vendors,
     list_all_parsers,
     list_vendor_parsers,
@@ -16,37 +15,6 @@ from tools.configuration_tools import (
     list_custom_parsers,
     get_custom_parser,
 )
-
-
-# ---------------------------------------------------------------------------
-# Local tools
-# ---------------------------------------------------------------------------
-
-
-@patch("tools.configuration_tools.SKILL_DIR")
-def test_get_parser_creation_guide(mock_skill_dir, tmp_path):
-    skill_file = tmp_path / "SKILL.md"
-    skill_file.write_text("# Parser Guide")
-    refs_dir = tmp_path / "references"
-    refs_dir.mkdir()
-    (refs_dir / "testing-parsers.md").write_text("# Testing")
-
-    mock_skill_dir.__truediv__ = lambda self, key: tmp_path / key
-    mock_skill_dir.return_value = tmp_path
-
-    with patch("tools.configuration_tools.SKILL_DIR", tmp_path):
-        result = get_parser_creation_guide()
-
-    assert "# Parser Guide" in result
-    assert "# Testing" in result
-
-
-@patch("tools.configuration_tools.SKILL_DIR")
-def test_get_parser_creation_guide_not_found(mock_skill_dir, tmp_path):
-    with patch("tools.configuration_tools.SKILL_DIR", tmp_path):
-        result = get_parser_creation_guide()
-
-    assert result == "Parser creation guide not found"
 
 
 @patch("tools.configuration_tools.REPO_ROOT")

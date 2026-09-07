@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from app import mcp, REPO_ROOT
 from utils.http import sc4s_request as _sc4s_request
 
-SKILL_DIR = REPO_ROOT / ".agents" / "skills" / "parser-creator"
+
 _CONFIG_SCRIPT: Path = REPO_ROOT / "configuration-tool.sh"
 
 
@@ -173,25 +173,6 @@ def sc4s_build_config(config: SC4SConfiguratorInput) -> dict:
         )
 
     return {"config": result.stdout, "warnings": warnings}
-
-
-@mcp.tool
-def get_parser_creation_guide() -> str:
-    """Get the complete SC4S parser creation guide. Call this tool BEFORE creating
-    a new parser when the user asks to create a parser, add support for a new log
-    source, or add a new vendor. Returns syntax reference, filter topics, rewrite
-    functions, examples, and a completion checklist."""
-    sections = []
-    for path in [
-        SKILL_DIR / "SKILL.md",
-        SKILL_DIR / "references" / "testing-parsers.md",
-    ]:
-        if path.exists():
-            sections.append(path.read_text(encoding="utf-8"))
-    return (
-        "\n\n---\n\n".join(sections) if sections else "Parser creation guide not found"
-    )
-
 
 @mcp.tool
 def list_vendors() -> list[str]:
