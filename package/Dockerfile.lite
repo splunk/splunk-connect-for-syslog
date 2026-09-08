@@ -66,8 +66,6 @@ EXPOSE 514
 EXPOSE 601/tcp
 EXPOSE 6514/tcp
 
-# No USER instruction: default listeners bind privileged ports 514/601 (non-root opt-in: uid 1024 + ports above 1024).
-
 HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 
 COPY pyproject.toml /
