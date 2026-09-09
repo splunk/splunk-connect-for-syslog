@@ -55,6 +55,10 @@ jobs:
           tar rvf /tmp/baremetal.tar -C package/shared test_parsers
           sha512sum -b /tmp/baremetal.tar > /tmp/baremetal_checksum.txt
       - name: Validate BYOE package
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           poetry install
           BAREMETAL_TAR=/tmp/baremetal.tar poetry run pytest tests/test_baremetal_package.py -v -m baremetal
