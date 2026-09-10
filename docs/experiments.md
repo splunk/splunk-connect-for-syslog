@@ -13,7 +13,7 @@ This guide is in an experimental phase and should be treated as such - it's like
 
 **GCP-specific notes:**
 
-- GCP automatically provisions a Passthrough Network Load Balancer (L4) when `service.type: LoadBalancer` is set — no manual load balancer setup required, unlike EKS.
+- GCP automatically provisions a Passthrough Network Load Balancer (L4) when `service.type: LoadBalancer` is set
 - Active TCP connections may be reset during HPA scale-up and scale-down as the GCP LB redistributes connections to new pods. SC4S disk buffer (`persistence.enabled: true`) prevents event loss during these resets.
 - HPA requires the GKE Node Autoscaler to be enabled. Without it, new pods stay `Pending` indefinitely when all nodes are occupied. See the [GKE getting started guide](gettingstarted/gke.md) for details.
 
