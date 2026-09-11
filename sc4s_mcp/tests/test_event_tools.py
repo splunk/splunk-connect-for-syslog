@@ -1,5 +1,7 @@
 """Tests for MCP raw-text syslog sending."""
 
+import logging
+import socket
 from unittest.mock import Mock
 
 import pytest
@@ -46,6 +48,34 @@ def test_send_text_reports_failed_udp_payloads(monkeypatch):
     assert result["sent"] == 2
     assert result["failed"] == 1
     assert result["bytes_sent"] == len(b"<14>one") + len(b"<14>three")
+
+
+@pytest.mark.parametrize(
+    ("error", "reason"),
+    [
+        (socket.timeout("send timed out"), "timed out"),
+        (socket.gaierror("name lookup failed"), "failed address resolution"),
+        (socket.herror("host lookup failed"), "failed host lookup"),
+        (OSError("send failed"), "failed"),
+    ],
+)
+def test_send_text_logs_socket_failure(
+    monkeypatch, caplog, error, reason
+):
+    sock = Mock()
+    sock.sendto.side_effect = error
+    monkeypatch.setattr(syslog_sender.socket, "socket", Mock(return_value=sock))
+    monkeypatch.setenv("SC4S_API_URL", "http://sc4s.example:8080")
+
+    with caplog.at_level(logging.WARNING, logger=syslog_sender.__name__):
+        result = syslog_sender.send_text(
+            text="<14>one", protocol="udp", port=514
+        )
+
+    assert result["failed"] == 1
+    assert reason in caplog.text
+    assert "event=1/1" in caplog.text
+    assert "<14>one" not in caplog.text
 
 
 def test_send_text_rejects_an_empty_request(monkeypatch):

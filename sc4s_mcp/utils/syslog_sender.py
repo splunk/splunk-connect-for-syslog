@@ -1,11 +1,13 @@
 """Small raw-text syslog sender used by the MCP event tool."""
 
+import logging
 import os
 import socket
 import time
 from urllib.parse import urlparse
 
 MAX_EVENT_BYTES = 65_507
+logger = logging.getLogger(__name__)
 
 
 def _host():
@@ -60,6 +62,27 @@ def _payloads(text):
     return payloads
 
 
+def _log_send_failure(exc, *, destination, protocol, event_number, event_count):
+    if isinstance(exc, socket.timeout):
+        reason = "timed out"
+    elif isinstance(exc, socket.gaierror):
+        reason = "failed address resolution"
+    elif isinstance(exc, socket.herror):
+        reason = "failed host lookup"
+    else:
+        reason = "failed"
+    logger.warning(
+        "MCP syslog %s send %s: destination=%r event=%d/%d error=%s: %s",
+        protocol,
+        reason,
+        destination,
+        event_number,
+        event_count,
+        type(exc).__name__,
+        exc,
+    )
+
+
 def send_text(*, text, protocol, port, framing=None, timeout=5.0):
     """Send each non-empty line in *text* to the configured SC4S host."""
     protocol = protocol.lower()
@@ -74,7 +97,7 @@ def send_text(*, text, protocol, port, framing=None, timeout=5.0):
     try:
         if protocol == "tcp":
             sock = socket.create_connection(destination, timeout=timeout)
-            for payload in payloads:
+            for event_number, payload in enumerate(payloads, start=1):
                 framed = (
                     f"{len(payload)} ".encode("ascii") + payload
                     if framing == "octet-counting"
@@ -82,19 +105,33 @@ def send_text(*, text, protocol, port, framing=None, timeout=5.0):
                 )
                 try:
                     sock.sendall(framed)
-                except OSError:
+                except OSError as exc:
                     failed += 1
+                    _log_send_failure(
+                        exc,
+                        destination=destination,
+                        protocol=protocol,
+                        event_number=event_number,
+                        event_count=len(payloads),
+                    )
                 else:
                     sent += 1
                     bytes_sent += len(framed)
         else:
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(timeout)
-            for payload in payloads:
+            for event_number, payload in enumerate(payloads, start=1):
                 try:
                     bytes_sent += sock.sendto(payload, destination)
-                except OSError:
+                except OSError as exc:
                     failed += 1
+                    _log_send_failure(
+                        exc,
+                        destination=destination,
+                        protocol=protocol,
+                        event_number=event_number,
+                        event_count=len(payloads),
+                    )
                 else:
                     sent += 1
     finally:
