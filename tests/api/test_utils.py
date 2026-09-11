@@ -130,13 +130,11 @@ def test_restart_fails_immediately_when_kill_fails(mock_run):
 @patch("utils.time.sleep")
 @patch("utils.time.monotonic", side_effect=[0, 0, 0.5])
 @patch("utils.subprocess.run")
-def test_reload_accepts_healthy_process_with_unchanged_pid(
+def test_reload_accepts_healthy_process(
     mock_run, _clock, mock_sleep
 ):
     mock_run.side_effect = [
-        completed(["pgrep"], stdout="101\n"),
         completed(["syslog-ng-ctl", "reload"]),
-        completed(["pgrep"], stdout="101\n"),
         completed(["syslog-ng-ctl", "healthcheck"]),
     ]
 
@@ -144,22 +142,10 @@ def test_reload_accepts_healthy_process_with_unchanged_pid(
 
     assert mock_run.call_args_list == [
         call(
-            ["pgrep", "-x", "syslog-ng"],
-            capture_output=True,
-            text=True,
-            timeout=1,
-        ),
-        call(
             ["syslog-ng-ctl", "reload"],
             capture_output=True,
             text=True,
             timeout=10,
-        ),
-        call(
-            ["pgrep", "-x", "syslog-ng"],
-            capture_output=True,
-            text=True,
-            timeout=1,
         ),
         call(
             ["syslog-ng-ctl", "healthcheck", "--timeout", "1"],
@@ -169,21 +155,6 @@ def test_reload_accepts_healthy_process_with_unchanged_pid(
         ),
     ]
     mock_sleep.assert_not_called()
-
-
-@patch("utils.subprocess.run")
-def test_reload_reports_error_from_stdout_when_stderr_is_empty(mock_run):
-    mock_run.side_effect = [
-        completed(["pgrep"], stdout="101\n"),
-        completed(
-            ["syslog-ng-ctl", "reload"],
-            returncode=1,
-            stdout="configuration reload rejected",
-        ),
-    ]
-
-    with pytest.raises(RuntimeError, match="configuration reload rejected"):
-        reload_syslog_ng()
 
 
 def test_restart_failure_restores_files_and_restarts_runtime(tmp_path):

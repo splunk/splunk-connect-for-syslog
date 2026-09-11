@@ -108,12 +108,8 @@ def reload_syslog_ng():
         raise RuntimeError(f"syslog-ng reload failed: {error}")
     deadline = time.monotonic() + RELOAD_TIMEOUT_SECONDS
     while time.monotonic() < deadline:
-        current_pids = _get_syslog_ng_pids()
-        replacement_is_healthy = (
-            bool(current_pids == previous_pids) and _syslog_ng_is_healthy()
-        )
         remaining = deadline - time.monotonic()
-        if replacement_is_healthy and remaining > 0:
+        if _syslog_ng_is_healthy() and remaining > 0:
             return
         if remaining <= 0:
             break
