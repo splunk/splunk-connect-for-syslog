@@ -3,7 +3,6 @@ import re
 
 
 ENV_FILE = Path("/opt/sc4s/env_file")
-BACKUP_FILE = ENV_FILE.with_suffix(".backup")
 PARSERS_DIR = Path("/etc/syslog-ng/conf.d/local/config/app_parsers")
 
 CONTEXT_DIR = Path("/etc/syslog-ng/conf.d/local/context")

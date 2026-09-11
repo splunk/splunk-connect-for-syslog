@@ -3,6 +3,8 @@ import os
 from unittest.mock import patch
 import pytest
 
+import metadata_api
+
 
 @pytest.fixture
 def ctx_dir(tmp_path):
@@ -276,9 +278,7 @@ def test_set_compliance_orphaned_filter(client, ctx_dir):
 
 @patch("metadata_api.submit_job", return_value=({"job_id": "job-1"}, 202))
 @patch("metadata_api.apply_with_rollback", side_effect=RuntimeError("restart failed"))
-def test_set_compliance_rollback_on_failure(
-    mock_apply, mock_submit, client, ctx_dir
-):
+def test_set_compliance_rollback_on_failure(mock_apply, mock_submit, client, ctx_dir):
     payload = {
         "conf_content": 'filter f_pci { host("pci-*" type(glob)) };',
         "csv_content": [
@@ -342,7 +342,8 @@ def test_set_splunk_metadata_submits_background_work(
     work = mock_submit.call_args.args[0]
     assert work() == {"status": "metadata updated successfully", "entries": entries}
     mock_apply.assert_called_once_with(
-        {ctx_dir / "splunk_metadata.csv": "juniper,index,network\r\n"}
+        {ctx_dir / "splunk_metadata.csv": "juniper,index,network\r\n"},
+        metadata_api.reload_syslog_ng,
     )
 
 
@@ -359,7 +360,7 @@ def test_delete_splunk_metadata_submits_background_work(
     assert response.status_code == 202
     work = mock_submit.call_args.args[0]
     assert work() == {"status": "splunk_metadata.csv cleared successfully"}
-    mock_apply.assert_called_once_with({csv_file: ""})
+    mock_apply.assert_called_once_with({csv_file: ""}, metadata_api.reload_syslog_ng)
 
 
 @patch("metadata_api.submit_job", return_value=({"job_id": "job-3"}, 202))
@@ -387,7 +388,8 @@ def test_set_compliance_submits_background_work(
         {
             ctx_dir / "compliance.conf": payload["conf_content"] + "\n",
             ctx_dir / "compliance.csv": "f_pci,.splunk.index,pci_idx\r\n",
-        }
+        },
+        metadata_api.reload_syslog_ng,
     )
 
 
@@ -406,4 +408,7 @@ def test_delete_compliance_submits_background_work(
     assert response.status_code == 202
     work = mock_submit.call_args.args[0]
     assert work() == {"status": "compliance metadata cleared successfully"}
-    mock_apply.assert_called_once_with({conf_file: "", csv_file: ""})
+    mock_apply.assert_called_once_with(
+        {conf_file: "", csv_file: ""},
+        metadata_api.reload_syslog_ng,
+    )
