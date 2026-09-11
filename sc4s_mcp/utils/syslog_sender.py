@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 
 MAX_EVENT_BYTES = 65_507
 
+
 def _host():
     hostname = urlparse(os.getenv("SC4S_API_URL", "")).hostname
     if not hostname:
@@ -14,11 +15,31 @@ def _host():
     return hostname
 
 
+def _allowed_ports():
+    allowed = os.getenv("SC4S_MCP_ALLOWED_SYSLOG_PORTS", "514,601").strip()
+    if allowed == "*":
+        return None
+
+    values = [value.strip() for value in allowed.split(",")]
+    if not allowed or any(not value or not value.isdecimal() for value in values):
+        raise ValueError(
+            "SC4S_MCP_ALLOWED_SYSLOG_PORTS must be '*' or a comma-separated "
+            "list of ports"
+        )
+
+    ports = {int(value) for value in values}
+    if any(not 1 <= port <= 65_535 for port in ports):
+        raise ValueError(
+            "SC4S_MCP_ALLOWED_SYSLOG_PORTS ports must be between 1 and 65535"
+        )
+    return ports
+
+
 def _validate(port, timeout, protocol, framing):
     if not isinstance(port, int) or isinstance(port, bool) or not 1 <= port <= 65_535:
         raise ValueError("port must be an integer between 1 and 65535")
-    allowed = os.getenv("SC4S_MCP_ALLOWED_SYSLOG_PORTS", "514,601")
-    if allowed != "*" and port not in {int(value.strip()) for value in allowed.split(",")}:
+    allowed_ports = _allowed_ports()
+    if allowed_ports is not None and port not in allowed_ports:
         raise ValueError(f"port {port} is not allowed for MCP syslog sending")
     if not isinstance(timeout, (int, float)) or not 0.1 <= timeout <= 30:
         raise ValueError("timeout must be between 0.1 and 30 seconds")

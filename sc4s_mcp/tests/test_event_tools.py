@@ -57,6 +57,24 @@ def test_send_text_rejects_an_empty_request(monkeypatch):
         )
 
 
+@pytest.mark.parametrize("allowed", ["514,", ",514", "514,,601", "514,abc", "*,514"])
+def test_send_text_rejects_malformed_allowed_ports(monkeypatch, allowed):
+    monkeypatch.setenv("SC4S_API_URL", "http://sc4s.example:8080")
+    monkeypatch.setenv("SC4S_MCP_ALLOWED_SYSLOG_PORTS", allowed)
+
+    with pytest.raises(ValueError, match="SC4S_MCP_ALLOWED_SYSLOG_PORTS"):
+        syslog_sender.send_text(text="<14>one", protocol="udp", port=514)
+
+
+@pytest.mark.parametrize("allowed", ["0,514", "514,65536"])
+def test_send_text_rejects_out_of_range_allowed_ports(monkeypatch, allowed):
+    monkeypatch.setenv("SC4S_API_URL", "http://sc4s.example:8080")
+    monkeypatch.setenv("SC4S_MCP_ALLOWED_SYSLOG_PORTS", allowed)
+
+    with pytest.raises(ValueError, match="between 1 and 65535"):
+        syslog_sender.send_text(text="<14>one", protocol="udp", port=514)
+
+
 def test_text_tool_maps_invalid_input(monkeypatch):
     from tools import event_tools
 
