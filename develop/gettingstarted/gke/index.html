@@ -8059,7 +8059,7 @@
 helm<span class="w"> </span>repo<span class="w"> </span>update
 </code></pre></div>
 <ol start="3">
-<li>Create a <code>values.yaml</code> file with the following GCP-specific configuration:</li>
+<li>Create a <code>values.yaml</code> file with the following basic GCP configuration. This deploys a fixed number of pods with no autoscaling:</li>
 </ol>
 <div class="highlight"><pre><span></span><code><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
 
@@ -8089,12 +8089,6 @@ helm<span class="w"> </span>repo<span class="w"> </span>update
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"2000m"</span>
 <span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"2Gi"</span>
-
-<span class="nt">autoscaling</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="w">  </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">  </span><span class="nt">targetCPUUtilizationPercentage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
 </code></pre></div>
 <ol start="4">
 <li>Add firewall rules to allow inbound syslog traffic:</li>
@@ -8148,12 +8142,63 @@ gcloud<span class="w"> </span>compute<span class="w"> </span>firewall-rules<span
 <p>If a pod does not start, debug it with:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span><span class="o">{</span>your_pod_name<span class="o">}</span><span class="w"> </span>-n<span class="w"> </span>sc4s
 </code></pre></div>
-<h1 id="configure-hpa-horizontal-pod-autoscaler">Configure HPA (Horizontal Pod Autoscaler)<a class="headerlink" href="#configure-hpa-horizontal-pod-autoscaler" title="Permanent link">&para;</a></h1>
-<p>HPA is already enabled in the <code>values.yaml</code> above. Verify it is active after deployment:</p>
+<h1 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h1>
+<p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk. To do this, execute the following search in Splunk:</p>
+<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events "starting up"</span>
+</code></pre></div>
+<h1 id="update-sc4s">Update SC4S<a class="headerlink" href="#update-sc4s" title="Permanent link">&para;</a></h1>
+<p>Whenever the image is upgraded or when you want your configuration changes to be applied, run:</p>
+<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-f<span class="w"> </span>values.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>sc4s
+</code></pre></div>
+<h1 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h1>
+<p>To delete the deployment run:</p>
+<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>uninstall<span class="w"> </span>sc4s<span class="w"> </span>-n<span class="w"> </span>sc4s
+</code></pre></div>
+<h1 id="advanced-configuration">Advanced Configuration<a class="headerlink" href="#advanced-configuration" title="Permanent link">&para;</a></h1>
+<h2 id="autoscaling-with-hpa-horizontal-pod-autoscaler">Autoscaling with HPA (Horizontal Pod Autoscaler)<a class="headerlink" href="#autoscaling-with-hpa-horizontal-pod-autoscaler" title="Permanent link">&para;</a></h2>
+<p>To enable autoscaling, add the following to your <code>values.yaml</code>. This configures a Horizontal Pod Autoscaler that scales SC4S pods based on CPU utilization:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">replicaCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+
+<span class="nt">splunk</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">hec_url</span><span class="p">:</span><span class="w"> </span><span class="s">"https://&lt;your-splunk-host&gt;:8088"</span>
+<span class="w">  </span><span class="nt">hec_token</span><span class="p">:</span><span class="w"> </span><span class="s">"&lt;your-hec-token&gt;"</span>
+<span class="w">  </span><span class="nt">hec_verify_tls</span><span class="p">:</span><span class="w"> </span><span class="s">"yes"</span>
+
+<span class="nt">image</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">repository</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/splunk/splunk-connect-for-syslog/container3</span>
+<span class="w">  </span><span class="nt">pullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IfNotPresent</span>
+<span class="w">  </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="s">""</span>
+
+<span class="nt">service</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LoadBalancer</span>
+<span class="w">  </span><span class="nt">usemetallb</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">externalTrafficPolicy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Local</span>
+
+<span class="nt">persistence</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="s">"10Gi"</span>
+
+<span class="nt">resources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"1000m"</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"512Mi"</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">"2000m"</span>
+<span class="w">    </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="s">"2Gi"</span>
+
+<span class="nt">autoscaling</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">minReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">maxReplicas</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">targetCPUUtilizationPercentage</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span>
+</code></pre></div>
+<p>Verify the HPA is active after deployment:</p>
 <div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>hpa<span class="w"> </span>-n<span class="w"> </span>sc4s
 </code></pre></div>
 <p>You should see <code>cpu: 1%/50%</code> with <code>MINPODS: 2</code> and <code>MAXPODS: 10</code>.</p>
-<h2 id="enable-gke-node-autoscaler-required">Enable GKE Node Autoscaler (Required)<a class="headerlink" href="#enable-gke-node-autoscaler-required" title="Permanent link">&para;</a></h2>
+<h3 id="enable-gke-node-autoscaler-required-for-hpa">Enable GKE Node Autoscaler (Required for HPA)<a class="headerlink" href="#enable-gke-node-autoscaler-required-for-hpa" title="Permanent link">&para;</a></h3>
 <p>The SC4S Helm chart enforces <strong>hard pod anti-affinity</strong> — each SC4S pod must run on its own dedicated node. This prevents CPU saturation caused by multiple SC4S pods sharing a node, which would cause new pods to crash-loop during scale-up.</p>
 <p>Because of this, when HPA requests more pods than there are available nodes, the new pods stay in <code>Pending</code> state. The GKE Node Autoscaler detects <code>Pending</code> pods and automatically adds new nodes to the cluster — allowing the pods to start cleanly.</p>
 <div class="admonition warning">
@@ -8178,20 +8223,6 @@ gcloud<span class="w"> </span>compute<span class="w"> </span>firewall-rules<span
 <li>Pod schedules on the new dedicated node → starts cleanly</li>
 <li>Traffic decreases → HPA scales pods back down → Node Autoscaler removes unused nodes</li>
 </ol>
-<h1 id="validate-your-configuration">Validate your configuration<a class="headerlink" href="#validate-your-configuration" title="Permanent link">&para;</a></h1>
-<p>SC4S performs checks to ensure that the container starts properly and that the syntax of the underlying syslog-ng configuration is correct. Once the checks are complete, validate that SC4S properly communicates with Splunk. To do this, execute the following search in Splunk:</p>
-<div class="highlight"><pre><span></span><code><span class="na">index</span><span class="o">=</span><span class="s">* sourcetype=sc4s:events "starting up"</span>
-</code></pre></div>
-<h1 id="update-sc4s">Update SC4S<a class="headerlink" href="#update-sc4s" title="Permanent link">&para;</a></h1>
-<p>Whenever the image is upgraded or when you want your configuration changes to be applied, run:</p>
-<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>upgrade<span class="w"> </span>sc4s<span class="w"> </span>splunk-connect-for-syslog/splunk-connect-for-syslog<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-f<span class="w"> </span>values.yaml<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-n<span class="w"> </span>sc4s
-</code></pre></div>
-<h1 id="stop-sc4s">Stop SC4S<a class="headerlink" href="#stop-sc4s" title="Permanent link">&para;</a></h1>
-<p>To delete the deployment run:</p>
-<div class="highlight"><pre><span></span><code>helm<span class="w"> </span>uninstall<span class="w"> </span>sc4s<span class="w"> </span>-n<span class="w"> </span>sc4s
-</code></pre></div>
 
 
 
