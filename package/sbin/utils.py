@@ -96,7 +96,6 @@ def restart_syslog_ng():
 
 def reload_syslog_ng():
     """Reload syslog-ng using syslog-ng-ctl reload command, aka send SIGHUP."""
-    previous_pids = _get_syslog_ng_pids()
     result = subprocess.run(
         ["syslog-ng-ctl", "reload"],
         capture_output=True,

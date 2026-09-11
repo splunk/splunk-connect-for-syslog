@@ -157,6 +157,40 @@ def test_reload_accepts_healthy_process(
     mock_sleep.assert_not_called()
 
 
+@patch("utils.time.sleep")
+@patch("utils.time.monotonic", side_effect=[0, 0, 30])
+@patch("utils.subprocess.run")
+def test_reload_times_out_when_new_process_is_unhealthy(
+    mock_run, _mock_monotonic, mock_sleep
+):
+    mock_run.side_effect = [
+        completed(["syslog-ng-ctl", "reload"]),
+        completed(["syslog-ng-ctl", "healthcheck"], returncode=1),
+    ]
+
+    with pytest.raises(RuntimeError, match="timed out after 30 seconds"):
+        reload_syslog_ng()
+
+    mock_sleep.assert_not_called()
+
+
+@patch("utils.time.sleep")
+@patch("utils.time.monotonic", side_effect=[0, 0, 30])
+@patch("utils.subprocess.run")
+def test_reload_rejects_healthy_process_after_deadline(
+    mock_run, _mock_monotonic, mock_sleep
+):
+    mock_run.side_effect = [
+        completed(["syslog-ng-ctl", "reload"]),
+        completed(["syslog-ng-ctl", "healthcheck"]),
+    ]
+
+    with pytest.raises(RuntimeError, match="timed out after 30 seconds"):
+        reload_syslog_ng()
+
+    mock_sleep.assert_not_called()
+
+
 def test_restart_failure_restores_files_and_restarts_runtime(tmp_path):
     existing = tmp_path / "existing.conf"
     existing.write_text("old\n", encoding="utf-8")
