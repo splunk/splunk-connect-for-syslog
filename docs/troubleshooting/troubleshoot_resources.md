@@ -26,6 +26,144 @@ podman volume create splunk-sc4s-var
 - Remove unused data: `podman system prune`
 - Load an image from a .tar archive or STDIN: `podman load <tar>`
 
+### Inspect syslog-ng statistics
+
+Use `syslog-ng-ctl stats` to determine whether SC4S is receiving messages,
+routing them to a Splunk HEC destination, buffering them, or dropping them.
+Run the command through the container runtime:
+
+```bash
+sudo podman exec SC4S syslog-ng-ctl stats
+# or
+sudo docker exec SC4S syslog-ng-ctl stats
+```
+
+The output is semicolon-delimited. A destination statistic resembles:
+
+```text
+dst.http;d_hec_fmt#0;https://splunk.example.com:8088/services/collector/event;a;queued;1250
+```
+
+The fields identify the component, configuration object, instance, state,
+counter, and value. The state is normally `a` for an active object. A state of
+`o` identifies an orphaned counter from an object that is no longer active.
+
+The following counters are the most useful when troubleshooting SC4S:
+
+| Counter | Meaning | Diagnostic value |
+| --- | --- | --- |
+| `queued` | Messages currently waiting in a destination queue | A queue that grows continuously indicates destination backpressure or an unavailable HEC endpoint. A temporary queue that drains can be normal during a traffic burst. |
+| `dropped` | Messages permanently dropped | Any increase requires investigation. Check the container logs for a full buffer, an HTTP error, or another delivery failure. |
+| `written` | Messages successfully delivered to the destination | This should increase while SC4S is receiving traffic. |
+| `processed` | Messages handed to a source, parser, or destination component | At a destination, this does not prove delivery because messages can still be queued. |
+| `discarded` | Messages rejected by a parser | An increasing value can identify malformed or unsupported messages. |
+| `memory_usage` | Bytes occupied by the queues associated with an object | Use this with `queued` to identify increasing memory pressure from buffering. |
+| `eps_last_1h` | Approximate events per second during the previous hour | Compare this with the expected traffic baseline. This counter is updated periodically rather than for every message. |
+
+The available counters depend on the syslog-ng version and configured
+statistics level. A missing optional counter such as `eps_last_1h` does not by
+itself indicate a problem. See the syslog-ng documentation for the complete
+[metrics and counters reference](https://syslog-ng.github.io/admin-guide/150_Statistics_of_syslog-ng/000_Metrics_and_counters.html).
+
+For destination counters, syslog-ng calculates successfully written messages
+as follows:
+
+```text
+written = processed - queued - dropped
+```
+
+`processed`, `written`, and `dropped` are cumulative counters. `queued` is the
+current destination backlog. Compare samples taken several seconds apart;
+counter trends are usually more useful than a single value.
+
+To display the principal counters for every SC4S HEC destination, run:
+
+```bash
+sudo podman exec SC4S syslog-ng-ctl stats \
+  | grep -E 'd_hec.*;(processed|written|queued|dropped|memory_usage|eps_last_1h|batch_size_avg);'
+```
+
+To check whether network sources are receiving messages, run:
+
+```bash
+sudo podman exec SC4S syslog-ng-ctl stats \
+  | grep -E '^src\..*;(processed|connections|eps_last_1h|stamp);'
+```
+
+Use the following combinations to narrow down a data-flow problem:
+
+| Observed trend | Likely interpretation |
+| --- | --- |
+| Source `processed` and HEC `written` increase, `queued` remains low or drains, and `dropped` remains unchanged | Normal data flow. |
+| Source `processed` increases, HEC `written` stalls, and HEC `queued` increases | Splunk HEC, network connectivity, or downstream capacity problem. |
+| Source `processed` increases but HEC `processed` does not | Parser, filter, routing, or destination-selection problem. |
+| Parser `discarded` increases | The parser is rejecting some incoming messages. Obtain a raw message and check its format. |
+| HEC `dropped` increases | Permanent data loss is occurring. Check SC4S logs and buffer capacity immediately. |
+| Source and destination counters remain unchanged | SC4S is not receiving traffic on the expected listener, or the wrong protocol or port is being used. |
+| HEC `written` increases faster than new input and `queued` decreases | SC4S is draining a backlog after a transient outage or traffic burst. |
+
+Do not use `syslog-ng-ctl stats --reset` during an active investigation unless
+you intentionally want to start a new measurement interval. Resetting the
+cumulative counters removes the baseline needed to calculate changes. It does
+not reset the `queued` counters.
+
+### Check for TCP backpressure
+
+TCP backpressure can occur in either direction: between a logging source and
+SC4S, or between SC4S and Splunk HEC. Confirm it by correlating SC4S destination
+queues with Linux socket queues and TCP flow-control signals.
+
+For standard host-network SC4S deployments, inspect established connections
+on the SC4S host. To check incoming syslog over TCP and TLS, run:
+
+```bash
+sudo ss -tinomp state established '( sport = :514 or sport = :601 or sport = :6514 )'
+```
+
+Replace these ports with any custom SC4S TCP or TLS listener ports. To inspect
+outgoing connections from SC4S to Splunk HEC, run the command for the port used
+by the HEC endpoint:
+
+```bash
+sudo ss -tinomp state established '( dport = :8088 )'
+```
+
+Use `dport = :443` instead when HEC is exposed on HTTPS port 443. The options
+select TCP sockets (`-t`), internal TCP information (`-i`), numeric addresses
+and ports (`-n`), timers (`-o`), socket memory (`-m`), and the owning process
+(`-p`).
+
+For an established TCP socket, the first columns are:
+
+```text
+State  Recv-Q  Send-Q  Local Address:Port  Remote Address:Port
+```
+
+The queue columns have different significance depending on the direction:
+
+| Connection | Counter to inspect | Meaning |
+| --- | --- | --- |
+| Logging source to SC4S | `Recv-Q` on the SC4S host | Bytes received by the kernel but not yet read by syslog-ng. A queue that remains high or grows indicates that SC4S is not reading the connection fast enough. |
+| SC4S to Splunk HEC | `Send-Q` on the SC4S host | Bytes sent by SC4S but not yet acknowledged by the downstream endpoint. A queue that remains high or grows can indicate a slow receiver, packet loss, or a constrained receive window. |
+
+The values on a listening socket have different meanings, so use
+`state established` when diagnosing data-flow backpressure. Short-lived queue
+spikes are normal; compare several samples and focus on persistent growth.
+
+The additional `ss -i` output can include the round-trip time (`rtt`),
+retransmission timeout (`rto`), retransmission backoff, congestion window
+(`cwnd`), acknowledged bytes, and estimated send rate. A
+`timer:(persist,...)` entry is strong evidence that the remote endpoint
+advertised a zero receive window and the local host is sending window probes.
+Increasing retransmissions alone can indicate packet loss rather than
+application backpressure.
+
+If `tshark` is installed, use packet analysis to confirm zero-window events,
+receiver-window-full conditions, or retransmissions:
+
+For details about how syslog-ng stops reading a TCP source when its flow-control
+window fills, see [Managing incoming and outgoing messages with flow-control](https://syslog-ng.github.io/admin-guide/080_Log/010_Flow_control/README.html).
+
 ### Test commands
 
 Check your SC4S port using the `nc` command. Run this command where SC4S is hosted and check data in Splunk for success and failure:
