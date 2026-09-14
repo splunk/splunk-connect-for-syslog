@@ -107,6 +107,63 @@ you intentionally want to start a new measurement interval. Resetting the
 cumulative counters removes the baseline needed to calculate changes. It does
 not reset the `queued` counters.
 
+### Check for TCP backpressure
+
+TCP backpressure can occur in either direction: between a logging source and
+SC4S, or between SC4S and Splunk HEC. Confirm it by correlating SC4S destination
+queues with Linux socket queues and TCP flow-control signals.
+
+For standard host-network SC4S deployments, inspect established connections
+on the SC4S host. To check incoming syslog over TCP and TLS, run:
+
+```bash
+sudo ss -tinomp state established '( sport = :514 or sport = :601 or sport = :6514 )'
+```
+
+Replace these ports with any custom SC4S TCP or TLS listener ports. To inspect
+outgoing connections from SC4S to Splunk HEC, run the command for the port used
+by the HEC endpoint:
+
+```bash
+sudo ss -tinomp state established '( dport = :8088 )'
+```
+
+Use `dport = :443` instead when HEC is exposed on HTTPS port 443. The options
+select TCP sockets (`-t`), internal TCP information (`-i`), numeric addresses
+and ports (`-n`), timers (`-o`), socket memory (`-m`), and the owning process
+(`-p`).
+
+For an established TCP socket, the first columns are:
+
+```text
+State  Recv-Q  Send-Q  Local Address:Port  Remote Address:Port
+```
+
+The queue columns have different significance depending on the direction:
+
+| Connection | Counter to inspect | Meaning |
+| --- | --- | --- |
+| Logging source to SC4S | `Recv-Q` on the SC4S host | Bytes received by the kernel but not yet read by syslog-ng. A queue that remains high or grows indicates that SC4S is not reading the connection fast enough. |
+| SC4S to Splunk HEC | `Send-Q` on the SC4S host | Bytes sent by SC4S but not yet acknowledged by the downstream endpoint. A queue that remains high or grows can indicate a slow receiver, packet loss, or a constrained receive window. |
+
+The values on a listening socket have different meanings, so use
+`state established` when diagnosing data-flow backpressure. Short-lived queue
+spikes are normal; compare several samples and focus on persistent growth.
+
+The additional `ss -i` output can include the round-trip time (`rtt`),
+retransmission timeout (`rto`), retransmission backoff, congestion window
+(`cwnd`), acknowledged bytes, and estimated send rate. A
+`timer:(persist,...)` entry is strong evidence that the remote endpoint
+advertised a zero receive window and the local host is sending window probes.
+Increasing retransmissions alone can indicate packet loss rather than
+application backpressure.
+
+If `tshark` is installed, use packet analysis to confirm zero-window events,
+receiver-window-full conditions, or retransmissions:
+
+For details about how syslog-ng stops reading a TCP source when its flow-control
+window fills, see [Managing incoming and outgoing messages with flow-control](https://syslog-ng.github.io/admin-guide/080_Log/010_Flow_control/README.html).
+
 ### Test commands
 
 Check your SC4S port using the `nc` command. Run this command where SC4S is hosted and check data in Splunk for success and failure:
