@@ -158,9 +158,6 @@ advertised a zero receive window and the local host is sending window probes.
 Increasing retransmissions alone can indicate packet loss rather than
 application backpressure.
 
-If `tshark` is installed, use packet analysis to confirm zero-window events,
-receiver-window-full conditions, or retransmissions:
-
 For details about how syslog-ng stops reading a TCP source when its flow-control
 window fills, see [Managing incoming and outgoing messages with flow-control](https://syslog-ng.github.io/admin-guide/080_Log/010_Flow_control/README.html).
 
