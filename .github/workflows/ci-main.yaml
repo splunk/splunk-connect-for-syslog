@@ -53,7 +53,7 @@ jobs:
         id: version
         uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
-          semantic_version: 18
+          semantic_version: 25
           extra_plugins: |
             @semantic-release/exec@v6.0.3
             @semantic-release/git
@@ -79,7 +79,7 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@7477eb72fa681f2f466911df598c0ae84c3cee73 # v3.3.4
+        uses: splunk/addonfactory-test-matrix-action@e6bb46e98bf72398538ddd4bbd958a8a847cd291 # v3.3.6
 
   security-fossa-scan:
     continue-on-error: true
@@ -128,9 +128,9 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - name: Login to GitHub Packages Docker Registry
         uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
@@ -139,7 +139,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push action
         id: docker_action_build
-        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
         with:
           context: .
           provenance: false
@@ -243,6 +243,10 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Run tests
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -298,6 +302,10 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Run tests
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -354,6 +362,10 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Run tests
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -415,6 +427,10 @@ jobs:
           submodules: false
           persist-credentials: false
       - name: Install dependencies
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -451,6 +467,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y linux-tools-$(uname -r) linux-tools-generic || sudo apt-get install -y bpftool
       - name: Install test dependencies
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
@@ -489,7 +509,7 @@ jobs:
         id: version
         uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
-          semantic_version: 18
+          semantic_version: 25
           extra_plugins: |
             @semantic-release/exec@v6.0.3
             @semantic-release/git

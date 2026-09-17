@@ -30,10 +30,15 @@ jobs:
           python-version: "3.14" # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           BRANCH=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $BRANCH
           python -m pip install --upgrade pip==26.0
           pip3 install --only-binary :all: poetry
           poetry install
+          poetry run python docs/gen_sources_nav.py
           poetry run mike deploy -p $BRANCH

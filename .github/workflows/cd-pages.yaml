@@ -34,11 +34,16 @@ jobs:
           python-version: '3.14' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
       - name: Upload
+        env:
+          POETRY_INSTALLER_ONLY_BINARY: ":all:"
+          # these deps publish no wheels, so they must build from sdist
+          POETRY_INSTALLER_NO_BINARY: "lovely-pytest-docker,splunk-sdk"
         run: |
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/v//')
           echo $VERSION
           pip3 install --only-binary :all: poetry
           poetry install
+          poetry run python docs/gen_sources_nav.py
           poetry run mike deploy -p $VERSION
   helm:
     runs-on: ubuntu-latest
@@ -56,7 +61,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
         with:
-          version: v4.2.3
+          version: v4.3.0
       - name: Upload
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -54,6 +54,7 @@ term_handler() {
   fi
 # 128 + 15 -- SIGTERM on non-existent process (will cause service failure)
   exit 143
+  return 0
 }
 
 # SIGHUP(1) - used to reload configs or restart processes
@@ -86,6 +87,7 @@ abrt_handler() {
   fi
 # 128 + 6
   exit 134
+  return 0
 }
 
 # SIGINT(2) - interrupts the process (ex. Ctrl+C)
@@ -98,6 +100,7 @@ int_handler() {
   fi
 # 128 + 2
   exit 130
+  return 0
 }
 
 # Setting traps to run handler function based on received signal

@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.26.0
+ARG SYSLOGNG_VERSION=4.28.0@sha256:3785379a20f884e6173c0e3e036e8215a488a5c4ec9cba6641049695e2271886
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN apk add -U --upgrade --no-cache \
@@ -56,19 +56,15 @@ RUN apk add -U --upgrade --no-cache \
 # Upgrade curl and postgresql libs from Alpine v3.23 to address CVEs
 RUN apk add --no-cache --upgrade \
     --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
+    c-ares \
     curl \
     libpq \
     postgresql-libs \
-    socat \ 
-    c-ares 
+    socat
 
 EXPOSE 514
 EXPOSE 601/tcp
 EXPOSE 6514/tcp
-
-#Note this is commented out because the default syslog-ng config will try to read
-#/dev/log a low priv user cannot read this and the container will fail in SC4S
-#and other uses the low user may be selected
 
 HEALTHCHECK --interval=2m --timeout=5s --start-period=30s CMD ["/usr/sbin/syslog-ng-ctl", "healthcheck", "--timeout", "5"]
 

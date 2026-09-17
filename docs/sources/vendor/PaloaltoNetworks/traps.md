@@ -1,4 +1,4 @@
-## TRAPS
+# TRAPS
 
 ## Key facts
 

@@ -1,3 +1,4 @@
+import ipaddress
 import traceback
 import socket
 import struct
@@ -45,6 +46,12 @@ def int2ip(addr):
         return int_to_ip6(addr)
 
 
+def ip_cache_key(addr):
+    ip = ipaddress.ip_address(addr)
+    prefix = "v4" if ip.version == 4 else "v6"
+    return f"{prefix}:{ip}"
+
+
 hostdict = str("/var/lib/syslog-ng/hostip")
 
 
@@ -60,10 +67,10 @@ class psc_parse(LogParser):
     def parse(self, log_message):
         try:
             ipaddr = log_message.get_as_str("SOURCEIP", "", repr="internal")
-            ip_int = ip2int(ipaddr)
-            self.logger.debug(f"psc.parse sourceip={ipaddr} int={ip_int}")
+            ip_key = ip_cache_key(ipaddr)
+            self.logger.debug(f"psc.parse sourceip={ipaddr} key={ip_key}")
             try:
-                name = self.db[ip_int]
+                name = self.db[ip_key]
             except KeyError:
                 return False
             self.logger.debug(f"psc.parse host={name}")
@@ -120,20 +127,20 @@ class psc_dest(LogDestination):
                 return self.SUCCESS
 
             try:
-                ip_int = ip2int(ipaddr)
-            except OSError:
+                ip_key = ip_cache_key(ipaddr)
+            except ValueError:
                 self.logger.debug(
                     f"psc.send skipped: invalid SOURCEIP sourceip={ipaddr!r}"
                 )
                 return self.SUCCESS
 
             try:
-                current = self.db[ip_int]
+                current = self.db[ip_key]
             except KeyError:
-                self.db[ip_int] = host
+                self.db[ip_key] = host
             else:
                 if current != host:
-                    self.db[ip_int] = host
+                    self.db[ip_key] = host
         except Exception:
             self.logger.debug(traceback.format_exc())
             return self.ERROR

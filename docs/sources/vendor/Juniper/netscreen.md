@@ -1,4 +1,4 @@
-## Netscreen
+# Netscreen
 
 ## Key facts
 

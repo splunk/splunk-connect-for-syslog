@@ -1,5 +1,5 @@
 
-## JetDirect
+# JetDirect
 
 ## Key facts
 

@@ -1,5 +1,5 @@
 
-## Product - vSphere - ESX NSX (Controller, Manager, Edge)
+# Product - vSphere - ESX NSX (Controller, Manager, Edge)
 
 Vmware vsphere product line has multiple old and known issues in syslog output.
 
