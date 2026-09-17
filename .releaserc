@@ -21,8 +21,7 @@
             [
                 "@semantic-release/commit-analyzer", 
                 { 
-                    "preset": "conventionalcommits", 
-                    "presetConfig": "conventional-changelog-conventionalcommits"
+                    "preset": "conventionalcommits"
                 }
             ],
             "@semantic-release/release-notes-generator",
