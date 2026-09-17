@@ -1,0 +1,6 @@
+#values.yaml
+replicaCount: 6 #2x node count
+splunk:
+    hec_url: "https://xxx.xxx.xxx.xxx:8088/services/collector/event"
+    hec_token: "00000000-0000-0000-0000-000000000000"
+    hec_verify_tls: "yes"
