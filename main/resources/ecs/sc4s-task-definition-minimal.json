@@ -1,0 +1,39 @@
+{
+  "family": "sc4s",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<ACCOUNT_ID>:role/<SC4S_EXECUTION_ROLE>",
+  "runtimePlatform": {
+    "cpuArchitecture": "X86_64",
+    "operatingSystemFamily": "LINUX"
+  },
+  "containerDefinitions": [
+    {
+      "name": "sc4s",
+      "image": "ghcr.io/splunk/splunk-connect-for-syslog/container3:latest",
+      "essential": true,
+      "portMappings": [
+        {"containerPort": 514,  "protocol": "udp"},
+        {"containerPort": 514,  "protocol": "tcp"},
+        {"containerPort": 601,  "protocol": "tcp"},
+        {"containerPort": 6514, "protocol": "tcp"},
+        {"containerPort": 8080, "protocol": "tcp"}
+      ],
+      "environment": [
+        {"name": "SC4S_DEST_SPLUNK_HEC_DEFAULT_URL",        "value": "https://<SPLUNK_HEC_HOST>:8088"},
+        {"name": "SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN",      "value": "<SPLUNK_HEC_TOKEN>"},
+        {"name": "SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY", "value": "no"},
+        {"name": "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE", "value": "no"}
+      ],
+      "healthCheck": {
+        "command": ["CMD-SHELL", "/usr/sbin/syslog-ng-ctl healthcheck --timeout 5 || exit 1"],
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}
