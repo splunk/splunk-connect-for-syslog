@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, request
 
 from constants import ENV_FILE, PARSERS_DIR
 from job_api import submit_job
-from utils import apply_with_rollback
+from utils import apply_with_rollback, restart_syslog_ng, reload_syslog_ng
 
 logger = logging.getLogger(__name__)
 
@@ -18,12 +18,15 @@ def get_env():
     if not ENV_FILE.exists():
         return jsonify({"status": "error", "message": "env_file not found"}), 404
 
-    return jsonify(
-        {
-            "path": str(ENV_FILE),
-            "content": ENV_FILE.read_text(encoding="utf-8"),
-        }
-    ), 200
+    return (
+        jsonify(
+            {
+                "path": str(ENV_FILE),
+                "content": ENV_FILE.read_text(encoding="utf-8"),
+            }
+        ),
+        200,
+    )
 
 
 @csrf.exempt
@@ -42,7 +45,7 @@ def set_env():
         return jsonify({"status": "error", "message": "invalid file"}), 400
 
     def apply_env():
-        apply_with_rollback({ENV_FILE: content})
+        apply_with_rollback({ENV_FILE: content}, restart_syslog_ng)
         return {"status": "env_file updated successfully"}
 
     return submit_job(apply_env)
@@ -62,7 +65,7 @@ def add_parser():
     content = file.read().decode("utf-8")
 
     def apply_parser():
-        apply_with_rollback({parser_path: content})
+        apply_with_rollback({parser_path: content}, reload_syslog_ng)
         return {"status": "parser added successfully", "path": str(parser_path)}
 
     return submit_job(apply_parser)
@@ -77,12 +80,15 @@ def get_parser(name):
     if not parser_path.exists():
         return jsonify({"status": "error", "message": "parser not found"}), 404
 
-    return jsonify(
-        {
-            "name": name,
-            "content": parser_path.read_text(encoding="utf-8"),
-        }
-    ), 200
+    return (
+        jsonify(
+            {
+                "name": name,
+                "content": parser_path.read_text(encoding="utf-8"),
+            }
+        ),
+        200,
+    )
 
 
 @csrf.exempt
@@ -96,7 +102,7 @@ def delete_parser(name):
         return jsonify({"status": "error", "message": "parser not found"}), 404
 
     def remove_parser():
-        apply_with_rollback({parser_path: None})
+        apply_with_rollback({parser_path: None}, reload_syslog_ng)
         return {"status": "parser deleted successfully"}
 
     return submit_job(remove_parser)

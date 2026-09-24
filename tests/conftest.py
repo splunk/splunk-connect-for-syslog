@@ -311,8 +311,8 @@ def sc4s_docker(request, worker_id, tmp_path_factory):
     with FileLock(str(fn) + ".lock"):
         if fn.is_file():
             data = json.loads(fn.read_text())
-            # this type conversion is requried because json keys are strings
-            # and in almost all tests we are refrencing the port by int e.g setup_sc4s[1][514]
+            # this type conversion is required because json keys are strings
+            # and in almost all tests we are referencing the port by int e.g setup_sc4s[1][514]
             sc4s_docker = (data[0], {int(k): v for k, v in data[1].items()})
         else:
             request.fixturenames.append("start_sc4s_docker")
