@@ -302,6 +302,15 @@ process and communicates via standard input/output. Provide:
 * an `args` array that starts the MCP server,
 * optional environment variables (`SC4S_API_URL`, `MCP_TRANSPORT=stdio`).
 
+### Codex MCP client configuration
+
+```bash
+codex mcp add sc4s --url http://<MCP_HOST>:8000/mcp
+```
+
+Replace <MCP_HOST> with the hostname or IP address that the MCP client can use
+to reach the MCP server.
+
 ## Verify the installation
 
 1. Confirm the container is running: `docker ps` or `podman ps`.
