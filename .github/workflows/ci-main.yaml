@@ -29,7 +29,7 @@ on:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
       container_labels: ${{ steps.docker_action_meta.outputs.labels }}
@@ -83,7 +83,7 @@ jobs:
 
   security-fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: run fossa anlyze and create report
@@ -112,7 +112,7 @@ jobs:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
   build_action:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     name: Build Action
     needs:
       - meta
@@ -158,7 +158,7 @@ jobs:
           cache-to: type=inline
     
   scan-docker-image-cves:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     name: Scan docker image on CVEs
     needs:
       - meta
@@ -181,7 +181,7 @@ jobs:
           scanners: "vuln"
           
   test-container:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -263,7 +263,7 @@ jobs:
             -k 'not lite and not name_cache'
   
   test-ipv4-name-cache:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -322,7 +322,7 @@ jobs:
             -m 'name_cache'
 
   test-ipv6-name-cache:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -382,7 +382,7 @@ jobs:
             -m 'name_cache'
 
   test-healthcheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -414,7 +414,7 @@ jobs:
         run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
 
   test-healthcheck-unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -439,7 +439,7 @@ jobs:
         run: poetry run pytest tests/test_healthcheck_unit_tests.py
 
   test-ebpf:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -482,7 +482,7 @@ jobs:
   
   release:
     name: Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     concurrency:
       group: release-${{ github.ref_name }}
       cancel-in-progress: false
