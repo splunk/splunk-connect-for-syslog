@@ -7970,6 +7970,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#inspect-syslog-ng-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inspect syslog-ng statistics
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-for-tcp-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Check for TCP backpressure
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#test-commands" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -8312,6 +8334,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#inspect-syslog-ng-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inspect syslog-ng statistics
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-for-tcp-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Check for TCP backpressure
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#test-commands" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -8443,6 +8487,183 @@ podman volume create splunk-sc4s-var
 <li>Remove unused data: <code>podman system prune</code></li>
 <li>Load an image from a .tar archive or STDIN: <code>podman load &lt;tar&gt;</code></li>
 </ul>
+<h3 id="inspect-syslog-ng-statistics">Inspect syslog-ng statistics<a class="headerlink" href="#inspect-syslog-ng-statistics" title="Permanent link">&para;</a></h3>
+<p>Use <code>syslog-ng-ctl stats</code> to determine whether SC4S is receiving messages,
+routing them to a Splunk HEC destination, buffering them, or dropping them.
+Run the command through the container runtime:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>podman<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>SC4S<span class="w"> </span>syslog-ng-ctl<span class="w"> </span>stats
+<span class="c1"># or</span>
+sudo<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>SC4S<span class="w"> </span>syslog-ng-ctl<span class="w"> </span>stats
+</code></pre></div>
+<p>The output is semicolon-delimited. A destination statistic resembles:</p>
+<div class="highlight"><pre><span></span><code>dst.http;d_hec_fmt#0;https://splunk.example.com:8088/services/collector/event;a;queued;1250
+</code></pre></div>
+<p>The fields identify the component, configuration object, instance, state,
+counter, and value. The state is normally <code>a</code> for an active object. A state of
+<code>o</code> identifies an orphaned counter from an object that is no longer active.</p>
+<p>The following counters are the most useful when troubleshooting SC4S:</p>
+<table>
+<thead>
+<tr>
+<th>Counter</th>
+<th>Meaning</th>
+<th>Diagnostic value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>queued</code></td>
+<td>Messages currently waiting in a destination queue</td>
+<td>A queue that grows continuously indicates destination backpressure or an unavailable HEC endpoint. A temporary queue that drains can be normal during a traffic burst.</td>
+</tr>
+<tr>
+<td><code>dropped</code></td>
+<td>Messages permanently dropped</td>
+<td>Any increase requires investigation. Check the container logs for a full buffer, an HTTP error, or another delivery failure.</td>
+</tr>
+<tr>
+<td><code>written</code></td>
+<td>Messages successfully delivered to the destination</td>
+<td>This should increase while SC4S is receiving traffic.</td>
+</tr>
+<tr>
+<td><code>processed</code></td>
+<td>Messages handed to a source, parser, or destination component</td>
+<td>At a destination, this does not prove delivery because messages can still be queued.</td>
+</tr>
+<tr>
+<td><code>discarded</code></td>
+<td>Messages rejected by a parser</td>
+<td>An increasing value can identify malformed or unsupported messages.</td>
+</tr>
+<tr>
+<td><code>memory_usage</code></td>
+<td>Bytes occupied by the queues associated with an object</td>
+<td>Use this with <code>queued</code> to identify increasing memory pressure from buffering.</td>
+</tr>
+<tr>
+<td><code>eps_last_1h</code></td>
+<td>Approximate events per second during the previous hour</td>
+<td>Compare this with the expected traffic baseline. This counter is updated periodically rather than for every message.</td>
+</tr>
+</tbody>
+</table>
+<p>The available counters depend on the syslog-ng version and configured
+statistics level. A missing optional counter such as <code>eps_last_1h</code> does not by
+itself indicate a problem. See the syslog-ng documentation for the complete
+<a href="https://syslog-ng.github.io/admin-guide/150_Statistics_of_syslog-ng/000_Metrics_and_counters.html">metrics and counters reference</a>.</p>
+<p>For destination counters, syslog-ng calculates successfully written messages
+as follows:</p>
+<div class="highlight"><pre><span></span><code>written = processed - queued - dropped
+</code></pre></div>
+<p><code>processed</code>, <code>written</code>, and <code>dropped</code> are cumulative counters. <code>queued</code> is the
+current destination backlog. Compare samples taken several seconds apart;
+counter trends are usually more useful than a single value.</p>
+<p>To display the principal counters for every SC4S HEC destination, run:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>podman<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>SC4S<span class="w"> </span>syslog-ng-ctl<span class="w"> </span>stats<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'d_hec.*;(processed|written|queued|dropped|memory_usage|eps_last_1h|batch_size_avg);'</span>
+</code></pre></div>
+<p>To check whether network sources are receiving messages, run:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>podman<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>SC4S<span class="w"> </span>syslog-ng-ctl<span class="w"> </span>stats<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'^src\..*;(processed|connections|eps_last_1h|stamp);'</span>
+</code></pre></div>
+<p>Use the following combinations to narrow down a data-flow problem:</p>
+<table>
+<thead>
+<tr>
+<th>Observed trend</th>
+<th>Likely interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source <code>processed</code> and HEC <code>written</code> increase, <code>queued</code> remains low or drains, and <code>dropped</code> remains unchanged</td>
+<td>Normal data flow.</td>
+</tr>
+<tr>
+<td>Source <code>processed</code> increases, HEC <code>written</code> stalls, and HEC <code>queued</code> increases</td>
+<td>Splunk HEC, network connectivity, or downstream capacity problem.</td>
+</tr>
+<tr>
+<td>Source <code>processed</code> increases but HEC <code>processed</code> does not</td>
+<td>Parser, filter, routing, or destination-selection problem.</td>
+</tr>
+<tr>
+<td>Parser <code>discarded</code> increases</td>
+<td>The parser is rejecting some incoming messages. Obtain a raw message and check its format.</td>
+</tr>
+<tr>
+<td>HEC <code>dropped</code> increases</td>
+<td>Permanent data loss is occurring. Check SC4S logs and buffer capacity immediately.</td>
+</tr>
+<tr>
+<td>Source and destination counters remain unchanged</td>
+<td>SC4S is not receiving traffic on the expected listener, or the wrong protocol or port is being used.</td>
+</tr>
+<tr>
+<td>HEC <code>written</code> increases faster than new input and <code>queued</code> decreases</td>
+<td>SC4S is draining a backlog after a transient outage or traffic burst.</td>
+</tr>
+</tbody>
+</table>
+<p>Do not use <code>syslog-ng-ctl stats --reset</code> during an active investigation unless
+you intentionally want to start a new measurement interval. Resetting the
+cumulative counters removes the baseline needed to calculate changes. It does
+not reset the <code>queued</code> counters.</p>
+<h3 id="check-for-tcp-backpressure">Check for TCP backpressure<a class="headerlink" href="#check-for-tcp-backpressure" title="Permanent link">&para;</a></h3>
+<p>TCP backpressure can occur in either direction: between a logging source and
+SC4S, or between SC4S and Splunk HEC. Confirm it by correlating SC4S destination
+queues with Linux socket queues and TCP flow-control signals.</p>
+<p>For standard host-network SC4S deployments, inspect established connections
+on the SC4S host. To check incoming syslog over TCP and TLS, run:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ss<span class="w"> </span>-tinomp<span class="w"> </span>state<span class="w"> </span>established<span class="w"> </span><span class="s1">'( sport = :514 or sport = :601 or sport = :6514 )'</span>
+</code></pre></div>
+<p>Replace these ports with any custom SC4S TCP or TLS listener ports. To inspect
+outgoing connections from SC4S to Splunk HEC, run the command for the port used
+by the HEC endpoint:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ss<span class="w"> </span>-tinomp<span class="w"> </span>state<span class="w"> </span>established<span class="w"> </span><span class="s1">'( dport = :8088 )'</span>
+</code></pre></div>
+<p>Use <code>dport = :443</code> instead when HEC is exposed on HTTPS port 443. The options
+select TCP sockets (<code>-t</code>), internal TCP information (<code>-i</code>), numeric addresses
+and ports (<code>-n</code>), timers (<code>-o</code>), socket memory (<code>-m</code>), and the owning process
+(<code>-p</code>).</p>
+<p>For an established TCP socket, the first columns are:</p>
+<div class="highlight"><pre><span></span><code>State  Recv-Q  Send-Q  Local Address:Port  Remote Address:Port
+</code></pre></div>
+<p>The queue columns have different significance depending on the direction:</p>
+<table>
+<thead>
+<tr>
+<th>Connection</th>
+<th>Counter to inspect</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logging source to SC4S</td>
+<td><code>Recv-Q</code> on the SC4S host</td>
+<td>Bytes received by the kernel but not yet read by syslog-ng. A queue that remains high or grows indicates that SC4S is not reading the connection fast enough.</td>
+</tr>
+<tr>
+<td>SC4S to Splunk HEC</td>
+<td><code>Send-Q</code> on the SC4S host</td>
+<td>Bytes sent by SC4S but not yet acknowledged by the downstream endpoint. A queue that remains high or grows can indicate a slow receiver, packet loss, or a constrained receive window.</td>
+</tr>
+</tbody>
+</table>
+<p>The values on a listening socket have different meanings, so use
+<code>state established</code> when diagnosing data-flow backpressure. Short-lived queue
+spikes are normal; compare several samples and focus on persistent growth.</p>
+<p>The additional <code>ss -i</code> output can include the round-trip time (<code>rtt</code>),
+retransmission timeout (<code>rto</code>), retransmission backoff, congestion window
+(<code>cwnd</code>), acknowledged bytes, and estimated send rate. A
+<code>timer:(persist,...)</code> entry is strong evidence that the remote endpoint
+advertised a zero receive window and the local host is sending window probes.
+Increasing retransmissions alone can indicate packet loss rather than
+application backpressure.</p>
+<p>For details about how syslog-ng stops reading a TCP source when its flow-control
+window fills, see <a href="https://syslog-ng.github.io/admin-guide/080_Log/010_Flow_control/README.html">Managing incoming and outgoing messages with flow-control</a>.</p>
 <h3 id="test-commands">Test commands<a class="headerlink" href="#test-commands" title="Permanent link">&para;</a></h3>
 <p>Check your SC4S port using the <code>nc</code> command. Run this command where SC4S is hosted and check data in Splunk for success and failure:
 <div class="highlight"><pre><span></span><code>echo '&lt;raw_sample&gt;' |nc &lt;host&gt; &lt;port&gt;
