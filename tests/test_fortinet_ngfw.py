@@ -303,3 +303,38 @@ def test_fortinet_prefiltering(record_property,  setup_splunk, setup_sc4s):
     record_property("message", message)
 
     assert result_count == 0
+
+
+# FortiGate security-rating events (msg_tag=fgt-security-rating) arrive without a type= field and header
+@pytest.mark.addons("fortinet")
+def test_fortinet_fgt_security_rating(record_property, setup_splunk, setup_sc4s):
+    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
+
+    time = time[:-7]
+    tzoffset = insert_char(tzoffset, ":", 3)
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        '{{ mark }}date={{ date }} time={{ time }} devname={{ host }} devid=FGT91G1234567890 logid=0004000017 level=notice vd=root msg_tag=fgt-security-rating\n'
+    )
+    message = mt.render(
+        mark="<111>", bsd=bsd, date=date, time=time, host=host, tzoffset=tzoffset
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="fgt_security-rating"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
