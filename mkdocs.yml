@@ -33,6 +33,8 @@ theme:
     accent: "orange"
   favicon: "images/logo.png"
   logo: "images/logo.png"
+  features:
+    - content.code.copy
 
 nav:
   - Home: "index.md"
