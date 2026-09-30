@@ -29,7 +29,7 @@ def _parse_host(value: str) -> tuple[str, int | None]:
     except ValueError as exc:
         raise ValueError(f"invalid host value: {value!r}") from exc
 
-    if not hostname or parsed.username or parsed.password or parsed.path:
+    if not hostname:
         raise ValueError(f"invalid host value: {value!r}")
 
     return hostname.lower().rstrip("."), port
@@ -42,15 +42,7 @@ def _parse_origin(value: str) -> tuple[str, str, int | None]:
     except ValueError as exc:
         raise ValueError(f"invalid origin value: {value!r}") from exc
 
-    if (
-        parsed.scheme not in {"http", "https"}
-        or not parsed.hostname
-        or parsed.username
-        or parsed.password
-        or parsed.path
-        or parsed.query
-        or parsed.fragment
-    ):
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname:
         raise ValueError(f"invalid origin value: {value!r}")
 
     return parsed.scheme.lower(), parsed.hostname.lower().rstrip("."), port
@@ -75,6 +67,10 @@ class TransportSecurityMiddleware:
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        if scope["path"] == "/health" and scope["method"] == "GET":
             await self.app(scope, receive, send)
             return
 
