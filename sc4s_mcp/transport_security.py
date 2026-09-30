@@ -17,6 +17,10 @@ ALLOWED_ORIGINS_ENV = "SC4S_MCP_ALLOWED_ORIGINS"
 DEFAULT_ALLOWED_HOSTS = ("localhost", "127.0.0.1", "[::1]")
 
 
+class TransportSecurityMiddlewareException(Exception):
+    """Raised when transport security middleware configuration is invalid."""
+
+
 def _parse_csv(value: str | None) -> list[str]:
     return [item.strip() for item in (value or "").split(",") if item.strip()]
 
@@ -59,11 +63,22 @@ class TransportSecurityMiddleware:
             *DEFAULT_ALLOWED_HOSTS,
             *_parse_csv(os.getenv(ALLOWED_HOSTS_ENV)),
         ]
-        self.allowed_hosts = tuple(_parse_host(value) for value in host_values)
-        self.allowed_origins = tuple(
-            _parse_origin(value)
-            for value in _parse_csv(os.getenv(ALLOWED_ORIGINS_ENV))
-        )
+        try:
+            self.allowed_hosts = tuple(_parse_host(value) for value in host_values)
+        except ValueError as exc:
+            raise TransportSecurityMiddlewareException(
+                f"Invalid {ALLOWED_HOSTS_ENV}: {exc}"
+            ) from exc
+
+        try:
+            self.allowed_origins = tuple(
+                _parse_origin(value)
+                for value in _parse_csv(os.getenv(ALLOWED_ORIGINS_ENV))
+            )
+        except ValueError as exc:
+            raise TransportSecurityMiddlewareException(
+                f"Invalid {ALLOWED_ORIGINS_ENV}: {exc}"
+            ) from exc
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
