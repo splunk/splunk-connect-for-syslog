@@ -129,6 +129,7 @@ mkdir -p /opt/sc4s-mcp/secrets
 python -c "import secrets; print(secrets.token_urlsafe(32))" \
   > /opt/sc4s-mcp/secrets/mcp_token
 chmod 600 /opt/sc4s-mcp/secrets/mcp_token
+sudo chown 10001:10001 /opt/sc4s-mcp/secrets/mcp_token
 ```
 
 Run the container:
@@ -255,6 +256,9 @@ below).
 Remote connections should use TLS. Set `SC4S_MCP_TLS_CERT` and
 `SC4S_MCP_TLS_KEY` to serve `/mcp` and `/health` over HTTPS. If only one is
 set, the server refuses to start.
+
+For allowing connections from non-loopback hostname or addresses add allowed hosts to `SC4S_MCP_ALLOWED_HOSTS`.
+A value without a port accepts that host on any port; include a port to restrict it.
 
 When both settings are empty, the server uses HTTP. TLS can also be terminated
 by a reverse proxy. In that configuration, publish the container on host
