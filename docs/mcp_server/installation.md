@@ -129,7 +129,7 @@ mkdir -p /opt/sc4s-mcp/secrets
 python -c "import secrets; print(secrets.token_urlsafe(32))" \
   > /opt/sc4s-mcp/secrets/mcp_token
 chmod 600 /opt/sc4s-mcp/secrets/mcp_token
-sudo chown 10001:10001 /opt/sc4s-mcp/secrets/mcp_token
+sudo chown 10001:10001 /opt/sc4s-mcp/secrets/mcp_token # if you are using docker remapping make sure to use correct uid and gid
 ```
 
 Run the container:
@@ -225,6 +225,7 @@ The token file should be readable only by the account running the container:
 
 ```bash
 chmod 600 /opt/sc4s-mcp/secrets/sc4s_api_token
+sudo chown 10001:10001 /opt/sc4s-mcp/secrets/sc4s_api_token # if you are using docker remapping make sure to use correct uid and gid 
 ```
 
 You can use `SC4S_API_TOKEN` instead, but an environment variable can be
@@ -269,6 +270,12 @@ If the private key is encrypted, also pass `-e SC4S_MCP_TLS_KEY_PASSWORD="$PASS"
 
 When using a self-signed certificate, install the issuing CA in the operating
 system or MCP client trust store.
+
+Make sure that the certificate and key have file permissions that will allow MCP process to access it. You can do this by running:
+
+```bash
+sudo chown 10001:10001 <your-cert-and-key> # if you are using docker remapping make sure to use correct uid and gid 
+```
 
 ## Generic MCP client configuration
 
