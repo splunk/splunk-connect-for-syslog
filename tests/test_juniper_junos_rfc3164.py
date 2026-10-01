@@ -295,13 +295,16 @@ def test_juniper_system_standard(
     assert result_count == 1
 
 
-# <28>Mar 18 17:56:52 host PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 0 PIC 0 CPU utilization exceeds threshold, current value = 99
+# Sep 12 06:42:34  sr-rtr PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 0 PIC 0 CPU utilization exceeds threshold, current value=93
 @pytest.mark.addons("juniper")
 @pytest.mark.parametrize(
     "event",
     [
-        "PERF_MON: RTPERF_CPU_UTIL_MAX: FPC 0 PIC 0 CPU Utilization greater than 99, expect packet loss",
-        "PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 0 PIC 0 CPU utilization exceeds threshold, current value = 99",
+        "PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 0 PIC 0 CPU utilization exceeds threshold, current value=93",
+        "PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 5 PIC 0 CPU utilization exceeds threshold, current value = 100",
+        "PERF_MON: RTPERF_CPU_UTIL_MAX: FPC 5 PIC 0 CPU Utilization greater than 99, expect packet loss",
+        "PERF_MON: RTPERF_CPU_USAGE_OK: FPC 0 PIC 0 CPU utilization returns to normal, current value = 42",
+        "PERF_MON: RTPERF_CPU_UTIL_OK: FPC 0 PIC 0 CPU utilization no longer at or greater than 99, current value = 85",
     ],
 )
 def test_juniper_junos_perfmon(
