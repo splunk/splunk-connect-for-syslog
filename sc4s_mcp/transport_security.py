@@ -2,8 +2,8 @@
 
 import logging
 import os
-from collections.abc import Iterable
 from urllib.parse import urlsplit
+from server import HEALTH_PATH
 
 from starlette.datastructures import Headers
 from starlette.responses import PlainTextResponse
@@ -85,7 +85,8 @@ class TransportSecurityMiddleware:
             await self.app(scope, receive, send)
             return
 
-        if scope["path"] == "/health" and scope["method"] == "GET":
+
+        if scope["path"] == HEALTH_PATH and scope["method"] == "GET":
             await self.app(scope, receive, send)
             return
 
