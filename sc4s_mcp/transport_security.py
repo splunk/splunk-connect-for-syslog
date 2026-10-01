@@ -3,7 +3,8 @@
 import logging
 import os
 from urllib.parse import urlsplit
-from server import HEALTH_PATH
+
+from server_config import HEALTH_PATH
 
 from starlette.datastructures import Headers
 from starlette.responses import PlainTextResponse

@@ -6,6 +6,7 @@ from fastapi import FastAPI
 import uvicorn
 
 from app import mcp
+from server_config import DEFAULT_PORT, HEALTH_PATH, MCP_MOUNT_PATH
 from tls import TlsConfigError, build_uvicorn_ssl_kwargs
 from transport_security import TransportSecurityMiddleware
 from utils.transport import TransportMode, resolve_transport
@@ -18,11 +19,6 @@ import prompts.workflows  # noqa: F401
 
 
 logger = logging.getLogger(__name__)
-
-HEALTH_PATH = "/health"
-DEFAULT_PORT = "8000"
-MCP_MOUNT_PATH = "/mcp"
-
 
 def _build_api() -> FastAPI:
     mcp_app = mcp.http_app(path="/")
