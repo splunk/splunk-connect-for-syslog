@@ -24,7 +24,6 @@ COPY --from=builder --chown=mcp:mcp /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 COPY --chown=mcp:mcp sc4s_mcp/ ./sc4s_mcp/
-COPY --chown=mcp:mcp sc4s_mcp/server_config.py ./sc4s_mcp/server_config.py
 COPY --chown=mcp:mcp docs/ ./docs/
 COPY --chown=mcp:mcp package/shared/addons/ ./package/shared/addons/
 COPY --chown=mcp:mcp skills/parser-creator/ ./skills/parser-creator/
