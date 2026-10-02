@@ -5,8 +5,8 @@ import ssl
 import sys
 import urllib.request
 
+from server_config import DEFAULT_PORT, HEALTH_PATH
 import tls
-from server import DEFAULT_PORT, HEALTH_PATH
 
 _TIMEOUT_SEC = 30
 
