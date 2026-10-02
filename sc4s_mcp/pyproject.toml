@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sc4s-mcp"
-version = "3.44.0"
+version = "3.46.0"
 description = "MCP server for SC4S"
 package-mode = false
 
