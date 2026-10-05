@@ -1,8 +1,26 @@
+import logging
+import os
 from pathlib import Path
+import tomllib
 
 from fastmcp import FastMCP
 
 from auth import build_auth_provider
+
+logger = logging.getLogger(__name__)
+
+
+def _mcp_version() -> str:
+    version = os.getenv("SC4S_MCP_VERSION", "").strip()
+    if version:
+        return version
+    try:
+        with (Path(__file__).resolve().parent / "pyproject.toml").open("rb") as file:
+            return tomllib.load(file)["tool"]["poetry"]["version"]
+    except (OSError, KeyError, TypeError, tomllib.TOMLDecodeError) as error:
+        logger.warning("Could not read SC4S MCP version: %s", error)
+        return "unknown"
+
 
 ASYNC_JOB_TOOLS = (
     "set_env",
@@ -28,6 +46,7 @@ report any verification or health failure clearly."""
 
 mcp = FastMCP(
     "sc4s",
+    version=_mcp_version(),
     auth=build_auth_provider(),
     instructions=SERVER_INSTRUCTIONS,
 )
