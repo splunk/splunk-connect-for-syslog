@@ -2,7 +2,7 @@
 
 !!! warning "Beta feature"
     The SC4S MCP server and AI agent plugin are beta features. They are
-    currently supported only with SC4S `3.46.0`, and their interfaces may
+    currently supported only with SC4S `3.47.0`, and their interfaces may
     change between releases.
 
 The **SC4S MCP Server** is a [Model Context Protocol](https://modelcontextprotocol.io) server
@@ -92,7 +92,7 @@ Additional the shipped image:
 
 The SC4S MCP server is currently available as a beta feature. Use the MCP
 server version that matches the SC4S version it manages; this beta release
-supports SC4S `3.46.0` only. Compatibility with earlier or later SC4S versions
+supports SC4S `3.47.0` only. Compatibility with earlier or later SC4S versions
 is not guaranteed.
 
 Known limitations:
