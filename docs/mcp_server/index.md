@@ -46,7 +46,7 @@ communicates with:
 
 ## Security model
 
-!!! note "The MCP server never runs commands on the host"
+!!! note "The MCP server never runs commands outside its container"
     The SC4S MCP server does **not** execute shell commands, scripts, or
     binaries on your host. It does **not** invoke `docker`, `podman`,
     `systemctl`, `syslog-ng`, `bash`, or any other process outside the
