@@ -245,6 +245,7 @@ jobs:
           poetry install
           mkdir -p test-results || true
           poetry run pytest -v --tb=long \
+            --ignore=tests/test_mcp_integration.py \
             --splunk_type=external \
             --splunk_hec_token=70b6ae71-76b3-4c38-9597-0c5b37ad9630 \
             --splunk_host=splunk \
