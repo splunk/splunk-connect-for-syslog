@@ -1,5 +1,15 @@
 # Current experimental features
 
+## > 3.47.0
+
+### SC4S MCP server
+
+The experimental SC4S Model Context Protocol (MCP) server lets MCP-compatible AI assistants create custom syslog-ng parsers, send test syslog events, and manage configuration and metadata overrides. It provides tools, documentation resources, and guided prompts for parser creation and troubleshooting.
+
+The MCP server runs in a separate Docker or Podman container and supports local `stdio` connections or Streamable HTTP. Configuration and metadata tools require `SC4S_API_MANAGEMENT_ENABLED=true` in the SC4S `env_file`. Configuration changes can restart syslog-ng inside the SC4S container.
+
+See the [MCP server overview](mcp_server/index.md), [installation instructions](mcp_server/installation.md), and [available tools](mcp_server/tools.md) for setup, authentication, TLS, and usage details.
+
 ## > 3.12.0
 `SC4S_USE_NAME_CACHE=yes` supports IPv6.
 
