@@ -52,9 +52,9 @@ services:
       - SC4S_NETAPP_ONTAP_NEW_FORMAT=yes
       - SC4S_USE_VPS_CACHE=yes
   mcp:
-    profiles:
-      - mcp-integration
-    image: ${SC4S_MCP_IMAGE:-sc4s-mcp-image-not-configured:invalid}
+    build:
+      context: ..
+      dockerfile: sc4s_mcp/Dockerfile
     ports:
       - "8000"
     environment:
