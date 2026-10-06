@@ -83,4 +83,4 @@ CSV should be placed in `local/context/*.csv`. Using `splunk_metadata.csv` is go
 **Q: Can we have a file in which we can create all default indexes in one effort?**
 
 A: Refer to [indexes.conf](./resources/indexes.conf), which contains all indexes being created in one effort. This file also has `lastChanceIndex` configured, to use if it fits your requirements.
-For more information on this file, please refer [Splunk docs](https://docs.splunk.com/Documentation/Splunk/latest/Admin/Indexesconf).
+For more information on this file, please refer [Splunk docs](https://docs.splunk.com/Documentation/Splunk/latest/admin/Indexesconf).
