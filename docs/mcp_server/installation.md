@@ -199,7 +199,7 @@ For example, `https://browser.example.com` and
 unlisted or malformed `Origin` is rejected with HTTP 403. Wildcard syntax is
 not supported; list each host or origin explicitly.
 
-The image ships a healthcheck that verifies the SSE endpoint is up. Check
+The image ships a healthcheck that verifies the `/health` endpoint. Check
 the container status with:
 
 ```bash
@@ -313,6 +313,15 @@ process and communicates via standard input/output. Provide:
 * an `args` array that starts the MCP server,
 * optional environment variables (`SC4S_API_URL`, `MCP_TRANSPORT=stdio`).
 
+### Codex MCP client configuration
+
+```bash
+codex mcp add sc4s --url http://<MCP_HOST>:8000/mcp
+```
+
+Replace <MCP_HOST> with the hostname or IP address that the MCP client can use
+to reach the MCP server.
+
 ## Verify the installation
 
 1. Confirm the container is running: `docker ps` or `podman ps`.
@@ -326,8 +335,10 @@ process and communicates via standard input/output. Provide:
 
 ## Upgrading
 
-To upgrade the MCP server, pull a newer image and recreate the container with
-the same configuration options. No data migration is required.
+The MCP server version must match the SC4S version it manages. Before upgrading,
+record the image tag or digest used by the running MCP container and keep its
+current configuration. Pull the replacement image before stopping the existing
+container. No data migration is required.
 
 Docker:
 
