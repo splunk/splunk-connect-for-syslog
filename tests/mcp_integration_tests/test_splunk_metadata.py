@@ -4,39 +4,11 @@ import uuid
 
 from fastmcp import Client
 
+from tests.mcp_integration_tests.utils import (
+    _call_tool,
+    _submit_config_change,
+)
 from tests.splunkutils import splunk_single
-
-
-JOB_TIMEOUT_SECONDS = 90
-JOB_POLL_INTERVAL_SECONDS = 1
-
-
-async def _call_tool(client: Client, name: str, arguments: dict | None = None) -> dict:
-    result = await client.call_tool(name, arguments or {})
-    assert result.is_error is False, result
-    assert result.data is not None, result
-    return result.data
-
-
-async def _wait_for_job(client: Client, job_id: str) -> dict:
-    deadline = asyncio.get_running_loop().time() + JOB_TIMEOUT_SECONDS
-
-    while asyncio.get_running_loop().time() < deadline:
-        job = await _call_tool(client, "get_job_status", {"job_id": job_id})
-        if job["status"] == "success":
-            return job
-        if job["status"] == "failed":
-            raise AssertionError(f"configuration job {job_id} failed: {job}")
-        await asyncio.sleep(JOB_POLL_INTERVAL_SECONDS)
-
-    raise AssertionError(f"configuration job {job_id} did not finish in time")
-
-
-async def _submit_metadata_change(client: Client, tool_name: str, **arguments) -> dict:
-    response = await _call_tool(client, tool_name, arguments)
-    assert response.get("status") == "accepted", response
-    assert response.get("job_id"), response
-    return await _wait_for_job(client, response["job_id"])
 
 
 def _smoke_parser(suffix: str) -> tuple[str, str, str]:
@@ -82,7 +54,7 @@ async def _exercise_splunk_metadata_tools(mcp_endpoint: str, splunk) -> None:
         parser_added = False
 
         try:
-            await _submit_metadata_change(
+            await _submit_config_change(
                 client,
                 "add_parser",
                 filename=parser_name,
@@ -90,7 +62,7 @@ async def _exercise_splunk_metadata_tools(mcp_endpoint: str, splunk) -> None:
             )
             parser_added = True
 
-            await _submit_metadata_change(
+            await _submit_config_change(
                 client, "set_splunk_metadata", entries=expected_entries
             )
 
@@ -123,24 +95,24 @@ async def _exercise_splunk_metadata_tools(mcp_endpoint: str, splunk) -> None:
             )
             assert result_count == 1
 
-            await _submit_metadata_change(client, "delete_splunk_metadata")
+            await _submit_config_change(client, "delete_splunk_metadata")
 
             cleared = await _call_tool(client, "get_splunk_metadata")
             assert cleared["entries"] == []
         finally:
             try:
                 if parser_added:
-                    await _submit_metadata_change(
+                    await _submit_config_change(
                         client, "delete_parser", name=parser_name
                     )
             finally:
                 # set_splunk_metadata is a full replacement, so restore live state.
                 if original_entries:
-                    await _submit_metadata_change(
+                    await _submit_config_change(
                         client, "set_splunk_metadata", entries=original_entries
                     )
                 else:
-                    await _submit_metadata_change(client, "delete_splunk_metadata")
+                    await _submit_config_change(client, "delete_splunk_metadata")
 
             restored = await _call_tool(client, "get_splunk_metadata")
             assert restored["entries"] == original_entries
