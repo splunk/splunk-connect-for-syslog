@@ -16,7 +16,7 @@
 #work.  If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 
-ARG SYSLOGNG_VERSION=4.28.0@sha256:3785379a20f884e6173c0e3e036e8215a488a5c4ec9cba6641049695e2271886
+ARG SYSLOGNG_VERSION=4.29.0@sha256:40a965250acf4bd45a3ff2b2621a1751ee832e47f359e871508f1cefd0b227a3
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN apk add -U --upgrade --no-cache \
