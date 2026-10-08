@@ -13,6 +13,8 @@ services:
     build:
       context: ..
       dockerfile: package/Dockerfile
+    tmpfs:
+      - /opt/sc4s
     hostname: sc4s
     # command: -det
     ports:
