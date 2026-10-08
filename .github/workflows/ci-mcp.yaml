@@ -30,6 +30,7 @@ on:
       - "next*"
       - "feat/mcp-feature-branch"
       - "feat/mcp-improvments-to-docs"
+      - "feat/mcp-integration-tests"
 
 jobs:
   meta:
@@ -210,8 +211,10 @@ jobs:
         run: |
           python -m pip install poetry
           poetry install
-      - name: Run MCP integration test
-        run: poetry run pytest tests/test_mcp_integration.py -v
+      - name: Run MCP integration tests
+        env:
+          SC4S_DEBUG_CONTAINER: "no"
+        run: poetry run pytest tests/mcp_integration_tests -v
 
   release:
     name: Release
