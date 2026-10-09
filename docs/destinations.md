@@ -204,8 +204,8 @@ application sc4s-lp-cisco_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other] {
 
 With this configuration, Cisco events are sent to both destinations: the default HEC uses default index, while the OTHER HEC uses `cisco_alt_index`. Do mind that this index may still be overriden later (for example by metadata.csv) so it may be necessary to use a postfilter instead.
 
-!!! note "Note" 
-    Placeholder note for possible confilcts like metadata.csv!
+!!! warning "Warning"
+    Index overrides in `splunk_metadata.csv` are applied after the selector and apply to every destination. For sources with an index override in `splunk_metadata.csv`, the alternate destination receives the index from `splunk_metadata.csv` instead of `cisco_alt_index`.
 
 # Send events to MDL federated indexes (Experimental)
 
@@ -251,7 +251,10 @@ Use the SC4S index as `<name>`. For example, events that SC4S sends to `netfw` a
 
 3. Restart SC4S.
 
-SC4S now adds the `~.federated.` prefix to the index of every event it sends to the MDL destination. The filter excludes SC4S internal events, such as metrics and SC4S logs, so they keep their original indexes, for example `_metrics`. Without the filter, Splunk silently drops SC4S metrics sent to a renamed index.
+SC4S now adds the `~.federated.` prefix to the index of every event it sends to the MDL destination. The filter excludes SC4S internal events, such as metrics and SC4S logs, so they keep their original indexes, for example `_metrics`.
+
+!!! warning "Warning"
+    Index overrides in `splunk_metadata.csv` are applied after this configuration and apply to every destination. For sources with an index override, the MDL destination receives the index from `splunk_metadata.csv` without the `~.federated.` prefix. If that index does not exist on the MDL side, Splunk drops these events without an error.
 
 ## Send only selected sources to MDL
 
@@ -267,11 +270,6 @@ application sc4s-lp_fmt_mdl[sc4s-lp-dest-select-d_hec_fmt_mdl] {
 };
 ```
 
-## Splunk requirements
-
-* Ingest Processor can route these events with an index partition, for example `index equals "~.federated.netfw"`, or with a sourcetype partition. The index partition matches even though no index with that name exists in Splunk.
-* Leave "Selected Indexes" empty on the MDL HEC token. If the token is restricted to selected indexes, HEC rejects `~.federated.*` indexes with a `400` error. SC4S does not retry events that HEC rejects with `400`, and the other events after the rejected one in the same batch are lost too.
-* An index named `~.federated.<name>` cannot exist in Splunk, so events that are not routed elsewhere are stored in the `lastChanceIndex`. If no `lastChanceIndex` is configured, HEC still accepts the events, but Splunk drops them. Splunk logs a warning in `splunkd.log` only the first time this happens for each index.
 
 # Advanced topic: Configure filtered alternate destinations 
 
