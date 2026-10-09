@@ -8358,10 +8358,64 @@ Compression affects the content but does not affect the HTTP headers. Enable bat
 <span class="p">};</span>
 </code></pre></div>
 <p>With this configuration, Cisco events are sent to both destinations: the default HEC uses default index, while the OTHER HEC uses <code>cisco_alt_index</code>. Do mind that this index may still be overriden later (for example by metadata.csv) so it may be necessary to use a postfilter instead.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The index override in the selector applies only to the alternate destination. The default destination&rsquo;s metadata is not affected.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Index overrides in <code>splunk_metadata.csv</code> are applied after the selector and apply to every destination. For sources with an index override in <code>splunk_metadata.csv</code>, the alternate destination receives the index from <code>splunk_metadata.csv</code> instead of <code>cisco_alt_index</code>.</p>
 </div>
+<h1 id="send-events-to-mdl-federated-indexes-experimental">Send events to MDL federated indexes (Experimental)<a class="headerlink" href="#send-events-to-mdl-federated-indexes-experimental" title="Permanent link">&para;</a></h1>
+<p>MDL federated index destinations are named <code>~.federated.&lt;name&gt;</code>. SC4S does not validate index names, so it can send events to these destinations without any code changes. To do this, add a HEC destination for MDL and rewrite the index for that destination only. The default destination keeps using the standard SC4S indexes.</p>
+<h2 id="index-naming">Index naming<a class="headerlink" href="#index-naming" title="Permanent link">&para;</a></h2>
+<p>Use the SC4S index as <code>&lt;name&gt;</code>. For example, events that SC4S sends to <code>netfw</code> are sent to <code>~.federated.netfw</code> on the MDL destination. This keeps the index categories SC4S already uses. For the list of default indexes, see <a href="../gettingstarted/getting-started-splunk-setup/#step-1-create-indexes-within-splunk">Create indexes within Splunk</a>.</p>
+<h2 id="configure-the-mdl-destination">Configure the MDL destination<a class="headerlink" href="#configure-the-mdl-destination" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p>Add the MDL HEC destination to your <code>env_file</code>. With <code>GLOBAL</code> mode, SC4S sends every event to both the default destination and the MDL destination.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">#env_file</span>
+<span class="nv">SC4S_DEST_SPLUNK_HEC_MDL_URL</span><span class="o">=</span>https://mdl-hec.example.com:8088
+<span class="nv">SC4S_DEST_SPLUNK_HEC_MDL_TOKEN</span><span class="o">=</span>&lt;MDL<span class="w"> </span>HEC<span class="w"> </span>token&gt;
+<span class="nv">SC4S_DEST_SPLUNK_HEC_MDL_TLS_VERIFY</span><span class="o">=</span>no
+<span class="nv">SC4S_DEST_SPLUNK_HEC_MDL_MODE</span><span class="o">=</span>GLOBAL
+</code></pre></div>
+<p><code>MDL</code> is the destination ID. SC4S names the destination <code>d_hec_fmt_&lt;id&gt;</code> in lowercase, which here is <code>d_hec_fmt_mdl</code>. If you choose a different ID, change <code>d_hec_fmt_mdl</code> in the next step to match.</p>
+</li>
+<li>
+<p>Create the following configuration file:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#filename: /opt/sc4s/local/config/app_parsers/app-dest-mdl_federated.conf</span>
+<span class="n">block</span><span class="w"> </span><span class="n">parser</span><span class="w"> </span><span class="n">sc4s_dest_mdl_parser</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">channel</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewrite</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">set</span><span class="p">(</span><span class="s">"~.federated.${.splunk.index}"</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">(</span><span class="s">".splunk.index"</span><span class="p">));</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp_fmt_mdl</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_hec_fmt_mdl</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">not</span><span class="w"> </span><span class="p">(</span><span class="err">'</span><span class="n">splunk</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="err">'</span><span class="n">sc4s</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_product}"</span><span class="p">)</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">sc4s_dest_mdl_parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div>
+</li>
+<li>
+<p>Restart SC4S.</p>
+</li>
+</ol>
+<p>SC4S now adds the <code>~.federated.</code> prefix to the index of every event it sends to the MDL destination. The filter excludes SC4S internal events, such as metrics and SC4S logs, so they keep their original indexes, for example <code>_metrics</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Index overrides in <code>splunk_metadata.csv</code> are applied after this configuration and apply to every destination. For sources with an index override, the MDL destination receives the index from <code>splunk_metadata.csv</code> without the <code>~.federated.</code> prefix. If that index does not exist on the MDL side, Splunk drops these events without an error.</p>
+</div>
+<h2 id="send-only-selected-sources-to-mdl">Send only selected sources to MDL<a class="headerlink" href="#send-only-selected-sources-to-mdl" title="Permanent link">&para;</a></h2>
+<p>For a partial rollout, set <code>SC4S_DEST_SPLUNK_HEC_MDL_MODE=SELECT</code> and replace the filter in the <code>sc4s-lp_fmt_mdl</code> application with one that matches the sources you want to send. Only events that match the filter are sent to the MDL destination. All other events, including SC4S internal events, are sent only to the default destination.</p>
+<div class="highlight"><pre><span></span><code><span class="n">application</span><span class="w"> </span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp_fmt_mdl</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">lp</span><span class="o">-</span><span class="n">dest</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="n">d_hec_fmt_mdl</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="err">'</span><span class="n">cisco</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_vendor}"</span>
+<span class="w">        </span><span class="n">and</span><span class="w"> </span><span class="err">'</span><span class="n">asa</span><span class="err">'</span><span class="w"> </span><span class="n">eq</span><span class="w"> </span><span class="s">"${fields.sc4s_product}"</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">sc4s_dest_mdl_parser</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div>
 <h1 id="advanced-topic-configure-filtered-alternate-destinations">Advanced topic: Configure filtered alternate destinations<a class="headerlink" href="#advanced-topic-configure-filtered-alternate-destinations" title="Permanent link">&para;</a></h1>
 <p>You may require more granularity for a specific data source. For example, you may want to send all Cisco ASA debug traffic to Cisco Prime for analysis. To accommodate this, filtered alternate destinations let you supply a filter to redirect a portion of a source&rsquo;s traffic to a list of alternate destinations and, optionally, prevent matching events from being sent to Splunk. You configure this using environment variables:</p>
 <table>
