@@ -1,9 +1,10 @@
 from unittest.mock import patch
 import os
 import pytest
+from flask import Flask
 
 from package.sbin.healthcheck import (
-    app,
+    healthcheck_bp,
     str_to_bool,
     check_syslog_ng_health,
     subprocess,
@@ -176,6 +177,8 @@ def client():
     """
     Pytest fixture that provides a test client for the Flask application.
     """
+    app = Flask(__name__)
+    app.register_blueprint(healthcheck_bp)
     with app.test_client() as client:
         yield client
 

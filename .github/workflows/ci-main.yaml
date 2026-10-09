@@ -28,6 +28,13 @@ on:
       - "next*"
 
 jobs:
+  mcp:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/ci-mcp.yaml
+    permissions:
+      contents: write
+      packages: write
+
   meta:
     runs-on: ubuntu-26.04
     outputs:
@@ -144,10 +151,8 @@ jobs:
           context: .
           provenance: false
           file: package/Dockerfile
-          #platforms: linux/amd64,linux/arm64
           platforms: linux/amd64,linux/arm64
           push: true
-          #tags: ${{ needs.meta.outputs.container_tags }}
           tags: ${{ needs.meta.outputs.container_base }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
@@ -215,6 +220,7 @@ jobs:
           - 6002:6002
           - 9000:9000
         env:
+          SC4S_API_MANAGEMENT_ENABLED: "true"
           SC4S_DEST_SPLUNK_HEC_DEFAULT_URL: https://splunk:8088
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN: 70b6ae71-76b3-4c38-9597-0c5b37ad9630
           SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY: "no"
@@ -479,14 +485,16 @@ jobs:
         run: sleep 45
       - name: Check eBPF programs loaded
         run: poetry run pytest tests/feature-tests/test_ebpf_runtime_check.py -v
-  
+
   release:
     name: Release
+    if: github.event_name == 'push'
     runs-on: ubuntu-26.04
     concurrency:
       group: release-${{ github.ref_name }}
       cancel-in-progress: false
     needs:
+      - mcp
       - meta
       - build_action
       - test-container
