@@ -113,3 +113,44 @@ def test_aruba_clearpass_class(
     record_property("message", message)
 
     assert result_count == 1
+
+
+# RFC5424 format in ClearPass 6.11 
+test_data_rfc5424 = [
+    (
+        '<135>1 {{ isodate }} {{ host }} ClearPass 25639 120079-1-0 [timeQuality tzKnown="1"][origin swVersion="6.11.12.262976" software="PolicyManager" ip="10.0.0.1" enterpriseId="1.3.6.1.4.1.14823"][clearPass@14823 eventId="3057" Common.Auth-Type="" Common.NAS-Name="SW-01" Common.Service="IIG NAD Radius Tracking" Common.NAS-IP-Address="10.0.0.6" Common.Source="RADIUS" Common.Connection-Status="Unknown" Common.Enforcement-Profiles="[Allow Access Profile\\]" RADIUS.Auth-Source="Local:localhost" RADIUS.Session-Log-Timestamp="2026-09-22 06:04:23.724+00" Common.Login-Status="ACCEPT" Common.Roles="[Other\\], [User Authenticated\\]" CppmNode.CPPM-Node="10.0.0.1" Common.Request-Timestamp="2026-09-22 06:04:23.724+00" RADIUS.Auth-Method="PAP" Common.Session-Log-Timestamp="2026-09-22 06:04:23.722+00" Common.Username="radius-tracking-user" Common.Error-Code="0"]',
+        "radius-session",
+    ),
+]
+
+
+@pytest.mark.addons("aruba")
+@pytest.mark.parametrize("event", test_data_rfc5424)
+def test_aruba_clearpass_rfc5424(
+    record_property, setup_splunk, setup_sc4s, get_host_key, event
+):
+    msg, sc4s_class = event
+    host = "aruba-cp-" + get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, date, _, _, epoch = time_operations(dt)
+    isodate = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    epoch = epoch[:-3]
+
+    mt = env.from_string(msg + "\n")
+    message = mt.render(host=host, isodate=isodate)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="aruba:clearpass" sc4s_class={{sc4s_class}}'
+    )
+    search = st.render(epoch=epoch, host=host, sc4s_class=sc4s_class)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
