@@ -28,6 +28,13 @@ on:
       - "next*"
 
 jobs:
+  mcp:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/ci-mcp.yaml
+    permissions:
+      contents: write
+      packages: write
+
   meta:
     runs-on: ubuntu-26.04
     outputs:
@@ -481,11 +488,13 @@ jobs:
 
   release:
     name: Release
+    if: github.event_name == 'push'
     runs-on: ubuntu-26.04
     concurrency:
       group: release-${{ github.ref_name }}
       cancel-in-progress: false
     needs:
+      - mcp
       - meta
       - build_action
       - test-container
