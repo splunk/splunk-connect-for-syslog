@@ -225,6 +225,7 @@ Custom indexes set in `splunk_metadata.csv` get the same prefix. For example, `c
     #env_file
     SC4S_DEST_SPLUNK_HEC_MDL_URL=https://mdl-hec.example.com:8088
     SC4S_DEST_SPLUNK_HEC_MDL_TOKEN=<MDL HEC token>
+    SC4S_DEST_SPLUNK_HEC_MDL_TLS_VERIFY=no
     SC4S_DEST_SPLUNK_HEC_MDL_MODE=GLOBAL
     ```
 
@@ -234,50 +235,22 @@ Custom indexes set in `splunk_metadata.csv` get the same prefix. For example, `c
 
     ```c
     #filename: /opt/sc4s/local/config/app_parsers/app-dest-mdl_federated.conf
-    block parser app-dest-mdl-mark() {
+    block parser sc4s_dest_mdl_parser() {
         channel {
             rewrite {
-                set("yes", value(".sc4s.mdl_federated"));
+                    set("~.federated.${.splunk.index}", value(".splunk.index"));
             };
         };
-    };
-    application app-dest-mdl-mark[sc4s-lp-dest-select-d_hec_fmt_mdl] {
-        parser { app-dest-mdl-mark(); };
     };
 
-    block parser app-finalfilter-mdl_federated_index() {
-        channel {
-            rewrite {
-                set("~.federated.${.splunk.index}", value(".splunk.index"));
-            };
-        };
-    };
-    application app-finalfilter-mdl_federated_index[sc4s-finalfilter] {
-        filter {
-            "${.sc4s.mdl_federated}" eq "yes"
-            and not ('splunk' eq "${fields.sc4s_vendor}" and 'sc4s' eq "${fields.sc4s_product}")
-        };
-        parser { app-finalfilter-mdl_federated_index(); };
+    application sc4s-lp_fmt_mdl[sc4s-lp-dest-select-d_hec_fmt_mdl] {
+        parser { sc4s_dest_mdl_parser(); };
     };
     ```
 
 3. Restart SC4S.
 
-The configuration has two parts:
-
-* `app-dest-mdl-mark` marks events on their way to the MDL destination. Each destination processes its own copy of the event, so the mark does not affect the default destination.
-* `app-finalfilter-mdl_federated_index` adds the `~.federated.` prefix to marked events. It runs last, after `splunk_metadata.csv` overrides and vendor-specific formatting. SC4S internal events, such as metrics and SC4S logs, are excluded and keep their original indexes.
-
-With this configuration, events are indexed as follows:
-
-| Event | Default destination | MDL destination |
-|-------|---------------------|-----------------|
-| Cisco ASA | `netfw` | `~.federated.netfw` |
-| Cisco ASA with `cisco_asa,index,custom_fw` in `splunk_metadata.csv` | `custom_fw` | `~.federated.custom_fw` |
-| SC4S metrics | `_metrics` | `_metrics` |
-
-!!! warning "Warning"
-    Do not rewrite the index in a `sc4s-lp-dest-format-d_hec_fmt_mdl` application. That hook runs before `splunk_metadata.csv` is applied, so a csv index override replaces the federated index. A destination-specific format application also replaces the vendor-specific HEC formatting for that destination. For example, BeyondTrust SRA events would no longer be sent as JSON.
+The configuration will now add the `~.federated.` prefix to the events.
 
 !!! note "Note"
     `sc4s-finalfilter` applies only the first application whose filter matches an event. If you already use `sc4s-finalfilter` applications, make sure their filters do not match the same events as `app-finalfilter-mdl_federated_index`.

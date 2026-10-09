@@ -4,7 +4,7 @@
 ### MDL federated indexes
 SC4S can send events to MDL federated index destinations named `~.federated.<name>`. This uses an additional HEC destination and doesn't require any SC4S code changes.
 See [Send events to MDL federated indexes](destinations.md#send-events-to-mdl-federated-indexes-experimental) for the configuration.
-This configuration is in an experimental phase and should be treated as such - it's likely it will be changed / improved in the future.
+This configuration is in an experimental phase and should be treated as such.
 
 ## > 3.46.0
 ### ECS/Fargate and GKE
