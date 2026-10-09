@@ -1,11 +1,9 @@
 from fastmcp.prompts import Message
 
-from pathlib import Path
-
 from app import mcp, REPO_ROOT
-from utils.file_utils import read_if_exists, read_dir_markdown
+from utils.file_utils import read_dir_markdown
 
-KNOWLEDGE_BASE = Path(__file__).resolve().parent.parent / "knowledge_base"
+PARSER_CREATOR_DIR = REPO_ROOT / "skills" / "parser-creator"
 
 
 @mcp.prompt(
@@ -17,23 +15,29 @@ def create_parser_prompt(
     product: str,
     sample_logs: str,
 ) -> list[Message]:
-    knowledge = read_if_exists(KNOWLEDGE_BASE / "create_parser_prompt_knowledge.md")
+    sections = []
+    for filename in ("SKILL.md", "parser-guide.md"):
+        content = (PARSER_CREATOR_DIR / filename).read_text(encoding="utf-8")
+        if not content.strip():
+            raise RuntimeError(f"Parser creation knowledge is empty: {filename}")
+        sections.append(f"### {filename}\n\n{content}")
+    knowledge = "\n\n".join(sections)
 
     return [
-        Message(
-            f"""You are an SC4S parser developer. Create a syslog-ng parser for:
+        Message(f"""You are an SC4S parser developer. Create a syslog-ng parser for:
 - Vendor: {vendor}
 - Product: {product}
 
 ## Project Knowledge (FOLLOW THESE CONVENTIONS EXACTLY)
+
+The parser-creator workflow and its referenced parser guide are embedded below.
 
 {knowledge}
 
 ## Sample Logs
 
 {sample_logs}
-"""
-        ),
+"""),
     ]
 
 
@@ -45,8 +49,7 @@ def troubleshoot_prompt(symptom: str) -> list[Message]:
     ts_content = read_dir_markdown(REPO_ROOT / "docs" / "troubleshooting")
 
     return [
-        Message(
-            f"""You are an SC4S troubleshooting expert.
+        Message(f"""You are an SC4S troubleshooting expert.
 
 ## Problem Description
 {symptom}
@@ -61,6 +64,5 @@ def troubleshoot_prompt(symptom: str) -> list[Message]:
 4. Based on findings, suggest specific fixes.
 5. If config changes are needed, use `set_env` to apply them.
 
-Always explain your reasoning before making changes."""
-        ),
+Always explain your reasoning before making changes."""),
     ]
