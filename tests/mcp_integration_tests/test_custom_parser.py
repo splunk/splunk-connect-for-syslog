@@ -72,8 +72,7 @@ async def _exercise_custom_parser_tools(mcp_endpoint: str, splunk) -> None:
                 f'search index=main "{marker}" host="{hostname}" '
                 'sourcetype="sc4s:api:parser-smoke"'
             )
-            result_count, _ = await asyncio.to_thread(
-                splunk_single,
+            result_count, _ = splunk_single(
                 splunk,
                 search,
                 attempt_limit=20,
