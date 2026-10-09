@@ -17,7 +17,6 @@ from tls import (
     tls_is_enabled,
 )
 
-
 RSA_PUBLIC_EXPONENT = 65537
 RSA_KEY_SIZE_BITS = 2048
 
@@ -26,7 +25,10 @@ RSA_KEY_SIZE_BITS = 2048
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _write_key_cert_to_file(tmp_path, cert: x509.Certificate, key, password: bytes | None = None):
+
+def _write_key_cert_to_file(
+    tmp_path, cert: x509.Certificate, key, password: bytes | None = None
+):
     cert_path = tmp_path / "cert.pem"
     key_path = tmp_path / "key.pem"
 
@@ -91,7 +93,9 @@ def key_cert_pair(tmp_path):
 def encrypted_key_cert_pair(tmp_path):
     """Same as ``key_cert_pair`` but the key is encrypted with a passphrase."""
     key, cert = _build_key_and_cert()
-    cert_path, key_path = _write_key_cert_to_file(tmp_path, cert, key, password=b"unit-test-pw")
+    cert_path, key_path = _write_key_cert_to_file(
+        tmp_path, cert, key, password=b"unit-test-pw"
+    )
     return cert_path, key_path, "unit-test-pw"
 
 
@@ -121,11 +125,12 @@ def test_build_kwargs_returns_dict_when_both_set(monkeypatch, key_cert_pair):
     assert kwargs == {
         "certfile": cert_path,
         "keyfile": key_path,
-        "keyfile_password": None,
     }
 
 
-def test_build_kwargs_passes_password_when_set(monkeypatch, encrypted_key_cert_pair):
+def test_build_kwargs_only_returns_gunicorn_settings(
+    monkeypatch, encrypted_key_cert_pair
+):
     cert_path, key_path, password = encrypted_key_cert_pair
     monkeypatch.setenv(TLS_CERT_ENV, cert_path)
     monkeypatch.setenv(TLS_KEY_ENV, key_path)
@@ -133,9 +138,8 @@ def test_build_kwargs_passes_password_when_set(monkeypatch, encrypted_key_cert_p
 
     kwargs = build_gunicorn_ssl_kwargs()
 
-    assert kwargs["certfile"] == cert_path
-    assert kwargs["keyfile"] == key_path
-    assert kwargs["keyfile_password"] == password
+    # The password is read by gunicorn_config.ssl_context, not Config.set.
+    assert kwargs == {"certfile": cert_path, "keyfile": key_path}
 
 
 def test_build_kwargs_raises_when_only_cert_set(monkeypatch, key_cert_pair):

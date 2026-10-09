@@ -30,11 +30,12 @@ def build_gunicorn_ssl_kwargs() -> dict[str, Any]:
 
     Returns an empty dict when TLS is disabled (both env vars unset or blank).
     Raises :class:`TlsConfigError` when exactly one of cert/key is set.
-    The returned dict uses Gunicorn's ``certfile`` / ``keyfile`` / ``keyfile_password`` keys.
+    The returned dict uses Gunicorn's ``certfile`` / ``keyfile`` settings.
+    The optional key password is handled by the ``ssl_context`` hook in
+    ``gunicorn_config`` because Gunicorn has no password setting.
     """
     cert_path = (os.environ.get(TLS_CERT_ENV) or "").strip()
     key_path = (os.environ.get(TLS_KEY_ENV) or "").strip()
-    password = os.environ.get(TLS_KEY_PASSWORD_ENV)
 
     if not cert_path and not key_path:
         return {}
@@ -50,5 +51,4 @@ def build_gunicorn_ssl_kwargs() -> dict[str, Any]:
     return {
         "certfile": cert_path,
         "keyfile": key_path,
-        "keyfile_password": password,
     }
