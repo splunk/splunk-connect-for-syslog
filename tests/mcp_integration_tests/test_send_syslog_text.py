@@ -35,8 +35,7 @@ async def _exercise_send_syslog_text(mcp_endpoint: str, splunk) -> None:
         f'search index=osnix "{marker}" host="{hostname}" '
         'sourcetype="nix:syslog"'
     )
-    result_count, _ = await asyncio.to_thread(
-        splunk_single,
+    result_count, _ = splunk_single(
         splunk,
         search,
         attempt_limit=20,
