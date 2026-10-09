@@ -1,5 +1,11 @@
 # Current experimental features
 
+## > 3.47.0
+### MDL federated indexes
+SC4S can send events to MDL federated index destinations named `~.federated.<name>`. This uses an additional HEC destination and doesn't require any SC4S code changes.
+See [Send events to MDL federated indexes](destinations.md#send-events-to-mdl-federated-indexes-experimental) for the configuration.
+This configuration is in an experimental phase and should be treated as such.
+
 ## > 3.46.0
 ### ECS/Fargate and GKE
 SC4S can now be deployed on AWS ECS/Fargate and Google Kubernetes Engine (GKE). 
