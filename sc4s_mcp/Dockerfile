@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir poetry==2.2.1 && \
 
 COPY sc4s_mcp/pyproject.toml sc4s_mcp/poetry.lock* ./
 RUN poetry install --no-interaction --no-ansi --only main \
-    && .venv/bin/python -m pip install --no-cache-dir --upgrade pip==26.1
+    && .venv/bin/python -m pip install --no-cache-dir --upgrade pip==26.2.1
 
 FROM python:3.14-alpine3.24
 
