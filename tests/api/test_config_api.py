@@ -151,11 +151,19 @@ def test_add_parser_rejects_unsafe_filename(
     assert list((ctx_dir / "parsers").iterdir()) == []
 
 
-@pytest.mark.parametrize("method", ["get", "delete"])
 @pytest.mark.parametrize("name", ["..", r"..\outside.conf", "parser name.conf"])
 @patch("config_api.submit_job")
-def test_parser_routes_reject_unsafe_filename(mock_submit, client, method, name):
-    response = getattr(client, method)(f"/config/parser/{name}")
+def test_get_parser_rejects_unsafe_filename(mock_submit, client, name):
+    response = client.get(f"/config/parser/{name}")
+
+    assert response.status_code == 400
+    mock_submit.assert_not_called()
+
+
+@pytest.mark.parametrize("name", ["..", r"..\outside.conf", "parser name.conf"])
+@patch("config_api.submit_job")
+def test_delete_parser_rejects_unsafe_filename(mock_submit, client, name):
+    response = client.delete(f"/config/parser/{name}")
 
     assert response.status_code == 400
     mock_submit.assert_not_called()
