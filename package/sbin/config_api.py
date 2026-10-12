@@ -2,6 +2,7 @@ import logging
 
 from flask_wtf.csrf import CSRFProtect
 from flask import Blueprint, jsonify, request
+from werkzeug.utils import secure_filename
 
 from constants import ENV_FILE, PARSERS_DIR
 from job_api import submit_job
@@ -11,6 +12,20 @@ logger = logging.getLogger(__name__)
 
 config_bp = Blueprint("config", __name__)
 csrf = CSRFProtect()
+
+
+def _parser_path(name):
+    """Accept only unchanged, safe filenames within the parser directory."""
+    if not name or not name.endswith(".conf") or secure_filename(name) != name:
+        raise ValueError("invalid parser filename")
+
+    parser_path = PARSERS_DIR / name
+    if (
+        parser_path.is_symlink()
+        or parser_path.resolve().parent != PARSERS_DIR.resolve()
+    ):
+        raise ValueError("invalid parser path")
+    return parser_path
 
 
 @config_bp.route("/config/env", methods=["GET"])
@@ -61,7 +76,10 @@ def add_parser():
     if not file.filename or not file.filename.endswith(".conf"):
         return jsonify({"status": "error", "message": "file must be a .conf file"}), 400
 
-    parser_path = PARSERS_DIR / file.filename
+    try:
+        parser_path = _parser_path(file.filename)
+    except ValueError as error:
+        return jsonify({"status": "error", "message": str(error)}), 400
     content = file.read().decode("utf-8")
 
     def apply_parser():
@@ -76,7 +94,10 @@ def get_parser(name):
     if not name.endswith(".conf"):
         name += ".conf"
 
-    parser_path = PARSERS_DIR / name
+    try:
+        parser_path = _parser_path(name)
+    except ValueError as error:
+        return jsonify({"status": "error", "message": str(error)}), 400
     if not parser_path.exists():
         return jsonify({"status": "error", "message": "parser not found"}), 404
 
@@ -97,7 +118,10 @@ def delete_parser(name):
     if not name.endswith(".conf"):
         name += ".conf"
 
-    parser_path = PARSERS_DIR / name
+    try:
+        parser_path = _parser_path(name)
+    except ValueError as error:
+        return jsonify({"status": "error", "message": str(error)}), 400
     if not parser_path.exists():
         return jsonify({"status": "error", "message": "parser not found"}), 404
 
