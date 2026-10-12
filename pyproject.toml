@@ -22,6 +22,7 @@ cryptography = "^50.0.0"
 flask-wtf = "^1.2.2"
 
 [tool.poetry.group.dev.dependencies]
+fastmcp = "^3.2"
 pytest = "^9.0.0"
 pytest-xdist = "^3.0.0"
 jinja2-time = "^0.2.0"
