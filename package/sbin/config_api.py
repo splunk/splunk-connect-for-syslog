@@ -17,14 +17,14 @@ csrf = CSRFProtect()
 def _parser_path(name):
     """Accept only unchanged, safe filenames within the parser directory."""
     if not name or not name.endswith(".conf") or secure_filename(name) != name:
-        raise ValueError("invalid parser filename")
+        raise ValueError(f"invalid parser filename: {name}")
 
     parser_path = PARSERS_DIR / name
     if (
         parser_path.is_symlink()
         or parser_path.resolve().parent != PARSERS_DIR.resolve()
     ):
-        raise ValueError("invalid parser path")
+        raise ValueError(f"invalid parser path: {name}")
     return parser_path
 
 
@@ -73,8 +73,21 @@ def add_parser():
         return jsonify({"status": "error", "message": "no file provided"}), 400
 
     file = request.files["file"]
-    if not file.filename or not file.filename.endswith(".conf"):
-        return jsonify({"status": "error", "message": "file must be a .conf file"}), 400
+    if not file.filename:
+        return (
+            jsonify({"status": "error", "message": "file must be a .conf file"}),
+            400,
+        )
+    if not file.filename.endswith(".conf"):
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": f"file must be a .conf file: {file.filename}",
+                }
+            ),
+            400,
+        )
 
     try:
         parser_path = _parser_path(file.filename)
