@@ -106,16 +106,91 @@ def test_set_env_rollback_on_failure(mock_apply, mock_submit, client, ctx_dir):
 
 @patch("config_api.submit_job", side_effect=lambda work: (work(), 202))
 @patch("config_api.apply_with_rollback")
-def test_add_parser(mock_apply, _mock_submit, client, ctx_dir):
+@pytest.mark.parametrize("filename", ["test.conf", "app-syslog-test_parser.conf"])
+def test_add_parser(mock_apply, _mock_submit, client, ctx_dir, filename):
     resp = client.post(
         "/config/parser",
-        data={"file": (BytesIO(b"block parser test {}"), "test.conf")},
+        data={"file": (BytesIO(b"block parser test {}"), filename)},
         content_type="multipart/form-data",
     )
 
     assert resp.status_code == 202
     assert "parser added successfully" in resp.get_json()["status"]
     mock_apply.assert_called_once()
+    assert list(mock_apply.call_args.args[0]) == [ctx_dir / "parsers" / filename]
+
+
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "../outside.conf",
+        "../../outside.conf",
+        "/tmp/outside.conf",
+        "nested/parser.conf",
+        r"..\outside.conf",
+        "C:\\outside.conf",
+        ".conf",
+        "parser name.conf",
+    ],
+)
+@patch("config_api.submit_job")
+@patch("config_api.apply_with_rollback")
+def test_add_parser_rejects_unsafe_filename(
+    mock_apply, mock_submit, client, ctx_dir, filename
+):
+    response = client.post(
+        "/config/parser",
+        data={"file": (BytesIO(b"block parser test {}"), filename)},
+        content_type="multipart/form-data",
+    )
+
+    assert response.status_code == 400
+    assert "invalid parser filename" in response.get_json()["message"]
+    mock_submit.assert_not_called()
+    mock_apply.assert_not_called()
+    assert list((ctx_dir / "parsers").iterdir()) == []
+
+
+@pytest.mark.parametrize("name", ["..", r"..\outside.conf", "parser name.conf"])
+@patch("config_api.submit_job")
+def test_get_parser_rejects_unsafe_filename(mock_submit, client, name):
+    response = client.get(f"/config/parser/{name}")
+
+    assert response.status_code == 400
+    mock_submit.assert_not_called()
+
+
+@pytest.mark.parametrize("name", ["..", r"..\outside.conf", "parser name.conf"])
+@patch("config_api.submit_job")
+def test_delete_parser_rejects_unsafe_filename(mock_submit, client, name):
+    response = client.delete(f"/config/parser/{name}")
+
+    assert response.status_code == 400
+    mock_submit.assert_not_called()
+
+
+@pytest.mark.parametrize("method", ["post", "get", "delete"])
+@patch("config_api.submit_job")
+def test_parser_routes_reject_symlink(mock_submit, client, ctx_dir, method):
+    outside = ctx_dir / "outside.conf"
+    outside.write_text("original content")
+    parser_path = ctx_dir / "parsers" / "linked.conf"
+    parser_path.symlink_to(outside)
+
+    if method == "post":
+        response = client.post(
+            "/config/parser",
+            data={"file": (BytesIO(b"replacement content"), parser_path.name)},
+            content_type="multipart/form-data",
+        )
+    else:
+        response = getattr(client, method)(f"/config/parser/{parser_path.name}")
+
+    assert response.status_code == 400
+    assert "invalid parser path" in response.get_json()["message"]
+    mock_submit.assert_not_called()
+    assert outside.read_text() == "original content"
+    assert parser_path.is_symlink()
 
 
 def test_add_parser_no_file(client):
