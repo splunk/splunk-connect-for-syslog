@@ -86,6 +86,12 @@ def sc4s_build_config(config: SC4SConfiguratorInput) -> dict:
 
     This tool only generates content. It does not modify a running SC4S
     instance; live changes require the separate get_env and set_env tools.
+
+    Args:
+        config: HEC connection settings and optional input/buffer tuning.
+
+    Returns:
+        Dict with config text and warnings, or error on failure.
     """
     if not _CONFIG_SCRIPT.exists():
         return {"error": f"Configuration script not found at {_CONFIG_SCRIPT}"}
@@ -176,21 +182,36 @@ def sc4s_build_config(config: SC4SConfiguratorInput) -> dict:
 
 @mcp.tool
 def list_vendors() -> list[str]:
-    """Lists all vendors supported by SC4S, based on the directories from known sources page in docs."""
+    """List vendors documented by SC4S.
+
+    Returns:
+        List of vendor directory names.
+    """
     sources_vendor_dir = REPO_ROOT / "docs" / "sources" / "vendor"
     return [d.name for d in sources_vendor_dir.iterdir() if d.is_dir()]
 
 
 @mcp.tool
 def list_all_parsers() -> list[str]:
-    """Lists all parsers, based on the .conf files in addon directory."""
+    """List all bundled addon parser files.
+
+    Returns:
+        Repository-relative .conf paths.
+    """
     addons_dir = REPO_ROOT / "package" / "shared" / "addons"
     return [str(f.relative_to(REPO_ROOT)) for f in addons_dir.rglob("*.conf")]
 
 
 @mcp.tool
 def list_vendor_parsers(vendor: str) -> list[str]:
-    """Lists parsers for given vendor, based on the parsers in addon directory."""
+    """List bundled parsers whose content mentions a vendor.
+
+    Args:
+        vendor: Case-insensitive vendor name
+
+    Returns:
+        Repository-relative .conf paths
+    """
     addons_dir = REPO_ROOT / "package" / "shared" / "addons"
     results = []
     vendor_pattern = re.compile(rf"\b{re.escape(vendor)}\b", re.IGNORECASE)
@@ -208,7 +229,16 @@ def list_vendor_parsers(vendor: str) -> list[str]:
 
 @mcp.tool
 def get_parser(parser_name: str) -> dict:
-    """Get parser content by filename from addon library. Returns a dict with 'found', 'path', and 'content' keys."""
+    """Read a bundled addon parser; use get_custom_parser for deployed parsers.
+
+    Args:
+        parser_name: Exact, case-sensitive name, e.g. app-cisco-cisco_asa.conf.
+            The .conf suffix is optional; paths from listing tools are not accepted.
+
+    Returns:
+        Dict with found=True, repository-relative path and content;
+        otherwise found=False and message.
+    """
     addons_dir = REPO_ROOT / "package" / "shared" / "addons"
     for conf_file in addons_dir.rglob("*.conf"):
         if conf_file.name == parser_name or conf_file.stem == parser_name:
@@ -222,7 +252,14 @@ def get_parser(parser_name: str) -> dict:
 
 @mcp.tool
 def search_docs(query: str) -> list[str]:
-    """Full text search for a pattern in the documentation files within docs/. Returns matching lines with filename and line number."""
+    """Search Markdown documentation under docs/.
+
+    Args:
+        query: Case-insensitive regular expression.
+
+    Returns:
+        List of path:line: text matches, or a regex error string in a list.
+    """
     docs_dir = REPO_ROOT / "docs"
     try:
         pattern = re.compile(query, re.IGNORECASE)
@@ -245,19 +282,38 @@ def search_docs(query: str) -> list[str]:
 
 @mcp.tool
 def sc4s_health() -> dict:
-    """Check the health status of a running SC4S instance."""
+    """Check the running SC4S instance's health.
+
+    Returns:
+        Dict with the health response, or status=error and error details.
+    """
     return _sc4s_request("get", "/health", timeout=10)
 
 
 @mcp.tool
 def get_job_status(job_id: str) -> dict:
-    """Get the current state and result of an asynchronous configuration job."""
+    """Read an asynchronous configuration job's progress.
+
+    Args:
+        job_id: ID returned by a configuration mutation tool.
+
+    Returns:
+        Job dict with status (in_progress, success or failed) and result/error,
+        or status=error if the request fails.
+    """
     return _sc4s_request("get", f"/jobs/{job_id}", timeout=10)
 
 
 @mcp.tool
 def set_env(env_file_content: str) -> dict:
-    """Upload an env_file and return a job ID for polling with get_job_status."""
+    """Replace the entire env_file and restart SC4S asynchronously.
+
+    Args:
+        env_file_content: Complete env_file text.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
+    """
     return _sc4s_request(
         "post",
         "/config/env",
@@ -268,13 +324,25 @@ def set_env(env_file_content: str) -> dict:
 
 @mcp.tool
 def get_env() -> dict:
-    """Read the current env_file from the running SC4S instance."""
+    """Read the running SC4S instance's env_file.
+
+    Returns:
+        Dict with path and content, or status=error and details.
+    """
     return _sc4s_request("get", "/config/env", timeout=10)
 
 
 @mcp.tool
 def add_parser(filename: str, content: str) -> dict:
-    """Upload a parser and return a job ID for polling with get_job_status."""
+    """Add or replace a complete custom parser and restart SC4S asynchronously.
+
+    Args:
+        filename: Parser name; .conf is appended if omitted.
+        content: Complete syslog-ng parser text.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
+    """
     if not filename.endswith(".conf"):
         filename += ".conf"
     return _sc4s_request(
@@ -287,17 +355,35 @@ def add_parser(filename: str, content: str) -> dict:
 
 @mcp.tool
 def delete_parser(name: str) -> dict:
-    """Delete a parser and return a job ID for polling with get_job_status."""
+    """Remove a custom parser and restart SC4S asynchronously.
+
+    Args:
+        name: Deployed parser name, with or without .conf.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
+    """
     return _sc4s_request("delete", f"/config/parser/{name}", timeout=30)
 
 
 @mcp.tool
 def list_custom_parsers() -> dict:
-    """List all custom parsers currently deployed on the running SC4S instance."""
+    """List custom parsers deployed on the running SC4S instance.
+
+    Returns:
+        Dict with parsers, or status=error and details.
+    """
     return _sc4s_request("get", "/config/parsers", timeout=10)
 
 
 @mcp.tool
 def get_custom_parser(name: str) -> dict:
-    """Read the content of a custom parser deployed on the running SC4S instance."""
+    """Read a custom parser deployed on the running SC4S instance.
+
+    Args:
+        name: Deployed parser name, with or without .conf.
+
+    Returns:
+        Dict with name and content, or status=error and details.
+    """
     return _sc4s_request("get", f"/config/parser/{name}", timeout=10)

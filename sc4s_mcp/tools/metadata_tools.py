@@ -13,16 +13,24 @@ CONTEXT_TEMPLATES = REPO_ROOT / "package" / "etc" / "context_templates"
 @mcp.tool
 def get_splunk_metadata() -> dict:
     """Read Splunk metadata overrides from the running SC4S instance.
-    Returns entries from splunk_metadata.csv with key, metadata, and value columns.
-    The 'key' is a vendor_product identifier, 'metadata' is one of: index, source,
-    sourcetype, host, sc4s_template."""
+
+    Returns:
+        Dict with entries (key, metadata, value rows), or status=error and details.
+    """
     return sc4s_request("get", "/config/metadata/splunk", timeout=30)
 
 
 @mcp.tool
 def set_splunk_metadata(entries: list[dict]) -> dict:
-    """Overwrite Splunk metadata and return a job ID for polling.
-    Example: [{"key": "juniper_netscreen", "metadata": "index", "value": "ns_index"}]"""
+    """Replace all Splunk metadata overrides and restart SC4S asynchronously.
+
+    Args:
+        entries: Complete list of key (vendor_product), metadata and value rows.
+            metadata: index, source, sourcetype, host or sc4s_template.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
+    """
     return sc4s_request(
         "post",
         "/config/metadata/splunk",
@@ -33,7 +41,11 @@ def set_splunk_metadata(entries: list[dict]) -> dict:
 
 @mcp.tool
 def delete_splunk_metadata() -> dict:
-    """Clear Splunk metadata and return a job ID for polling."""
+    """Clear all Splunk metadata overrides and restart SC4S asynchronously.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
+    """
     return sc4s_request("delete", "/config/metadata/splunk", timeout=30)
 
 
@@ -45,23 +57,25 @@ def delete_splunk_metadata() -> dict:
 @mcp.tool
 def get_compliance_overrides() -> dict:
     """Read compliance metadata overrides from the running SC4S instance.
-    Returns the syslog-ng filter definitions (conf_content) and CSV rows (csv_content)
-    with filter_name, field_name, and value. These overrides redirect events to different
-    Splunk indexes or add indexed fields based on host, IP, or subnet matching."""
+
+    Returns:
+        Dict with conf_content (filters) and csv_content (filter_name, field_name,
+        value rows), or status=error and details.
+    """
     return sc4s_request("get", "/config/metadata/compliance", timeout=10)
 
 
 @mcp.tool
 def set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
-    """Overwrite compliance metadata and return a job ID for polling.
-    The provided content completely replaces both files. SC4S restarts after applying changes.
+    """Replace both compliance override files and restart SC4S asynchronously.
 
     Args:
-        conf_content: Complete syslog-ng filter definitions, e.g.:
-            'filter f_pci_zone { host("pci-*" type(glob)) or netmask(10.1.0.0/16) };'
-        csv_content: List of dicts with 'filter_name', 'field_name', 'value'. Field names
-            must be .splunk.index, .splunk.source, .splunk.sourcetype, or fields.<name>.
-            Example: [{"filter_name": "f_pci_zone", "field_name": ".splunk.index", "value": "pci_idx"}]
+        conf_content: Complete syslog-ng filter definitions.
+        csv_content: Complete list of filter_name, field_name and value rows.
+            Fields: .splunk.index, .splunk.source, .splunk.sourcetype or fields.<name>.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
     """
     return sc4s_request(
         "post",
@@ -73,5 +87,9 @@ def set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
 
 @mcp.tool
 def delete_compliance_override() -> dict:
-    """Clear compliance metadata and return a job ID for polling."""
+    """Clear both compliance override files and restart SC4S asynchronously.
+
+    Returns:
+        Dict with job_id to poll via get_job_status, or status=error and details.
+    """
     return sc4s_request("delete", "/config/metadata/compliance", timeout=30)
