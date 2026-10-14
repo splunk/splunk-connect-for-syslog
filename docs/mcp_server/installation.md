@@ -67,7 +67,7 @@ The MCP server is configured through environment variables.
 | `SC4S_API_URL`              | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools.                                                                                                                                                                                                                                 |
 | `SC4S_MCP_ALLOWED_SYSLOG_PORTS` | `514,601` | Comma-separated syslog destination ports permitted for event-sending tools. Set to `*` to allow every valid port. The destination host always remains the hostname from `SC4S_API_URL`. |
 | `SC4S_MCP_ALLOWED_HOSTS`     | loopback hosts          | Additional comma-separated MCP server hostnames or IP addresses accepted in the HTTP `Host` header. Provides a defense against DNS rebinding by rejecting requests with unexpected Host values. Specify `host` or `host:port`, without a scheme or path. A value without a port accepts that host on any port. Set to `*` to accept any host and port. `localhost`, `127.0.0.1`, and `[::1]` are always allowed. See [Host and origin validation](#host-and-origin-validation). |
-| `SC4S_MCP_ALLOWED_ORIGINS`   |                         | Comma-separated browser origins accepted by the MCP server, using exact `http://host[:port]` or `https://host[:port]` values. Requests without an `Origin` header, including normal native MCP clients, remain allowed. |
+| `SC4S_MCP_ALLOWED_ORIGINS`   |                         | Comma-separated browser origins accepted by the MCP server, using exact `http://host[:port]` or `https://host[:port]` values. Set to `*` to accept any origin. Requests without an `Origin` header, including normal native MCP clients, remain allowed. |
 | `SC4S_API_TOKEN`            |                         | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
 | `SC4S_API_TOKEN_FILE`       |                         | Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings.                                                                                                                      |
 | `SC4S_API_CA_CERT`          |                         | Path inside the container to a CA certificate used to verify an SC4S API certificate issued by a private CA. |
@@ -192,19 +192,12 @@ For example, if the MCP server runs in a container on EC2 with public IP
 | `https://mcp.example.com:8000/mcp` | `mcp.example.com:8000` |
 
 By default, only `localhost`, `127.0.0.1`, and `[::1]` are accepted.
-A missing, malformed, or unlisted `Host` is rejected with HTTP 421.
 
 To accept any hostname or IP address on any port, set:
 
 ```bash
 -e SC4S_MCP_ALLOWED_HOSTS='*'
 ```
-
-The bare `*` can also appear in a comma-separated list and allows every host,
-regardless of the other entries. This disables the Host allowlist's DNS
-rebinding defense. Missing or malformed `Host` headers are still rejected,
-and Origin validation and bearer-token authentication still apply when
-configured. Partial host patterns such as `*.example.com` are not supported.
 
 Native MCP clients normally omit the `Origin` header and need no
 `SC4S_MCP_ALLOWED_ORIGINS` setting. If a browser-based client connects directly
@@ -217,9 +210,13 @@ client:
 
 Origins include the scheme and, when non-default or explicitly sent, the port.
 For example, `https://browser.example.com` and
-`https://browser.example.com:8443` are different allowed origins. An
-unlisted or malformed `Origin` is rejected with HTTP 403. Wildcard syntax is
-not supported for origins; list each origin explicitly.
+`https://browser.example.com:8443` are different allowed origins.
+
+To allow any Origin set:
+
+```bash
+-e SC4S_MCP_ALLOWED_ORIGINS='*'
+```
 
 The image ships a healthcheck that verifies the `/health` endpoint. Check
 the container status with:

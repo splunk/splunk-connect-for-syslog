@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock
 import pytest
 from fastapi.testclient import TestClient
 from fastmcp import FastMCP
+from starlette.responses import PlainTextResponse
 
 from auth import StaticBearerTokenVerifier
 from server import _build_api
@@ -168,3 +169,16 @@ def test_origin_allowlist_uses_exact_scheme_host_and_port(monkeypatch):
                 "Origin": "https://inspector.example.com",
             },
         ).status_code == 403
+
+
+@pytest.mark.parametrize(
+    "allowed_origins", ["*", "https://inspector.example.com, *"]
+)
+def test_origin_wildcard_allows_startup_and_any_origin(monkeypatch, allowed_origins):
+    with _client(monkeypatch, allowed_origins=allowed_origins) as client:
+        response = client.get(
+            SECURITY_TEST_PATH,
+            headers={"Host": "localhost:8000", "Origin": "null"},
+        )
+
+    assert response.status_code == 200
