@@ -127,7 +127,7 @@ class TransportSecurityMiddleware:
         host: tuple[str, int | None]
     ) -> bool:
         hostname, port = host
-        return any(
+        return ("*", None) in self.allowed_hosts or any(
             hostname == allowed_hostname
             and (allowed_port is None or allowed_port == port)
             for allowed_hostname, allowed_port in self.allowed_hosts
