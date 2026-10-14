@@ -15,7 +15,20 @@ def send_syslog_text(
     framing: Literal["raw", "newline", "octet-counting"] | None = None,
     timeout_seconds: float = 5.0,
 ) -> dict:
-    """Send each non-empty line of raw syslog text to the SC4S API host."""
+    """Send each non-empty syslog line to the host configured by SC4S_API_URL.
+
+    Args:
+        text: Raw syslog events, one per line.
+        protocol: udp (default) or tcp.
+        port: Allowed destination port (default 514).
+        framing: raw for UDP; newline or octet-counting for TCP.
+            Defaults to raw for UDP and newline for TCP.
+        timeout_seconds: Socket timeout, 0.1-30 seconds (default 5).
+
+    Returns:
+        Dict with status (ok/partial), send counts and transport details,
+        or status=error and error details. Sending does not verify ingestion.
+    """
     try:
         return send_text(
             text=text,
