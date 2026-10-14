@@ -3,19 +3,21 @@ FROM python:3.14-alpine3.24 AS builder
 WORKDIR /app
 
 RUN pip install --no-cache-dir poetry==2.4.1 && \
-    poetry config virtualenvs.in-project true
+    poetry config virtualenvs.in-project true && \
+    poetry config virtualenvs.options.no-pip true
 
 COPY sc4s_mcp/pyproject.toml sc4s_mcp/poetry.lock* ./
-RUN poetry install --no-interaction --no-ansi --only main \
-    && .venv/bin/python -m pip install --no-cache-dir --upgrade pip==26.2.1
+RUN poetry install --no-interaction --no-ansi --only main
 
 FROM python:3.14-alpine3.24
 
 ARG VERSION
 
-RUN apk add --no-cache bash ca-certificates
+# Require the Alpine fix for CVE-2026-85091
+RUN apk add --no-cache --upgrade bash ca-certificates 'zlib>=1.3.2-r1'
 
-RUN python -m pip install --no-cache-dir --upgrade pip==26.1
+# Runtime package installation is unnecessary; pip bundles vulnerable libraries.
+RUN python -m pip uninstall --yes pip
 
 RUN addgroup -S -g 10001 mcp && \
     adduser -S -D -u 10001 -G mcp -s /sbin/nologin mcp
