@@ -66,7 +66,7 @@ The MCP server is configured through environment variables.
 | `MCP_LOG_LEVEL`             | `INFO`                  | Logging verbosity. Accepts standard Python log level names: `DEBUG`, `INFO`, `WARNING`, `ERROR`.                                                                                                                                                                                                                             |
 | `SC4S_API_URL`              | `http://localhost:8080` | URL of the SC4S management REST API. The MCP server calls this URL for all management tools.                                                                                                                                                                                                                                 |
 | `SC4S_MCP_ALLOWED_SYSLOG_PORTS` | `514,601` | Comma-separated syslog destination ports permitted for event-sending tools. Set to `*` to allow every valid port. The destination host always remains the hostname from `SC4S_API_URL`. |
-| `SC4S_MCP_ALLOWED_HOSTS`     | loopback hosts          | Additional comma-separated HTTP `Host` values accepted by the MCP server. `localhost`, `127.0.0.1`, and `[::1]` are always allowed. A value without a port accepts that host on any port; include a port to restrict it. Required when clients connect using a non-loopback hostname or address. |
+| `SC4S_MCP_ALLOWED_HOSTS`     | loopback hosts          | Additional comma-separated MCP server hostnames or IP addresses accepted in the HTTP `Host` header. Provides a defense against DNS rebinding by rejecting requests with unexpected Host values. Specify `host` or `host:port`, without a scheme or path. A value without a port accepts that host on any port. `localhost`, `127.0.0.1`, and `[::1]` are always allowed. See [Host and origin validation](#host-and-origin-validation). |
 | `SC4S_MCP_ALLOWED_ORIGINS`   |                         | Comma-separated browser origins accepted by the MCP server, using exact `http://host[:port]` or `https://host[:port]` values. Requests without an `Origin` header, including normal native MCP clients, remain allowed. |
 | `SC4S_API_TOKEN`            |                         | Bearer token sent by the MCP server to the SC4S management REST API in `Authorization: Bearer <token>`. Required when the SC4S API has authentication enabled. See [SC4S API authentication](#sc4s-api-authentication) and [Enabling auth on the SC4S API](../configuration.md#sc4s-management-api-authentication). |
 | `SC4S_API_TOKEN_FILE`       |                         | Path inside the container to a file containing the SC4S API bearer token. Takes precedence over `SC4S_API_TOKEN` when set. Preferred over the env var to avoid the token appearing in process listings.                                                                                                                      |
@@ -175,19 +175,29 @@ Replace `docker` with `podman` when using Podman. The local client connects to
 
 ## Host and origin validation
 
-The HTTP transport validates every request before it reaches `/mcp` or
-`/health`. By default, only the loopback hosts `localhost`, `127.0.0.1`, and
-`[::1]` are accepted. Native MCP clients normally omit the `Origin` header and
-continue to work without additional configuration.
+The HTTP transport checks the `Host` header and, when present, the `Origin`
+header before requests reach `/mcp`.
+`GET /health` is exempt from these checks so health probes can reach it.
 
-For a remote deployment explicitly allow the hostname clients use:
+`SC4S_MCP_ALLOWED_HOSTS` provides a defense against **DNS rebinding attacks**.
+In such an attack, a malicious website changes the DNS records for its hostname
+to point at your MCP server's IP address. `SC4S_MCP_ALLOWED_HOSTS` lists the allowed **MCP server's hostnames or IP addresses**.
 
-```bash
--e SC4S_MCP_ALLOWED_HOSTS=mcp.example.com
-```
+For example, if the MCP server runs in a container on EC2 with public IP
+`203.0.113.10`, configure the server address used by your local MCP client:
 
-Requests with any other `Host` are rejected with HTTP 421. If a browser-based
-client connects directly to the MCP server, also allow its exact origin:
+| Client connection URL | `SC4S_MCP_ALLOWED_HOSTS` value |
+|-----------------------|-------------------------------|
+| `https://203.0.113.10:8000/mcp` | `203.0.113.10:8000` |
+| `https://mcp.example.com:8000/mcp` | `mcp.example.com:8000` |
+
+By default, only `localhost`, `127.0.0.1`, and `[::1]` are accepted.
+A missing, malformed, or unlisted `Host` is rejected with HTTP 421.
+
+Native MCP clients normally omit the `Origin` header and need no
+`SC4S_MCP_ALLOWED_ORIGINS` setting. If a browser-based client connects directly
+to the MCP server, also allow the exact origin of the website running that
+client:
 
 ```bash
 -e SC4S_MCP_ALLOWED_ORIGINS=https://browser.example.com
@@ -258,8 +268,9 @@ Remote connections should use TLS. Set `SC4S_MCP_TLS_CERT` and
 `SC4S_MCP_TLS_KEY` to serve `/mcp` and `/health` over HTTPS. If only one is
 set, the server refuses to start.
 
-For allowing connections from non-loopback hostname or addresses add allowed hosts to `SC4S_MCP_ALLOWED_HOSTS`.
-A value without a port accepts that host on any port; include a port to restrict it.
+When clients connect using a non-loopback server hostname or IP address, add
+that server address to `SC4S_MCP_ALLOWED_HOSTS` as described in
+[Host and origin validation](#host-and-origin-validation).
 
 When both settings are empty, the server uses HTTP. TLS can also be terminated
 by a reverse proxy. In that configuration, publish the container on host
