@@ -1,7 +1,14 @@
+import asyncio
+from unittest.mock import AsyncMock
+
 import pytest
 from fastapi.testclient import TestClient
+from fastmcp import FastMCP
+from starlette.responses import PlainTextResponse
 
+from auth import StaticBearerTokenVerifier
 from server import _build_api
+from transport_security import TransportSecurityMiddleware
 
 
 SECURITY_TEST_PATH = "/openapi.json"
@@ -69,6 +76,22 @@ def test_configured_host_port_does_not_allow_other_ports(monkeypatch):
             == 421
         )
 
+
+@pytest.mark.parametrize("allowed_hosts", ["*", "mcp.example.com:8443, *"])
+@pytest.mark.parametrize(
+    "host",
+    [
+        "other.example.com",
+        "other.example.com:8000",
+        "203.0.113.10:8443",
+        "[2001:db8::10]:9000",
+    ],
+)
+def test_wildcard_host_allowlist_accepts_any_host(monkeypatch, allowed_hosts, host):
+    with _client(monkeypatch, allowed_hosts=allowed_hosts) as client:
+        response = client.get(SECURITY_TEST_PATH, headers={"Host": host})
+
+    assert response.status_code == 200
 
 def test_origin_is_rejected_unless_explicitly_allowed(monkeypatch):
     with _client(monkeypatch) as client:
@@ -146,3 +169,16 @@ def test_origin_allowlist_uses_exact_scheme_host_and_port(monkeypatch):
                 "Origin": "https://inspector.example.com",
             },
         ).status_code == 403
+
+
+@pytest.mark.parametrize(
+    "allowed_origins", ["*", "https://inspector.example.com, *"]
+)
+def test_origin_wildcard_allows_startup_and_any_origin(monkeypatch, allowed_origins):
+    with _client(monkeypatch, allowed_origins=allowed_origins) as client:
+        response = client.get(
+            SECURITY_TEST_PATH,
+            headers={"Host": "localhost:8000", "Origin": "null"},
+        )
+
+    assert response.status_code == 200
