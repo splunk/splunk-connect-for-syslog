@@ -64,6 +64,7 @@ class TransportSecurityMiddleware:
             *DEFAULT_ALLOWED_HOSTS,
             *_parse_csv(os.getenv(ALLOWED_HOSTS_ENV)),
         ]
+        self.allow_any_host = "*" in host_values
         try:
             self.allowed_hosts = tuple(_parse_host(value) for value in host_values)
         except ValueError as exc:
@@ -71,10 +72,13 @@ class TransportSecurityMiddleware:
                 f"Invalid {ALLOWED_HOSTS_ENV}: {exc}"
             ) from exc
 
+        origin_values = _parse_csv(os.getenv(ALLOWED_ORIGINS_ENV))
+        self.allow_any_origin = "*" in origin_values
         try:
             self.allowed_origins = tuple(
                 _parse_origin(value)
-                for value in _parse_csv(os.getenv(ALLOWED_ORIGINS_ENV))
+                for value in origin_values
+                if value != "*"
             )
         except ValueError as exc:
             raise TransportSecurityMiddlewareException(
@@ -92,20 +96,21 @@ class TransportSecurityMiddleware:
             return
 
         headers = Headers(scope=scope)
-        host_header = headers.get("host", "")
-        try:
-            host = _parse_host(host_header)
-        except ValueError:
-            host = None
+        if not self.allow_any_host:
+            host_header = headers.get("host", "")
+            try:
+                host = _parse_host(host_header)
+            except ValueError:
+                host = None
 
-        if host is None or not self._host_allowed(host):
-            logger.warning("MCP HTTP request rejected: disallowed Host %r", host_header)
-            response = PlainTextResponse("Invalid Host header", status_code=421)
-            await response(scope, receive, send)
-            return
+            if host is None or not self._host_allowed(host):
+                logger.warning("MCP HTTP request rejected: disallowed Host %r", host_header)
+                response = PlainTextResponse("Invalid Host header", status_code=421)
+                await response(scope, receive, send)
+                return
 
         origin_header = headers.get("origin")
-        if origin_header:
+        if origin_header and not self.allow_any_origin:
             try:
                 origin = _parse_origin(origin_header)
             except ValueError:
