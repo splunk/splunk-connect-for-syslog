@@ -11,6 +11,14 @@ normalize_hec_url() {
   SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
 }
 
+# Rebuild derived source lists from the current environment before validating
+# ports or generating syslog-ng configuration, including after env_file changes.
+refresh_source_sets() {
+  export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_NOPARSE_PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
+  export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_NOPARSE_PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
+  python3 /source_ports_validator.py
+}
+
 # Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
@@ -241,12 +249,8 @@ then
   echo "hostip.sqlite file deleted at $SC4S_VAR"
 fi
 
-# Create a workable variable with a list of simple log paths, used in port validation script
-export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_NOPARSE_PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
-export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_NOPARSE_PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
-
-# Validate ports
-python3 /source_ports_validator.py
+# Startup preprocessing and syntax checks also need the derived source lists.
+refresh_source_sets
 
 
 # Generate csv with vendor to Splunk index mappings, to be filled with correct index later
@@ -329,6 +333,8 @@ do
     : > /tmp/sc4s_prev_env_keys
     apply_sc4s_defaults
   fi
+
+  refresh_source_sets
 
   echo starting syslog-ng
   if [[ "${SC4S_DEBUG_LOGS}" == "yes" ]]; then

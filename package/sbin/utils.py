@@ -2,6 +2,7 @@ import csv
 import os
 import logging
 from pathlib import Path
+import re
 import subprocess
 import shutil
 import time
@@ -13,6 +14,19 @@ logger = logging.getLogger(__name__)
 
 RESTART_TIMEOUT_SECONDS = 30
 RESTART_POLL_INTERVAL_SECONDS = 0.5
+
+
+def _source_all_set_from_env(env: dict[str, str]) -> str:
+    """Discover active listener sources using the entrypoint's naming rules."""
+    sources = set()
+    for key, value in env.items():
+        if not key.startswith("SC4S_LISTEN_") or not key.endswith("_PORT"):
+            continue
+        if not value or "disabled" in f"{key}={value}":
+            continue
+        source = f"{key.removeprefix('SC4S_LISTEN_')}={value}"
+        sources.add(re.sub(r"_[^_]*(?:_NOPARSE)?_PORT=.*", "", source))
+    return ",".join(sorted(sources)).upper()
 
 
 def build_env_from_file():
@@ -28,6 +42,7 @@ def build_env_from_file():
                     continue
                 key, _, value = line.partition("=")
                 env[key.strip()] = value.strip()
+    env["SOURCE_ALL_SET"] = _source_all_set_from_env(env)
     return env
 
 
