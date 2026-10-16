@@ -13,7 +13,7 @@ from constants import (
     SPLUNK_METADATA_FIELDS,
 )
 from job_api import submit_job
-from utils import apply_with_rollback, read_three_col_csv, reload_syslog_ng
+from utils import apply_with_rollback, read_three_col_csv, restart_syslog_ng
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ def set_splunk_metadata():
     files_to_write = {SPLUNK_METADATA_CSV: buf.getvalue()}
 
     def apply_metadata():
-        apply_with_rollback(files_to_write, reload_syslog_ng)
+        apply_with_rollback(files_to_write, restart_syslog_ng)
         return {"status": "metadata updated successfully", "entries": entries}
 
     return submit_job(apply_metadata)
@@ -90,7 +90,7 @@ def delete_splunk_metadata():
         )
 
     def clear_metadata():
-        apply_with_rollback({SPLUNK_METADATA_CSV: ""}, reload_syslog_ng)
+        apply_with_rollback({SPLUNK_METADATA_CSV: ""}, restart_syslog_ng)
         return {"status": "splunk_metadata.csv cleared successfully"}
 
     return submit_job(clear_metadata)
@@ -185,7 +185,7 @@ def set_compliance():
         files_to_write[COMPLIANCE_CSV] = buf.getvalue()
 
     def apply_compliance():
-        apply_with_rollback(files_to_write, reload_syslog_ng)
+        apply_with_rollback(files_to_write, restart_syslog_ng)
         return {"status": "compliance metadata updated successfully"}
 
     return submit_job(apply_compliance)
@@ -211,7 +211,7 @@ def delete_compliance():
         files_to_write[COMPLIANCE_CSV] = ""
 
     def clear_compliance():
-        apply_with_rollback(files_to_write, reload_syslog_ng)
+        apply_with_rollback(files_to_write, restart_syslog_ng)
         return {"status": "compliance metadata cleared successfully"}
 
     return submit_job(clear_compliance)
