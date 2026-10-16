@@ -9,6 +9,7 @@ import time
 from typing import Callable
 
 from constants import ENV_FILE
+from env_file_parser import read_env_file
 
 logger = logging.getLogger(__name__)
 
@@ -33,15 +34,7 @@ def build_env_from_file():
     """Build environment dict from current env_file."""
     env = os.environ.copy()
     if ENV_FILE.exists():
-        with open(ENV_FILE) as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-                if "=" not in line:
-                    continue
-                key, _, value = line.partition("=")
-                env[key.strip()] = value.strip()
+        env.update(read_env_file(ENV_FILE))
     env["SOURCE_ALL_SET"] = _source_all_set_from_env(env)
     return env
 

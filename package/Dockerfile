@@ -97,6 +97,7 @@ COPY package/shared/context_templates /etc/syslog-ng/context_templates
 COPY package/shared/test_parsers /etc/syslog-ng/test_parsers
 COPY package/shared/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
+COPY package/sbin/env_file_parser.py /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/api.py /
 COPY package/sbin/auth.py /

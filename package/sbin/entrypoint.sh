@@ -293,10 +293,9 @@ fi
 
 # Save initial env_file keys so we can detect removals across syslog-ng restarts.
 # When the env_file is updated (e.g. via MCP) and a variable is removed, we unset it
-# before re-sourcing so it doesn't persist from Docker's initial --env-file or a prior iteration.
+# before loading so it doesn't persist from Docker's initial --env-file or a prior iteration.
 if [[ -f /opt/sc4s/env_file ]]; then
-  grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
-    | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_prev_env_keys
+  python3 /env_file_parser.py /opt/sc4s/env_file --skip-invalid --keys > /tmp/sc4s_prev_env_keys || :
 else
   : > /tmp/sc4s_prev_env_keys
 fi
@@ -308,19 +307,23 @@ do
   # This ensures features can be disabled by simply deleting the line from env_file,
   # even if Docker's --env-file originally set the variable at container start.
   if [[ -f /opt/sc4s/env_file ]]; then
-    grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
-      | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_curr_env_keys
+    if _sc4s_env_values=$(python3 /env_file_parser.py /opt/sc4s/env_file --skip-invalid) &&
+       python3 /env_file_parser.py /opt/sc4s/env_file --skip-invalid --keys > /tmp/sc4s_curr_env_keys; then
 
-    while IFS= read -r key; do
-      unset "$key"
-    done < <(comm -23 /tmp/sc4s_prev_env_keys /tmp/sc4s_curr_env_keys)
+      while IFS= read -r key; do
+        unset "$key"
+      done < <(comm -23 /tmp/sc4s_prev_env_keys /tmp/sc4s_curr_env_keys)
 
-    cp /tmp/sc4s_curr_env_keys /tmp/sc4s_prev_env_keys
+      cp /tmp/sc4s_curr_env_keys /tmp/sc4s_prev_env_keys
 
-    echo "Re-sourcing /opt/sc4s/env_file..."
-    set -a
-    . /opt/sc4s/env_file
-    set +a
+      echo "Loading /opt/sc4s/env_file..."
+      while IFS= read -r _sc4s_env_assignment; do
+        [[ -z "$_sc4s_env_assignment" ]] && continue
+        # Clear Bash integer attributes before assigning a literal value.
+        unset "${_sc4s_env_assignment%%=*}" && export "$_sc4s_env_assignment" ||
+          echo "Warning: cannot load env_file variable ${_sc4s_env_assignment%%=*}; skipping" >&2
+      done <<< "$_sc4s_env_values"
+    fi
 
     apply_sc4s_defaults
     normalize_hec_url
