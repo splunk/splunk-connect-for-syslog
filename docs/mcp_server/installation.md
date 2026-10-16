@@ -49,7 +49,15 @@ ExecStart=/usr/bin/podman run \
         --name SC4S \
         --rm $SC4S_IMAGE
 ```
-3. Reload and restart the systemd service:
+3. If SC4S runs as the non-root `syslog` user (UID/GID `1024`), make the mounted file readable and writable by that user:
+```bash
+sudo chown 1024:1024 /opt/sc4s/env_file
+sudo chmod 600 /opt/sc4s/env_file
+```
+Use the mapped host UID/GID if your container runtime uses user namespace remapping.
+An unreadable file is skipped during startup, but management tools cannot read or update it until permissions are corrected.
+
+4. Reload and restart the systemd service:
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart sc4s
