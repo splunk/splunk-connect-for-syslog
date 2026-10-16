@@ -114,9 +114,11 @@ COPY package/sbin/gunicorn_config.py /
 # Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
 # entrypoint creates/updates at startup, enabling non-root runtimes without
 # breaking the default root runtime.
-RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log /home/syslog \
+# Pre-create /opt/sc4s so non-root management can create env_file backups
+# beside a single-file bind mount.
+RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log /home/syslog /opt/sc4s \
     && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out \
-    /var/log/syslog-ng.err /home/syslog \
+    /var/log/syslog-ng.err /home/syslog /opt/sc4s \
     && chmod -R g+rwX /etc/syslog-ng /var/lib/syslog-ng \
     && chmod g+rw /var/log/syslog-ng.out /var/log/syslog-ng.err
 
