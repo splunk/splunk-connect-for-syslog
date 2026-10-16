@@ -12,9 +12,7 @@ from constants import ENV_FILE
 logger = logging.getLogger(__name__)
 
 RESTART_TIMEOUT_SECONDS = 30
-RELOAD_TIMEOUT_SECONDS = 30
 RESTART_POLL_INTERVAL_SECONDS = 0.5
-RELOAD_POLL_INTERVAL_SECONDS = 0.5
 
 
 def build_env_from_file():
@@ -91,31 +89,6 @@ def restart_syslog_ng():
 
     raise RuntimeError(
         f"syslog-ng restart timed out after {RESTART_TIMEOUT_SECONDS} seconds"
-    )
-
-
-def reload_syslog_ng():
-    """Reload syslog-ng using syslog-ng-ctl reload command, aka send SIGHUP."""
-    result = subprocess.run(
-        ["syslog-ng-ctl", "reload"],
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    if result.returncode != 0:
-        error = result.stderr.strip() or result.stdout.strip()
-        raise RuntimeError(f"syslog-ng reload failed: {error}")
-    deadline = time.monotonic() + RELOAD_TIMEOUT_SECONDS
-    while time.monotonic() < deadline:
-        remaining = deadline - time.monotonic()
-        if _syslog_ng_is_healthy() and remaining > 0:
-            return
-        if remaining <= 0:
-            break
-        time.sleep(min(RELOAD_POLL_INTERVAL_SECONDS, remaining))
-
-    raise RuntimeError(
-        f"syslog-ng reload timed out after {RELOAD_TIMEOUT_SECONDS} seconds"
     )
 
 
