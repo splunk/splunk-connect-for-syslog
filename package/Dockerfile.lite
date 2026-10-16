@@ -123,6 +123,7 @@ COPY package/lite/etc/config.yaml /etc/syslog-ng/config.yaml
 COPY package/shared/addons /etc/syslog-ng/addons
 
 COPY package/sbin/entrypoint.sh /
+COPY package/sbin/env_file_parser.py /
 COPY package/sbin/healthcheck.sh /
 COPY package/sbin/api.py /
 COPY package/sbin/auth.py /
