@@ -356,7 +356,7 @@ def test_add_parser_submits_background_work(mock_apply, mock_submit, client, ctx
     }
     mock_apply.assert_called_once_with(
         {ctx_dir / "parsers" / "test.conf": "block parser test {}"},
-        config_api.reload_syslog_ng,
+        config_api.restart_syslog_ng,
     )
 
 
@@ -373,4 +373,6 @@ def test_delete_parser_submits_background_work(
     assert response.status_code == 202
     work = mock_submit.call_args.args[0]
     assert work() == {"status": "parser deleted successfully"}
-    mock_apply.assert_called_once_with({parser_file: None}, config_api.reload_syslog_ng)
+    mock_apply.assert_called_once_with(
+        {parser_file: None}, config_api.restart_syslog_ng
+    )

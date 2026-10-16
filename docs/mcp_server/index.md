@@ -98,7 +98,7 @@ is not guaranteed.
 Known limitations:
 
 * Management tools require the SC4S management API to be enabled. Applying an
-  `env_file` can restart SC4S, while parser and metadata changes can reload it.
+  changes to SC4S configuration will restart SC4S.
 * Tool schemas, prompts, and plugin workflows may change during the beta.
 
 Beta support is provided by the SC4S community on a best-effort basis. Report

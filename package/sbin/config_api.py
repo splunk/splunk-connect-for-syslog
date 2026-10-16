@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 
 from constants import ENV_FILE, PARSERS_DIR
 from job_api import submit_job
-from utils import apply_with_rollback, restart_syslog_ng, reload_syslog_ng
+from utils import apply_with_rollback, restart_syslog_ng
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +96,7 @@ def add_parser():
     content = file.read().decode("utf-8")
 
     def apply_parser():
-        apply_with_rollback({parser_path: content}, reload_syslog_ng)
+        apply_with_rollback({parser_path: content}, restart_syslog_ng)
         return {"status": "parser added successfully", "path": str(parser_path)}
 
     return submit_job(apply_parser)
@@ -139,7 +139,7 @@ def delete_parser(name):
         return jsonify({"status": "error", "message": "parser not found"}), 404
 
     def remove_parser():
-        apply_with_rollback({parser_path: None}, reload_syslog_ng)
+        apply_with_rollback({parser_path: None}, restart_syslog_ng)
         return {"status": "parser deleted successfully"}
 
     return submit_job(remove_parser)
