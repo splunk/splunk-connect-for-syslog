@@ -193,3 +193,19 @@ jobs:
       - name: Stop MCP container
         if: always()
         run: docker rm --force sc4s-mcp || true
+
+  test-mcp-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+      - name: Install dependencies
+        run: |
+          python -m pip install poetry
+          poetry install
+      - name: Run MCP integration tests
+        env:
+          SC4S_DEBUG_CONTAINER: "no"
+        run: poetry run pytest tests/mcp_integration_tests -v
