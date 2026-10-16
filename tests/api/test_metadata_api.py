@@ -18,12 +18,13 @@ def ctx_dir(tmp_path):
 
 
 @pytest.fixture
-def client():
+def client(management_api_token):
     os.environ["SC4S_API_MANAGEMENT_ENABLED"] = "true"
     import api
 
     importlib.reload(api)
     with api.app.test_client() as client:
+        client.environ_base["HTTP_AUTHORIZATION"] = f"Bearer {management_api_token}"
         yield client
 
 

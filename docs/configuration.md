@@ -34,18 +34,18 @@ By default the management REST API exposes only the `/health` endpoint. The conf
 
 | Variable | Values | Description |
 |----------|--------|-------------|
-| `SC4S_API_MANAGEMENT_ENABLED` | `true`/`1`/`yes`/`y`/`t` to enable; unset or any other value to disable (default) | When unset, only `/health` is registered. All `/config/*` paths return HTTP 404. |
+| `SC4S_API_MANAGEMENT_ENABLED` | `true`/`1`/`yes`/`y`/`t` to enable; unset or any other value to disable (default) | Requires `SC4S_AUTH_TOKEN_FILE` containing a non-empty bearer token. When unset, only `/health` is registered. All `/config/*` paths return HTTP 404. |
 
 !!! note "API authentication"
-    When you enable management endpoints, consider configuring `SC4S_AUTH_TOKEN_FILE` as well – the management endpoints can read and modify the syslog-ng configuration.
+    Management endpoints require bearer-token authentication because they can read and modify the syslog-ng configuration. Set `SC4S_AUTH_TOKEN_FILE` to a readable file containing a non-empty token before enabling `SC4S_API_MANAGEMENT_ENABLED`. The API refuses to start if the token path is missing, the file cannot be read, or its contents are empty or whitespace-only.
 
 ## SC4S management API authentication
 
-The SC4S management REST API (default port `8080`) supports optional bearer-token authentication. When `SC4S_API_MANAGEMENT_ENABLED` is set and `SC4S_AUTH_TOKEN_FILE` is unset or empty, the management endpoints are accessible without credentials. When it is set, every request must carry a matching `Authorization: Bearer <token>` header; mismatches return HTTP 401.
+The SC4S management REST API (default port `8080`) requires bearer-token authentication when `SC4S_API_MANAGEMENT_ENABLED` is enabled. Every management request must carry a matching `Authorization: Bearer <token>` header; missing or invalid credentials return HTTP 401. The `/health` endpoint remains accessible without credentials. When management endpoints are disabled, the health-only API can start without a token.
 
 | Variable | Description |
 |----------|-------------|
-| `SC4S_AUTH_TOKEN_FILE` | Path to a file containing the bearer token. When set, enables bearer-token authentication on the management REST API. |
+| `SC4S_AUTH_TOKEN_FILE` | Path to a readable file containing a non-empty bearer token. Required when `SC4S_API_MANAGEMENT_ENABLED` is enabled. |
 
 
 ```bash
@@ -84,7 +84,7 @@ sudo systemctl restart sc4s
 ```
 
 !!! note "Connecting the MCP server"
-    If you enable API authentication, you must also supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication).
+    Supply the same token to the SC4S MCP server via the `SC4S_API_TOKEN` or `SC4S_API_TOKEN_FILE` environment variable so it can authenticate against the API. See [SC4S MCP Server — SC4S API authentication](mcp_server/installation.md#sc4s-api-authentication).
 
 The MCP server's configuration and metadata tools also require `SC4S_API_MANAGEMENT_ENABLED=true` on the SC4S side; without it, those tools will receive HTTP 404 responses from the SC4S API.
 

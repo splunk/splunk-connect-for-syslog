@@ -9,6 +9,7 @@ def _make_client(enabled: bool):
         os.environ["SC4S_API_MANAGEMENT_ENABLED"] = "true"
     else:
         os.environ.pop("SC4S_API_MANAGEMENT_ENABLED", None)
+        os.environ.pop("SC4S_AUTH_TOKEN_FILE", None)
     import api
     importlib.reload(api)
     return api.app.test_client()
@@ -67,3 +68,16 @@ def test_management_routes_absent_when_disabled():
     assert "/config/parsers" not in rules
     assert "/config/metadata/splunk" not in rules
     assert "/jobs/<job_id>" not in rules
+
+
+@pytest.mark.parametrize("token", [None, "", "  \n\t"])
+def test_management_requires_auth_token(monkeypatch, tmp_path, token):
+    if token is None:
+        monkeypatch.delenv("SC4S_AUTH_TOKEN_FILE")
+    else:
+        token_file = tmp_path / "token"
+        token_file.write_text(token)
+        monkeypatch.setenv("SC4S_AUTH_TOKEN_FILE", str(token_file))
+
+    with pytest.raises(RuntimeError, match="SC4S_AUTH_TOKEN_FILE"):
+        _make_client(enabled=True)
