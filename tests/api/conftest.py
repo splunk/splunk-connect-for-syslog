@@ -1,11 +1,11 @@
-import importlib
-import os
 import pytest
 
 
-@pytest.fixture(scope="session", autouse=True)
-def _enable_management_api():
-    os.environ["SC4S_API_MANAGEMENT_ENABLED"] = "true"
-    import api
-    importlib.reload(api)
-    yield
+@pytest.fixture(autouse=True)
+def management_api_token(monkeypatch, tmp_path):
+    token = "unit-test-management-token"
+    token_file = tmp_path / "api-token"
+    token_file.write_text(token)
+    monkeypatch.setenv("SC4S_API_MANAGEMENT_ENABLED", "true")
+    monkeypatch.setenv("SC4S_AUTH_TOKEN_FILE", str(token_file))
+    return token
