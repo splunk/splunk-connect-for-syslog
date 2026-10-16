@@ -175,7 +175,7 @@ jobs:
           python -m pip install poetry
           poetry install
       - name: Test management API authentication and routes
-        run: poetry run pytest tests/api tests/test_management_api_auth.py tests/test_management_api_tls.py -n 0
+        run: poetry run pytest tests/api -n 0
 
   test-mcp-container-health:
     runs-on: ubuntu-latest
