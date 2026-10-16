@@ -25,8 +25,9 @@ Before running the MCP server, make sure your SC4S instance is properly configur
 
 * **Enable SC4S management API** - by default SC4S API exposes only the `/health` endpoint. The configuration and metadata endpoints are **disabled**. To enable them, set `SC4S_API_MANAGEMENT_ENABLED` to `true` in your SC4S `env_file` (see
 [SC4S management API](../configuration.md#sc4s-management-api-endpoints)).
-* **Configure SC4S API authentication** - authentication is recommended when
-  management endpoints are enabled. See
+* **Configure SC4S API authentication** - authentication is required when
+  management endpoints are enabled. Set `SC4S_AUTH_TOKEN_FILE` to a readable, non-empty
+  token file; the API refuses to start without it. See
   [SC4S management API authentication](../configuration.md#sc4s-management-api-authentication).
 * **Mount env_file** - some MCP management tools need to read and write SC4S's `env_file` at runtime. The `--env-file` flag alone is **not sufficient**: it only injects variables at startup and does not make the file writable inside the container. To make `env_file` accessible to the SC4S process, you need to bind-mount it into the container. If you are using systemd, follow the steps below:
 
@@ -227,8 +228,8 @@ docker ps   # or: podman ps
 
 ## SC4S API authentication
 
-When the SC4S management REST API requires authentication, the MCP server
-must present the same bearer token. Configure authentication on SC4S as
+The SC4S management REST API requires authentication for management endpoints.
+The MCP server must present the same bearer token. Configure authentication on SC4S as
 described in
 [SC4S management API authentication](../configuration.md#sc4s-management-api-authentication).
 

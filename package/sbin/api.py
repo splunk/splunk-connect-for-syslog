@@ -7,7 +7,7 @@ from config_api import config_bp, csrf
 from healthcheck import healthcheck_bp, str_to_bool
 from metadata_api import metadata_bp
 from job_api import init_job_manager, job_bp
-from auth import build_token_verify
+from auth import AUTH_TOKEN_FILE_ENV, build_token_verify
 from tls import tls_is_enabled
 
 logging.basicConfig(
@@ -18,12 +18,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+MANAGEMENT_ENABLED_ENV = "SC4S_API_MANAGEMENT_ENABLED"
+management_enabled = str_to_bool(os.environ.get(MANAGEMENT_ENABLED_ENV, ""))
+token_verifier = build_token_verify()
+
+if management_enabled and token_verifier is None:
+    raise RuntimeError(
+        f"{MANAGEMENT_ENABLED_ENV} requires {AUTH_TOKEN_FILE_ENV} "
+        "to point to a readable file containing a non-empty bearer token"
+    )
+
 app = Flask(__name__)
 csrf.init_app(app)
 app.register_blueprint(healthcheck_bp)
-
-MANAGEMENT_ENABLED_ENV = "SC4S_API_MANAGEMENT_ENABLED"
-management_enabled = str_to_bool(os.environ.get(MANAGEMENT_ENABLED_ENV, ""))
 
 if management_enabled:
     app.register_blueprint(config_bp)
@@ -40,8 +47,6 @@ else:
         "Management API endpoints disabled (%s unset/false); only /health is exposed",
         MANAGEMENT_ENABLED_ENV,
     )
-
-token_verifier = build_token_verify()
 
 if tls_is_enabled():
     logger.info("Management API TLS enabled")
