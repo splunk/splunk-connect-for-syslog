@@ -13,7 +13,11 @@ services:
     build:
       context: ..
       dockerfile: package/Dockerfile
+    tmpfs:
+      - /opt/sc4s
     hostname: sc4s
+    secrets:
+      - sc4s_api_token
     # command: -det
     ports:
       - 514:514/tcp
@@ -34,6 +38,8 @@ services:
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN=${SPLUNK_HEC_TOKEN}
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY=no
       - SC4S_DEST_SPLUNK_HEC_DEFAULT_HTTP_COMPRESSION=yes
+      - SC4S_API_MANAGEMENT_ENABLED=true
+      - SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_api_token
       - SC4S_LISTEN_PFSENSE_FIREWALL_TCP_PORT=6000
       - SC4S_LISTEN_SIMPLE_TEST_ONE_TCP_PORT=5514
       - SC4S_LISTEN_SIMPLE_TEST_ONE_UDP_PORT=5514
@@ -46,10 +52,21 @@ services:
       - SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL=yes
       - SC4S_SOURCE_RICOH_SYSLOG_FIXHOST=yes
       - TEST_SC4S_ACTIVATE_EXAMPLES=yes
-      - SC4S_DEBUG_CONTAINER=yes
+      - SC4S_DEBUG_CONTAINER=${SC4S_DEBUG_CONTAINER:-no}
       - SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG=yes
       - SC4S_NETAPP_ONTAP_NEW_FORMAT=yes
       - SC4S_USE_VPS_CACHE=yes
+  mcp:
+    build:
+      context: ..
+      dockerfile: sc4s_mcp/Dockerfile
+    ports:
+      - "8000"
+    environment:
+      - SC4S_API_URL=http://sc4s:8080
+      - SC4S_API_TOKEN_FILE=/run/secrets/sc4s_api_token
+    secrets:
+      - sc4s_api_token
   splunk:
     image: splunk/splunk:latest
     hostname: splunk
@@ -69,3 +86,8 @@ services:
 volumes:
   splunk-var:
     external: false
+
+# Shared test credential; never use this token in a deployed instance.
+secrets:
+  sc4s_api_token:
+    file: ./data/sc4s_api_token

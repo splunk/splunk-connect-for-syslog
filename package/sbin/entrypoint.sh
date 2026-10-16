@@ -6,38 +6,41 @@ function join_by {
   return 0
 }
 
+# Normalize HEC URLs: extract host:port, append /services/collector/event, replace commas with spaces
+normalize_hec_url() {
+  SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+}
+
 # Activate python environment and run parsing/caching for conf files
 . /var/lib/python-venv/bin/activate
 export PYTHONPATH=/etc/syslog-ng/pylib
 python3 /etc/syslog-ng/pylib/parser_source_cache.py
 
-# Configuring environment variables
-export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
+# Apply defaults both at startup and after an env_file reload. The reload loop
+# unsets removed keys, so defaults must be restored before syslog-ng restarts.
+apply_sc4s_defaults() {
+  export SC4S_LISTEN_STATUS_PORT=${SC4S_LISTEN_STATUS_PORT:=8080}
+  export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
+  export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
+  export SC4S_LISTEN_DEFAULT_TLS_PORT=${SC4S_LISTEN_DEFAULT_TLS_PORT:=6514}
+  export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
+  export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
+  export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
+  export SC4S_CLEAR_NAME_CACHE=${SC4S_CLEAR_NAME_CACHE:=no}
+  export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
+  export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
+  export SC4S_DEST_SPLUNK_INDEXED_FIELDS=${SC4S_DEST_SPLUNK_INDEXED_FIELDS:=r_unixtime,facility,container,loghost,destport,fromhostip,proto,severity}
+  export SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX=${SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX:=fgt}
+  export SC4S_OPTION_DELL_POWERSTORE_INDEX=${SC4S_OPTION_DELL_POWERSTORE_INDEX:=infraops}
+  export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
+  export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
+  export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
+  export SC4S_BIN=${SC4S_BIN:=/usr/bin}
+  export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
+  export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
+}
 
-
-export SC4S_LISTEN_DEFAULT_TCP_PORT=${SC4S_LISTEN_DEFAULT_TCP_PORT:=514}
-export SC4S_LISTEN_DEFAULT_UDP_PORT=${SC4S_LISTEN_DEFAULT_UDP_PORT:=514}
-export SC4S_LISTEN_DEFAULT_TLS_PORT=${SC4S_LISTEN_DEFAULT_TLS_PORT:=6514}
-export SC4S_LISTEN_DEFAULT_RFC5426_PORT=${SC4S_LISTEN_DEFAULT_RFC5426_PORT:=601}
-export SC4S_LISTEN_DEFAULT_RFC6587_PORT=${SC4S_LISTEN_DEFAULT_RFC6587_PORT:=601}
-export SC4S_LISTEN_DEFAULT_RFC5425_PORT=${SC4S_LISTEN_DEFAULT_RFC5425_PORT:=5425}
-export SC4S_CLEAR_NAME_CACHE=${SC4S_CLEAR_NAME_CACHE:=no}
-
-export SC4S_DEFAULT_TIMEZONE=${SC4S_DEFAULT_TIMEZONE:=GMT}
-export SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS=${SC4S_LISTEN_CHECKPOINT_SPLUNK_NOISE_CONTROL_SECONDS:=2}
-export SC4S_DEST_SPLUNK_INDEXED_FIELDS=${SC4S_DEST_SPLUNK_INDEXED_FIELDS:=r_unixtime,facility,container,loghost,destport,fromhostip,proto,severity}
-
-export SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX=${SC4S_OPTION_FORTINET_SOURCETYPE_PREFIX:=fgt}
-export SC4S_OPTION_DELL_POWERSTORE_INDEX=${SC4S_OPTION_DELL_POWERSTORE_INDEX:=infraops}
-# Variables with path to sc4s directories
-# These path variables allow for a single entrypoint script to be utilized for both Container and BYOE runtimes
-export SC4S_ETC=${SC4S_ETC:=/etc/syslog-ng}
-export SC4S_TLS=${SC4S_TLS:=/etc/syslog-ng/tls}
-export SC4S_VAR=${SC4S_VAR:=/var/lib/syslog-ng}
-export SC4S_BIN=${SC4S_BIN:=/usr/bin}
-export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
-
-export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
+apply_sc4s_defaults
 
 # Set list with alternate destinations than HEC
 export SC4S_DESTS_FILTERED_ALTERNATES=$(env | grep _FILTERED_ALTERNATES= | grep -v SC4S_DEST_GLOBAL_FILTERED_ALTERNATES | cut -d= -f2 | sort | uniq |  paste -s -d, -)
@@ -198,7 +201,7 @@ if [[ -f "${SC4S_TLS}/trusted.pem" || -f "${SC4S_TLS}/ca.crt" ]]; then
 fi
 
 # Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
-SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+normalize_hec_url
 if [[ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
@@ -261,7 +264,7 @@ echo sc4s version=$(cat $SC4S_ETC/VERSION) >>$SC4S_VAR/log/syslog-ng.out
 "${SC4S_SBIN}"/syslog-ng $SC4S_CONTAINER_OPTS -s >>$SC4S_VAR/log/syslog-ng.out 2>$SC4S_VAR/log/syslog-ng.err
 
 echo "Configuring the health check port to: $SC4S_LISTEN_STATUS_PORT"
-nohup gunicorn -b 0.0.0.0:$SC4S_LISTEN_STATUS_PORT healthcheck:app &
+nohup gunicorn -b "${SC4S_LISTEN_STATUS_HOST:-0.0.0.0}:$SC4S_LISTEN_STATUS_PORT" --workers 1 --config python:gunicorn_config api:app &
 
 # Generating syslog configuration and export it to tmp file
 # OPTIONAL for BYOE:  Comment out/remove all remaining lines and launch syslog-ng directly from systemd
@@ -284,9 +287,49 @@ then
   fi
 fi
 
+# Save initial env_file keys so we can detect removals across syslog-ng restarts.
+# When the env_file is updated (e.g. via MCP) and a variable is removed, we unset it
+# before re-sourcing so it doesn't persist from Docker's initial --env-file or a prior iteration.
+if [[ -f /opt/sc4s/env_file ]]; then
+  grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
+    | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_prev_env_keys
+else
+  : > /tmp/sc4s_prev_env_keys
+fi
+
 # Loop that runs and restarts syslog-ng, reacts to specific signals (exit codes - 147) to exit syslog-ng
 while :
 do
+  # Unset env variables that were removed from env_file since the last iteration.
+  # This ensures features can be disabled by simply deleting the line from env_file,
+  # even if Docker's --env-file originally set the variable at container start.
+  if [[ -f /opt/sc4s/env_file ]]; then
+    grep -v '^\s*#' /opt/sc4s/env_file | grep -v '^\s*$' | grep '=' \
+      | cut -d'=' -f1 | sed 's/^[[:space:]]*//' | sort > /tmp/sc4s_curr_env_keys
+
+    while IFS= read -r key; do
+      unset "$key"
+    done < <(comm -23 /tmp/sc4s_prev_env_keys /tmp/sc4s_curr_env_keys)
+
+    cp /tmp/sc4s_curr_env_keys /tmp/sc4s_prev_env_keys
+
+    echo "Re-sourcing /opt/sc4s/env_file..."
+    set -a
+    . /opt/sc4s/env_file
+    set +a
+
+    apply_sc4s_defaults
+    normalize_hec_url
+  else
+    # env_file was deleted -- unset all previously tracked keys
+    while IFS= read -r key; do
+      [[ -z "$key" ]] && continue
+      unset "$key"
+    done < /tmp/sc4s_prev_env_keys
+    : > /tmp/sc4s_prev_env_keys
+    apply_sc4s_defaults
+  fi
+
   echo starting syslog-ng
   if [[ "${SC4S_DEBUG_LOGS}" == "yes" ]]; then
     echo debug mode enabled
