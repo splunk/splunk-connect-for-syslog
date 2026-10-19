@@ -97,16 +97,29 @@ COPY package/shared/context_templates /etc/syslog-ng/context_templates
 COPY package/shared/test_parsers /etc/syslog-ng/test_parsers
 COPY package/shared/local_config /etc/syslog-ng/local_config
 COPY package/sbin/entrypoint.sh /
+COPY package/sbin/env_file_parser.py /
 COPY package/sbin/healthcheck.sh /
+COPY package/sbin/api.py /
+COPY package/sbin/auth.py /
 COPY package/sbin/healthcheck.py /
+COPY package/sbin/config_api.py /
+COPY package/sbin/metadata_api.py /
+COPY package/sbin/constants.py /
+COPY package/sbin/utils.py /
+COPY package/sbin/job_manager.py /
+COPY package/sbin/job_api.py /
 COPY package/sbin/source_ports_validator.py /
+COPY package/sbin/tls.py /
+COPY package/sbin/gunicorn_config.py /
 
 # Allow the unprivileged "syslog" user (UID/GID 1024) to write to the paths the
 # entrypoint creates/updates at startup, enabling non-root runtimes without
 # breaking the default root runtime.
-RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log /home/syslog \
+# Pre-create /opt/sc4s so non-root management can create env_file backups
+# beside a single-file bind mount.
+RUN mkdir -p /etc/syslog-ng/conf.d /etc/syslog-ng/tls /var/lib/syslog-ng/log /home/syslog /opt/sc4s \
     && chown -R syslog:syslog /etc/syslog-ng /var/lib/syslog-ng /var/log/syslog-ng.out \
-    /var/log/syslog-ng.err /home/syslog \
+    /var/log/syslog-ng.err /home/syslog /opt/sc4s \
     && chmod -R g+rwX /etc/syslog-ng /var/lib/syslog-ng \
     && chmod g+rw /var/log/syslog-ng.out /var/log/syslog-ng.err
 

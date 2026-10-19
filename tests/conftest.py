@@ -181,6 +181,17 @@ def is_responsive_sc4s(host: str, port: int) -> bool:
     return False
     
 
+def is_responsive_mcp(host: str, port: int) -> bool:
+    """Check MCP health endpoint."""
+    try:
+        response = requests.get(f"http://{host}:{port}/health", timeout=5)
+        return (
+            response.status_code == 200
+            and response.json().get("status") == "ok"
+        )
+    except (requests.RequestException, ValueError):
+        return False
+
 
 @pytest.fixture(scope="session")
 def docker_compose_file(pytestconfig):
@@ -311,8 +322,8 @@ def sc4s_docker(request, worker_id, tmp_path_factory):
     with FileLock(str(fn) + ".lock"):
         if fn.is_file():
             data = json.loads(fn.read_text())
-            # this type conversion is requried because json keys are strings
-            # and in almost all tests we are refrencing the port by int e.g setup_sc4s[1][514]
+            # this type conversion is required because json keys are strings
+            # and in almost all tests we are referencing the port by int e.g setup_sc4s[1][514]
             sc4s_docker = (data[0], {int(k): v for k, v in data[1].items()})
         else:
             request.fixturenames.append("start_sc4s_docker")
@@ -332,6 +343,7 @@ def sc4s_external(request):
         6000: 6000,
         6001: 6001,
         6002: 6002,
+        8080: 8080,
         9000: 9000,
         9001: 9001,
         9002: 9002,
@@ -353,6 +365,24 @@ def setup_sc4s(request):
         raise ValueError(f"Unknown sc4s_type: {sc4s_type!r}. Use 'docker' or 'external'.")
 
     yield sc4s
+
+
+@pytest.fixture(scope="session")
+def setup_mcp(docker_services, setup_sc4s):
+    """Start MCP after SC4S is ready and return its HTTP endpoint."""
+    docker_services.start("mcp")
+
+    host = docker_services.docker_ip
+    port = docker_services.port_for("mcp", 8000)
+
+    docker_services.wait_until_responsive(
+        timeout=60.0,
+        pause=2.0,
+        check=lambda: is_responsive_mcp(host, port),
+    )
+
+    return f"http://{host}:{port}/mcp"
+
 
 @pytest.fixture(scope="session")
 def setup_splunk(splunk):
