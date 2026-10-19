@@ -351,6 +351,41 @@ codex mcp add sc4s --url http://<MCP_HOST>:8000/mcp
 Replace <MCP_HOST> with the hostname or IP address that the MCP client can use
 to reach the MCP server.
 
+### Claude Code MCP client configuration
+
+Store the MCP bearer token in an environment variable, then register the
+server with the `claude` CLI:
+
+```bash
+export SC4S_MCP_TOKEN="<TOKEN>"
+claude mcp add --transport http sc4s https://<MCP_HOST>:8000/mcp \
+  --header 'Authorization: Bearer ${SC4S_MCP_TOKEN}'
+```
+
+Replace `<MCP_HOST>` with the hostname or IP address that the MCP client can
+use to reach the MCP server, and `<TOKEN>` with the value configured in
+`SC4S_MCP_AUTH_TOKEN` or `SC4S_MCP_AUTH_TOKEN_FILE`.
+
+Keep the single quotes around the header. Claude Code then stores the
+`${SC4S_MCP_TOKEN}` placeholder and expands it each time it connects, so
+`SC4S_MCP_TOKEN` must be set in the environment that starts Claude Code. If you
+pass the token itself, Claude Code saves it in plain text in `~/.claude.json`.
+
+By default, the server is added for the current project only. Add
+`--scope user` to make it available in every project.
+
+If the MCP server certificate is issued by a private or self-signed CA, set
+`NODE_EXTRA_CA_CERTS` to the CA certificate before starting Claude Code:
+
+```bash
+export NODE_EXTRA_CA_CERTS=/path/to/ca.pem
+claude
+```
+
+Run `/mcp` in Claude Code to confirm that the `sc4s` server is connected. To
+install the SC4S skills for Claude Code, see
+[SC4S Plugin](../sc4s-plugin.md#install-with-claude-code).
+
 ## Verify the installation
 
 1. Confirm the container is running: `docker ps` or `podman ps`.
