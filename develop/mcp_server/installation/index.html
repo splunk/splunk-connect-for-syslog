@@ -8131,6 +8131,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#claude-code-mcp-client-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Claude Code MCP client configuration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -8721,6 +8732,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#claude-code-mcp-client-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Claude Code MCP client configuration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -9122,6 +9144,30 @@ process and communicates via standard input/output. Provide:</p>
 </code></pre></div>
 <p>Replace <MCP_HOST> with the hostname or IP address that the MCP client can use
 to reach the MCP server.</p>
+<h3 id="claude-code-mcp-client-configuration">Claude Code MCP client configuration<a class="headerlink" href="#claude-code-mcp-client-configuration" title="Permanent link">&para;</a></h3>
+<p>Store the MCP bearer token in an environment variable, then register the
+server with the <code>claude</code> CLI:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">SC4S_MCP_TOKEN</span><span class="o">=</span><span class="s2">"&lt;TOKEN&gt;"</span>
+claude<span class="w"> </span>mcp<span class="w"> </span>add<span class="w"> </span>--transport<span class="w"> </span>http<span class="w"> </span>sc4s<span class="w"> </span>https://&lt;MCP_HOST&gt;:8000/mcp<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--header<span class="w"> </span><span class="s1">'Authorization: Bearer ${SC4S_MCP_TOKEN}'</span>
+</code></pre></div>
+<p>Replace <code>&lt;MCP_HOST&gt;</code> with the hostname or IP address that the MCP client can
+use to reach the MCP server, and <code>&lt;TOKEN&gt;</code> with the value configured in
+<code>SC4S_MCP_AUTH_TOKEN</code> or <code>SC4S_MCP_AUTH_TOKEN_FILE</code>.</p>
+<p>Keep the single quotes around the header. Claude Code then stores the
+<code>${SC4S_MCP_TOKEN}</code> placeholder and expands it each time it connects, so
+<code>SC4S_MCP_TOKEN</code> must be set in the environment that starts Claude Code. If you
+pass the token itself, Claude Code saves it in plain text in <code>~/.claude.json</code>.</p>
+<p>By default, the server is added for the current project only. Add
+<code>--scope user</code> to make it available in every project.</p>
+<p>If the MCP server certificate is issued by a private or self-signed CA, set
+<code>NODE_EXTRA_CA_CERTS</code> to the CA certificate before starting Claude Code:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">NODE_EXTRA_CA_CERTS</span><span class="o">=</span>/path/to/ca.pem
+claude
+</code></pre></div>
+<p>Run <code>/mcp</code> in Claude Code to confirm that the <code>sc4s</code> server is connected. To
+install the SC4S skills for Claude Code, see
+<a href="../../sc4s-plugin/#install-with-claude-code">SC4S Plugin</a>.</p>
 <h2 id="verify-the-installation">Verify the installation<a class="headerlink" href="#verify-the-installation" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Confirm the container is running: <code>docker ps</code> or <code>podman ps</code>.</li>
