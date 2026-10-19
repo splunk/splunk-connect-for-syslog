@@ -47,16 +47,19 @@ The SC4S management REST API (default port `8080`) requires bearer-token authent
 |----------|-------------|
 | `SC4S_AUTH_TOKEN_FILE` | Path to a readable file containing a non-empty bearer token. Required when `SC4S_API_MANAGEMENT_ENABLED` is enabled. |
 
+Store the token on persistent host storage with restricted permissions. Replace
+`<your-token>` with the bearer token that the MCP server will use:
 
 ```bash
-echo "<your-token>" > /run/secrets/sc4s_auth_token
-chmod 600 /run/secrets/sc4s_auth_token
+mkdir -p /opt/sc4s/secrets
+echo "<your-token>" > /opt/sc4s/secrets/sc4s_auth_token
+chmod 600 /opt/sc4s/secrets/sc4s_auth_token
 ```
 
 Add the following to the SC4S systemd service file (by default `/lib/systemd/system/sc4s.service`):
 
 ```ini
-Environment="SC4S_AUTH_TOKEN_FILE_MOUNT=/run/secrets/sc4s_auth_token:/run/secrets/sc4s_auth_token:ro"
+Environment="SC4S_AUTH_TOKEN_FILE_MOUNT=/opt/sc4s/secrets/sc4s_auth_token:/run/secrets/sc4s_auth_token:ro"
 ```
 
 And add `-v $SC4S_AUTH_TOKEN_FILE_MOUNT` alongside the other `-v` flags in `ExecStart`, plus `-e SC4S_AUTH_TOKEN_FILE=/run/secrets/sc4s_auth_token`:
