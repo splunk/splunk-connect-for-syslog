@@ -52,7 +52,7 @@ jobs:
           node-version: "24"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@03595b5eaf44910cf239ff20904cc52d410f97d4 # v8.1.2
+        uses: cycjimmy/semantic-release-action@d9bf53a078bd2f86aaffaec796dbb3d28f1b6f34 # v8.1.3
         with:
           semantic_version: 25
           extra_plugins: |
