@@ -6,6 +6,11 @@ SC4S can send events to MDL federated index destinations named `~.federated.<nam
 See [Send events to MDL federated indexes](destinations.md#send-events-to-mdl-federated-indexes-experimental) for the configuration.
 This configuration is in an experimental phase and should be treated as such.
 
+### SC4S MCP
+The SC4S MCP server connects MCP-compatible AI assistants to SC4S for parser creation, troubleshooting, configuration, and Splunk metadata management.
+See [SC4S MCP Server](mcp_server/index.md) for capabilities, installation, and client setup.
+The MCP server and accompanying AI agent plugin are beta features, and their interfaces may change between releases.
+
 ## > 3.46.0
 ### ECS/Fargate and GKE
 SC4S can now be deployed on AWS ECS/Fargate and Google Kubernetes Engine (GKE). 
