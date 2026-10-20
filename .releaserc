@@ -59,6 +59,43 @@
                                 }
                             ],
                             "countMatches": true
+                        },
+                        {
+                            "files": [
+                                ".claude-plugin/plugin.json",
+                                ".claude-plugin/marketplace.json",
+                                ".codex-plugin/plugin.json",
+                                ".cursor-plugin/plugin.json"
+                            ],
+                            "from": "\"version\":\\s*\"[^\"]+\"",
+                            "to": "\"version\": \"${nextRelease.version}\"",
+                            "results": [
+                                {
+                                    "file": ".claude-plugin/plugin.json",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                },
+                                {
+                                    "file": ".claude-plugin/marketplace.json",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                },
+                                {
+                                    "file": ".codex-plugin/plugin.json",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                },
+                                {
+                                    "file": ".cursor-plugin/plugin.json",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                }
+                            ],
+                            "countMatches": true
                         }
                     ]
                 }
@@ -70,6 +107,10 @@
                 "assets": [
                     "pyproject.toml",
                     "sc4s_mcp/pyproject.toml",
+                    ".claude-plugin/plugin.json",
+                    ".claude-plugin/marketplace.json",
+                    ".codex-plugin/plugin.json",
+                    ".cursor-plugin/plugin.json",
                     "package/etc/VERSION",
                     "deploy/k8s-microk8s/*",
                     "charts/splunk-connect-for-syslog/Chart.yaml"
