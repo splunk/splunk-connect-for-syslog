@@ -1,0 +1,4 @@
+interface:
+  display_name: "Troubleshoot SC4S"
+  short_description: "Diagnose live SC4S health and routing issues"
+  default_prompt: "Use $troubleshoot-sc4s to diagnose why my SC4S events are missing."

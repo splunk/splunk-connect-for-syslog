@@ -293,3 +293,45 @@ def test_juniper_system_standard(
     record_property("message", message)
 
     assert result_count == 1
+
+
+# Sep 12 06:42:34  sr-rtr PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 0 PIC 0 CPU utilization exceeds threshold, current value=93
+@pytest.mark.addons("juniper")
+@pytest.mark.parametrize(
+    "event",
+    [
+        "PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 0 PIC 0 CPU utilization exceeds threshold, current value=93",
+        "PERF_MON: RTPERF_CPU_THRESHOLD_EXCEEDED: FPC 5 PIC 0 CPU utilization exceeds threshold, current value = 100",
+        "PERF_MON: RTPERF_CPU_UTIL_MAX: FPC 5 PIC 0 CPU Utilization greater than 99, expect packet loss",
+        "PERF_MON: RTPERF_CPU_USAGE_OK: FPC 0 PIC 0 CPU utilization returns to normal, current value = 42",
+        "PERF_MON: RTPERF_CPU_UTIL_OK: FPC 0 PIC 0 CPU utilization no longer at or greater than 99, current value = 85",
+    ],
+)
+def test_juniper_junos_perfmon(
+    record_property, get_host_key, setup_splunk, setup_sc4s, event
+):
+    host = get_host_key
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string("{{ mark }} {{ bsd }} {{ host }} " + event)
+    message = mt.render(mark="<28>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netops host="{{ host }}" sourcetype="juniper:legacy"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1

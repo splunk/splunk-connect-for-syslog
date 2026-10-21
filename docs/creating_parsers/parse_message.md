@@ -60,9 +60,12 @@ The `template` parameter in `r_set_splunk_dest_default` controls what part of th
 | `t_msg_only` | `${MSGONLY}` | When header is not needed (e.g. Palo Alto)                           |
 | `t_program_msg` | `${PROGRAM}[${PID}]: ${MESSAGE}` | Program with PID and message                                         |
 | `t_hdr_sdata_msg` | `${MSGHDR}${MSGID} ${SDATA} ${MESSAGE}` | RFC5424 with structured data                                         |
-| `t_kv_values` | `.values.*`, `.SDATA.*`, `.metadata.*` as `key=value` pairs | When used, Splunk can automatically extract those values from the message |
-| `t_json_values` | `.values.*`, `.SDATA.*`, `.metadata.*` as a JSON object | Same as `t_kv_values` but JSON format                                |
-| `t_json_values_msg` | Same as `t_json_values` + original `message` field | When extracted fields and the raw original message are both needed   |
+| `t_kv_values` | `.values.*`, `.SDATA.*`, `.metadata.*` as WELF `key=value` pairs | Replace the event body with normalized key/value text |
+| `t_json_values` | `.values.*`, `.SDATA.*`, `.metadata.*` as a JSON object | Replace the event body with JSON |
+| `t_kv_values_msg` | Same as `t_kv_values` plus `message=$MSG` | Emit normalized key/value text with the original message stored as a field |
+| `t_json_values_msg` | Same as `t_json_values` plus a `message` property | Emit JSON with the original message stored as a property |
+
+The values templates replace the event body. The `_msg` variants include the original message as a field inside the transformed WELF or JSON event; they do not preserve the event body unchanged. To preserve the message body, use a raw-message template such as `t_msg_only` or `t_hdr_msg` and use `fields.*` when indexed HEC fields are also required.
 
 ## Parsing methods
 
@@ -123,10 +126,24 @@ parser {
     regexp-parser(
         template("${MESSAGE}")
         patterns('^(?<field1>\d+) (?<field2>[^ ]+) (?<field3>.*)')
-        prefix(".parsed.")
+        prefix(".tmp.")
     );
 };
 ```
+
+#### Quoting regular expressions
+
+Single-quoted syslog-ng strings are literal and are usually easier to read for regular expressions. Double-quoted strings are interpreted, so quotation marks and regex backslashes must be escaped:
+
+```conf
+# Single-quoted string
+patterns('rc="(?<rc>[^"]*)" and count=(?<count>\d+)')
+
+# Equivalent double-quoted string
+patterns("rc=\"(?<rc>[^\"]*)\" and count=(?<count>\\d+)")
+```
+
+These examples show the final `.conf` content. JSON or MCP serialization may display additional backslashes around the same content; do not copy those transport-level escapes into the parser.
 
 **`json-parser`** — use when logs are JSON-formatted.
 
@@ -184,6 +201,13 @@ However, sometimes — due to the message format or the unavailability of a TA �
 In that case, you can use SC4S parsers to extract the necessary fields and send them to Splunk.
 There are two ways fields extracted by a parser can appear in Splunk search results.
 
+### Namespace rules
+
+- Use `.tmp.*` for intermediate fragments, discarded prefixes, and unparsed tails that are needed by later parser stages but must not be emitted.
+- Use `.values.*` for fields intentionally serialized into the event body by `t_kv_values`, `t_json_values`, or their `_msg` variants.
+- Use `fields.*` for indexed fields sent in the Splunk HEC payload while a raw-message template preserves the event body.
+- A custom namespace such as `.parsed.*` is not included by the standard values templates unless it is copied or mapped to an output namespace.
+
 ### 1. Via the event body template
 
 Extract fields into the `.values.*` namespace and set `template('t_kv_values')` or `template('t_json_values')`. These templates serialize fields from `.values.*`, `.SDATA.*`, and `.metadata.*` into the event body.
@@ -208,6 +232,8 @@ block parser app-syslog-vendor_product() {
 ```
 
 **If you extract into a different namespace** (e.g. `.parsed.*`, `.tmp.*`), those fields will not be picked up by these templates, either use `.values.*` as the prefix or write a custom template.
+
+Do not put an unparsed tail such as `key="value" key2="value with spaces"` in `.values.*` when using a values template. The template will serialize that whole tail as one escaped value alongside any fields parsed from it, which can create duplicate or misleading Splunk field extractions. Keep the tail in `.tmp.*` instead.
 
 ### 2. Via `fields.*` mapping
 

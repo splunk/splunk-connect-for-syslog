@@ -204,8 +204,72 @@ application sc4s-lp-cisco_dest_fmt_other[sc4s-lp-dest-select-d_hec_fmt_other] {
 
 With this configuration, Cisco events are sent to both destinations: the default HEC uses default index, while the OTHER HEC uses `cisco_alt_index`. Do mind that this index may still be overriden later (for example by metadata.csv) so it may be necessary to use a postfilter instead.
 
-!!! note "Note" 
-    The index override in the selector applies only to the alternate destination. The default destination's metadata is not affected.
+!!! warning "Warning"
+    Index overrides in `splunk_metadata.csv` are applied after the selector and apply to every destination. For sources with an index override in `splunk_metadata.csv`, the alternate destination receives the index from `splunk_metadata.csv` instead of `cisco_alt_index`.
+
+# Send events to MDL federated indexes (Experimental)
+
+MDL federated index destinations are named `~.federated.<name>`. SC4S does not validate index names, so it can send events to these destinations without any code changes. To do this, add a HEC destination for MDL and rewrite the index for that destination only. The default destination keeps using the standard SC4S indexes.
+
+## Index naming
+
+Use the SC4S index as `<name>`. For example, events that SC4S sends to `netfw` are sent to `~.federated.netfw` on the MDL destination. This keeps the index categories SC4S already uses. For the list of default indexes, see [Create indexes within Splunk](gettingstarted/getting-started-splunk-setup.md#step-1-create-indexes-within-splunk).
+
+## Configure the MDL destination
+
+1. Add the MDL HEC destination to your `env_file`. With `GLOBAL` mode, SC4S sends every event to both the default destination and the MDL destination.
+
+    ```bash
+    #env_file
+    SC4S_DEST_SPLUNK_HEC_MDL_URL=https://mdl-hec.example.com:8088
+    SC4S_DEST_SPLUNK_HEC_MDL_TOKEN=<MDL HEC token>
+    SC4S_DEST_SPLUNK_HEC_MDL_TLS_VERIFY=no
+    SC4S_DEST_SPLUNK_HEC_MDL_MODE=GLOBAL
+    ```
+
+    `MDL` is the destination ID. SC4S names the destination `d_hec_fmt_<id>` in lowercase, which here is `d_hec_fmt_mdl`. If you choose a different ID, change `d_hec_fmt_mdl` in the next step to match.
+
+2. Create the following configuration file:
+
+    ```c
+    #filename: /opt/sc4s/local/config/app_parsers/app-dest-mdl_federated.conf
+    block parser sc4s_dest_mdl_parser() {
+        channel {
+            rewrite {
+                set("~.federated.${.splunk.index}", value(".splunk.index"));
+            };
+        };
+    };
+
+    application sc4s-lp_fmt_mdl[sc4s-lp-dest-select-d_hec_fmt_mdl] {
+        filter {
+            not ('splunk' eq "${fields.sc4s_vendor}" and 'sc4s' eq "${fields.sc4s_product}")
+        };
+        parser { sc4s_dest_mdl_parser(); };
+    };
+    ```
+
+3. Restart SC4S.
+
+SC4S now adds the `~.federated.` prefix to the index of every event it sends to the MDL destination. The filter excludes SC4S internal events, such as metrics and SC4S logs, so they keep their original indexes, for example `_metrics`.
+
+!!! warning "Warning"
+    Index overrides in `splunk_metadata.csv` are applied after this configuration and apply to every destination. For sources with an index override, the MDL destination receives the index from `splunk_metadata.csv` without the `~.federated.` prefix. If that index does not exist on the MDL side, Splunk drops these events without an error.
+
+## Send only selected sources to MDL
+
+For a partial rollout, set `SC4S_DEST_SPLUNK_HEC_MDL_MODE=SELECT` and replace the filter in the `sc4s-lp_fmt_mdl` application with one that matches the sources you want to send. Only events that match the filter are sent to the MDL destination. All other events, including SC4S internal events, are sent only to the default destination.
+
+```c
+application sc4s-lp_fmt_mdl[sc4s-lp-dest-select-d_hec_fmt_mdl] {
+    filter {
+        'cisco' eq "${fields.sc4s_vendor}"
+        and 'asa' eq "${fields.sc4s_product}"
+    };
+    parser { sc4s_dest_mdl_parser(); };
+};
+```
+
 
 # Advanced topic: Configure filtered alternate destinations 
 

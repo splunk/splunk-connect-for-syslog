@@ -29,7 +29,7 @@ on:
 
 jobs:
   meta:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       sc4s: ghcr.io/${{ github.repository }}/container3lite:${{ fromJSON(steps.docker_action_meta.outputs.json).labels['org.opencontainers.image.version'] }}
       container_tags: ${{ steps.docker_action_meta.outputs.tags }}
@@ -47,12 +47,12 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "24"
       - name: Semantic Release
         id: version
-        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
+        uses: cycjimmy/semantic-release-action@d9bf53a078bd2f86aaffaec796dbb3d28f1b6f34 # v8.1.3
         with:
           semantic_version: 25
           extra_plugins: |
@@ -80,11 +80,11 @@ jobs:
             type=ref,event=tag
       - name: matrix
         id: matrix
-        uses: splunk/addonfactory-test-matrix-action@e6bb46e98bf72398538ddd4bbd958a8a847cd291 # v3.3.6
+        uses: splunk/addonfactory-test-matrix-action@0a80acb3f3aa0718a901375ba472a004701b8fbd # v3.3.7
 
   security-fossa-scan:
     continue-on-error: true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: run fossa anlyze and create report
@@ -100,7 +100,7 @@ jobs:
           fossa analyze --debug
           fossa report attribution --format text > /tmp/THIRDPARTY
       - name: upload THIRDPARTY file
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: THIRDPARTY
           path: /tmp/THIRDPARTY
@@ -113,7 +113,7 @@ jobs:
           FOSSA_API_KEY: ${{ secrets.FOSSA_API_KEY }}
 
   build_action:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     name: Build Action
     needs:
       - meta
@@ -145,10 +145,8 @@ jobs:
           context: .
           provenance: false
           file: package/Dockerfile.lite
-          #platforms: linux/amd64,linux/arm64
           platforms: linux/amd64,linux/arm64
           push: true
-          #tags: ${{ needs.meta.outputs.container_tags }}
           tags: ${{ needs.meta.outputs.container_base }}
           labels: ${{ needs.meta.outputs.container_labels }}
           build-args: |
@@ -159,7 +157,7 @@ jobs:
           cache-to: type=inline
 
   scan-docker-image-cves:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     name: Scan docker image on CVEs
     needs:
       - meta
@@ -182,7 +180,7 @@ jobs:
           scanners: "vuln"
           
   test-container:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -262,7 +260,7 @@ jobs:
             -n 14 -m "lite or addons"
 
   test-ipv4-name-cache:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -321,7 +319,7 @@ jobs:
             -m 'name_cache'
 
   test-ipv6-name-cache:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -381,7 +379,7 @@ jobs:
             -m 'name_cache'
 
   test-healthcheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -413,7 +411,7 @@ jobs:
         run: python3 tests/test_healthcheck_healthy.py --host sc4s --port 8090
 
   test-healthcheck-unit-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action
@@ -438,7 +436,7 @@ jobs:
         run: poetry run pytest tests/test_healthcheck_unit_tests.py
 
   test-ebpf:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - meta
       - build_action

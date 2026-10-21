@@ -28,6 +28,11 @@ testdata = [
     ("", []),
     # Label fields keep their own key/value pairs intact.
     ("cs1Label=Foo cs1=bar", [("cs1Label", "Foo"), ("cs1", "bar")]),
+    # ISO8601 rt= timestamps: verify all four format variants are extracted intact.
+    ("rt=2026-09-14T08:05:50.609+00:00", [("rt", "2026-09-14T08:05:50.609+00:00")]),
+    ("rt=2026-09-14T08:05:50.609Z",      [("rt", "2026-09-14T08:05:50.609Z")]),
+    ("rt=2026-09-14T08:05:50+00:00",     [("rt", "2026-09-14T08:05:50+00:00")]),
+    ("rt=2026-09-14T08:05:50Z",          [("rt", "2026-09-14T08:05:50Z")]),
 ]
 
 @pytest.mark.parametrize("data, expected", testdata)
