@@ -88,6 +88,7 @@ RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "pyasn1>=0.6.4" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "setuptools>=83.0.0" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "msgpack>=1.2.1" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "certifi>=2026.10.19" \
     && /var/lib/syslog-ng-venv/bin/pip uninstall -y pip \
     && /var/lib/python-venv/bin/pip uninstall -y pip
 
