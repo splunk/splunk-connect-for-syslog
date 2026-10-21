@@ -1,0 +1,42 @@
+# EKS add-on defaults, merged over the chart's values.yaml at build time.
+
+# EKS add-ons may only pull images from the AWS Marketplace ECR registry.
+image:
+  repository: ${ECR_IMAGE_REPO}
+  tag: ${CHART_APPVERSION}
+
+# Run as the image's unprivileged "syslog" user. Listeners move above 1024 inside
+# the container; the Service still exposes 514/601 to senders.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1024
+  runAsGroup: 1024
+  fsGroup: 1024
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+
+sc4s:
+  listenPorts:
+    tcp: 5514
+    udp: 5514
+    rfc6587: 5601
+    rfc5426: 5601
+
+# Internal NLB via the AWS Load Balancer Controller, following docs/architecture/lb/nlb.md.
+# On EKS Auto Mode set service.loadBalancerClass to eks.amazonaws.com/nlb.
+service:
+  type: LoadBalancer
+  usemetallb: false
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internal"
+    service.beta.kubernetes.io/aws-load-balancer-target-group-attributes: "stickiness.enabled=false,deregistration_delay.timeout_seconds=300,deregistration_delay.connection_termination.enabled=false"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "HTTP"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "8080"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/health"

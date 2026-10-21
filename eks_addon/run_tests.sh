@@ -1,0 +1,67 @@
+#!/bin/bash
+# Builds the EKS add-on chart and checks it against EKS add-on constraints.
+# Override the Kubernetes versions with K8S_VERSIONS="1.33 1.34".
+set -euo pipefail
+
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/common.sh"
+
+read -r -a K8S_VERSIONS <<< "${K8S_VERSIONS:-1.30 1.31 1.32 1.33 1.34 1.35}"
+SAMPLE_SETTINGS="${EKS_ADDON_DIR}/kind/settings.example.yaml"
+failures=0
+
+pass() { echo "ok    $*"; }
+fail() { echo "FAIL  $*"; failures=$((failures + 1)); }
+
+render() {
+  helm template splunk-connect-for-syslog "${EKS_CHART_DIR}" --namespace sc4s --no-hooks "$@"
+}
+
+prepare_chart
+
+if helm lint "${EKS_CHART_DIR}" > /dev/null; then pass "helm lint"; else fail "helm lint"; fi
+
+for v in "${K8S_VERSIONS[@]}"; do
+  if render --kube-version "${v}" > /dev/null; then pass "renders on Kubernetes ${v}"; else fail "renders on Kubernetes ${v}"; fi
+done
+
+if jq empty "${EKS_CHART_DIR}/aws_mp_configuration_schema.json"; then
+  pass "aws_mp_configuration_schema.json is valid JSON"
+else
+  fail "aws_mp_configuration_schema.json is missing or invalid"
+fi
+
+if rendered="$(render -f "${SAMPLE_SETTINGS}")"; then
+  pass "sample settings pass the schema"
+else
+  fail "sample settings rejected"
+  rendered=""
+fi
+
+if [[ "$(yq e '(.dependencies // []) | length' "${EKS_CHART_DIR}/Chart.yaml")" == "0" && ! -d "${EKS_CHART_DIR}/charts" ]]; then
+  pass "no subchart dependencies"
+else
+  fail "chart has subchart dependencies"
+fi
+
+if grep -q 'helm.sh/hook' <<< "${rendered}" || [[ -d "${EKS_CHART_DIR}/templates/tests" ]]; then
+  fail "chart contains Helm hooks"
+else
+  pass "no Helm hooks"
+fi
+
+if grep -q '^kind: CustomResourceDefinition' <<< "${rendered}"; then fail "chart renders CRDs"; else pass "no CRDs"; fi
+
+if grep -rqE '\blookup\b' "${EKS_CHART_DIR}/templates"; then fail "templates use lookup"; else pass "no lookup calls"; fi
+
+bad_images="$(grep -E '^\s+image:' <<< "${rendered}" | awk '{print $2}' | tr -d '"' | grep -v "^${ECR_REGISTRY}/" || true)"
+if [[ -z "${bad_images}" ]]; then
+  pass "all images come from ${ECR_REGISTRY}"
+else
+  fail "images outside the Marketplace registry: ${bad_images}"
+fi
+
+if [[ "${failures}" -gt 0 ]]; then
+  echo "${failures} check(s) failed"
+  exit 1
+fi
+echo "All checks passed"

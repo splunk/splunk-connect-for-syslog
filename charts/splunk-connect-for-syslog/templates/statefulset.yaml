@@ -16,6 +16,9 @@ spec:
   template:
     metadata:
       annotations:
+        {{- if not .Values.splunk.existingSecret }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
         {{- if .Values.sc4s.config_files }}
         checksum/config: {{ include (print $.Template.BasePath "/config-configmap.yaml") . | sha256sum }}
         {{- end }}
@@ -87,18 +90,18 @@ spec:
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
             value: "{{ .Values.splunk.hec_url }}"
-          {{- if .Values.splunk.hec_token }}
-          - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
-            value:  "{{ .Values.splunk.hec_token }}"
-          {{- else }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
             valueFrom:
               secretKeyRef:
-                key: hec_token
-                name: splunk-connection
-          {{- end }}
+                name: {{ .Values.splunk.existingSecret | default "splunk-connection" }}
+                key: {{ .Values.splunk.existingSecretKey | default "hec_token" }}
+          {{- $verify := .Values.splunk.hec_verify_tls }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
-            value: "{{ .Values.splunk.hec_verify_tls }}"
+            {{- if kindIs "bool" $verify }}
+            value: {{ ternary "yes" "no" $verify | quote }}
+            {{- else }}
+            value: {{ $verify | default "yes" | quote }}
+            {{- end }}
           {{- if .Values.persistence.enabled }}              
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "yes"

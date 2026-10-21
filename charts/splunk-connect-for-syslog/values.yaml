@@ -10,6 +10,10 @@ splunk:
 #   hec_url: ""
 #   hec_token: ""
 #   hec_verify_tls: "yes"
+#   Name of a Secret you manage that holds the HEC token. When set, hec_token
+#   is ignored and the chart does not create the "splunk-connection" Secret.
+#   existingSecret: ""
+#   existingSecretKey: hec_token
 
 sc4s:
   {}
@@ -220,7 +224,7 @@ securityContext:
 
 service:
   type: LoadBalancer
-  usemetallb: {}
+  usemetallb: true
   metallbsharingkey: {}
   # externalTrafficPolicy controls how external traffic is routed to pods on
   # Service types `LoadBalancer` and `NodePort`. Defaults to `Local` to
@@ -229,6 +233,9 @@ service:
   # kube-proxy to load-balance traffic across all nodes at the cost of losing
   # the original source IP (kube-proxy will SNAT the traffic).
   externalTrafficPolicy: Local
+  # loadBalancerClass: service.k8s.aws/nlb  # AWS LB Controller; eks.amazonaws.com/nlb on EKS Auto Mode
+  # loadBalancerSourceRanges:
+  #   - 10.0.0.0/8
 
 resources:
   {}
