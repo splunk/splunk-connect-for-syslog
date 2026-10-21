@@ -264,14 +264,14 @@ develop = ["aiomisc-pytest", "coveralls", "pytest", "pytest-cov", "pytest-rerunf
 
 [[package]]
 name = "certifi"
-version = "2026.10.18"
+version = "2026.10.19"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.7"
 groups = ["main", "dev"]
 files = [
-    {file = "certifi-2026.10.18-py3-none-any.whl", hash = "sha256:73191c47aaa79da394e8fee2dbc2ec827432cab56311122c9e47abf79e390f62"},
-    {file = "certifi-2026.10.18.tar.gz", hash = "sha256:b9995d97b64d0431a5af837d8ca8cd6238104d1f319f04bd93ea43124d6c861e"},
+    {file = "certifi-2026.10.19-py3-none-any.whl", hash = "sha256:42d35340cc5b9ba78e818ddbff0c5b1c2b779de448a340fd1b989f5fa8670e1b"},
+    {file = "certifi-2026.10.19.tar.gz", hash = "sha256:035c1e85572b141bf1c3a3eff0e33a8eb74917522f2559075ff8d2fea780a1ae"},
 ]
 
 [[package]]
@@ -839,44 +839,45 @@ testing = ["hatch", "pre-commit", "pytest", "tox"]
 
 [[package]]
 name = "fastmcp"
-version = "4.1.2"
+version = "4.1.3"
 description = "The fast, Pythonic way to build MCP servers and clients."
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "fastmcp-4.1.2-py3-none-any.whl", hash = "sha256:3d5eddfe624b002ebcf202d5a55ff13bdce6925ce58bfcaeb28bc2e3bbee1830"},
-    {file = "fastmcp-4.1.2.tar.gz", hash = "sha256:1b70a8467ac4dd6416c7c101cd54562f089b55e6636a196b4a20bdac3ccb0284"},
+    {file = "fastmcp-4.1.3-py3-none-any.whl", hash = "sha256:b983d8acc44ab1143e0c86fd6da843f25043ee0aeb64ab983b36c527bd1d33e9"},
+    {file = "fastmcp-4.1.3.tar.gz", hash = "sha256:a1f79e9db929a1603c75331df603f74530fc236aa711e0ee2e185821c6d9888d"},
 ]
 
 [package.dependencies]
-fastmcp-slim = {version = "4.1.2", extras = ["client", "server"]}
+fastmcp-slim = {version = "4.1.3", extras = ["client", "server"]}
 
 [package.extras]
-anthropic = ["fastmcp-slim[anthropic] (==4.1.2)"]
-apps = ["fastmcp-slim[apps] (==4.1.2)"]
-azure = ["fastmcp-slim[azure] (==4.1.2)"]
-code-mode = ["fastmcp-slim[code-mode] (==4.1.2)"]
-gemini = ["fastmcp-slim[gemini] (==4.1.2)"]
-jev = ["fastmcp-slim[jev] (==4.1.2)"]
-openai = ["fastmcp-slim[openai] (==4.1.2)"]
-tasks = ["fastmcp-tasks (==4.1.2)"]
+anthropic = ["fastmcp-slim[anthropic] (==4.1.3)"]
+apps = ["fastmcp-slim[apps] (==4.1.3)"]
+azure = ["fastmcp-slim[azure] (==4.1.3)"]
+code-mode = ["fastmcp-slim[code-mode] (==4.1.3)"]
+gemini = ["fastmcp-slim[gemini] (==4.1.3)"]
+jev = ["fastmcp-slim[jev] (==4.1.3)"]
+openai = ["fastmcp-slim[openai] (==4.1.3)"]
+tasks = ["fastmcp-tasks (==4.1.3)"]
 
 [[package]]
 name = "fastmcp-slim"
-version = "4.1.2"
+version = "4.1.3"
 description = "The dependency-slim FastMCP package."
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "fastmcp_slim-4.1.2-py3-none-any.whl", hash = "sha256:58a4e547a0f85cfee2d2219677ed31c0f1c4911741a5c91a1ee5fbf69dde35fa"},
-    {file = "fastmcp_slim-4.1.2.tar.gz", hash = "sha256:4b703ddbd35165ebf03b2cc560688f458f3fe4db11e635074fcc303496734154"},
+    {file = "fastmcp_slim-4.1.3-py3-none-any.whl", hash = "sha256:81af8699331c33d438caf85b6947f36df6e2f04118e6f318ca00374fd9afea9a"},
+    {file = "fastmcp_slim-4.1.3.tar.gz", hash = "sha256:d95277db0979e4cbfa84528cf9016ae079494b41ed8e88cc909fee8233db6035"},
 ]
 
 [package.dependencies]
 authlib = {version = ">=1.6.11", optional = true, markers = "extra == \"client\" or extra == \"server\""}
 beartype = {version = ">=0.23.0rc2", optional = true, markers = "python_version >= \"3.15\" and (extra == \"client\" or extra == \"server\")"}
+certifi = {version = ">=2026.10.19", optional = true, markers = "extra == \"server\""}
 cyclopts = {version = ">=4.0.0", optional = true, markers = "extra == \"server\""}
 exceptiongroup = {version = ">=1.2.2", optional = true, markers = "extra == \"client\" or extra == \"server\""}
 griffelib = {version = ">=2.0.0", optional = true, markers = "extra == \"server\""}
@@ -906,16 +907,16 @@ watchfiles = {version = ">=1.0.0", optional = true, markers = "extra == \"server
 websockets = {version = ">=15.0.1", optional = true, markers = "extra == \"server\""}
 
 [package.extras]
-anthropic = ["anthropic (>=0.48.0,<2)"]
+anthropic = ["anthropic (>=0.48.0,<2)", "certifi (>=2026.10.19)"]
 apps = ["prefab-ui (>=0.18.0)"]
-azure = ["azure-identity (>=1.16.0)", "pyjwt (>=2.12.0)"]
+azure = ["azure-identity (>=1.16.0)", "certifi (>=2026.10.19)", "pyjwt (>=2.12.0)"]
 client = ["authlib (>=1.6.11)", "beartype (>=0.23.0rc2) ; python_version >= \"3.15\"", "exceptiongroup (>=1.2.2)", "httpx2 (>=2.5.0)", "mcp (>=2.2.0,<3.0.0)", "opentelemetry-api (>=1.28.0)", "py-key-value-aio[filetree,keyring,memory] (>=0.4.4,<0.5.0)", "starlette (>=1.0.1)"]
 code-mode = ["pydantic-monty (>=1.1,<2)"]
-gemini = ["google-genai (>=1.18.0)", "jsonref (>=1.1.0)"]
+gemini = ["certifi (>=2026.10.19)", "google-genai (>=1.18.0)", "jsonref (>=1.1.0)"]
 jev = ["typesafe-sdk (>=0.5.7)"]
 mcp = ["exceptiongroup (>=1.2.2)", "httpx2 (>=2.5.0)", "mcp (>=2.2.0,<3.0.0)", "opentelemetry-api (>=1.28.0)", "starlette (>=1.0.1)"]
-openai = ["openai (>=1.102.0)"]
-server = ["authlib (>=1.6.11)", "beartype (>=0.23.0rc2) ; python_version >= \"3.15\"", "cyclopts (>=4.0.0)", "exceptiongroup (>=1.2.2)", "griffelib (>=2.0.0)", "httpx2 (>=2.5.0)", "joserfc (>=1.5.0)", "jsonref (>=1.1.0)", "jsonschema-path (>=0.3.4)", "mcp (>=2.2.0,<3.0.0)", "openapi-pydantic (>=0.6.0)", "opentelemetry-api (>=1.28.0)", "packaging (>=24.0)", "py-key-value-aio[filetree,keyring,memory] (>=0.4.4,<0.5.0)", "pyperclip (>=1.9.0)", "python-multipart (>=0.0.26)", "pyyaml (>=6.0,<7.0)", "starlette (>=1.0.1)", "uncalled-for (>=0.4.0)", "uvicorn (>=0.35)", "watchfiles (>=1.0.0)", "websockets (>=15.0.1)"]
+openai = ["certifi (>=2026.10.19)", "openai (>=1.102.0)"]
+server = ["authlib (>=1.6.11)", "beartype (>=0.23.0rc2) ; python_version >= \"3.15\"", "certifi (>=2026.10.19)", "cyclopts (>=4.0.0)", "exceptiongroup (>=1.2.2)", "griffelib (>=2.0.0)", "httpx2 (>=2.5.0)", "joserfc (>=1.5.0)", "jsonref (>=1.1.0)", "jsonschema-path (>=0.3.4)", "mcp (>=2.2.0,<3.0.0)", "openapi-pydantic (>=0.6.0)", "opentelemetry-api (>=1.28.0)", "packaging (>=24.0)", "py-key-value-aio[filetree,keyring,memory] (>=0.4.4,<0.5.0)", "pyperclip (>=1.9.0)", "python-multipart (>=0.0.26)", "pyyaml (>=6.0,<7.0)", "starlette (>=1.0.1)", "uncalled-for (>=0.4.0)", "uvicorn (>=0.35)", "watchfiles (>=1.0.0)", "websockets (>=15.0.1)"]
 
 [[package]]
 name = "filelock"
