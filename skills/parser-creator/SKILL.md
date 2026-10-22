@@ -51,7 +51,7 @@ Show the exact `<filename>` and complete parser. Explain:
 - A compact table of every requested field and its expected value for each supplied sample.
 - Any assumptions caused by missing samples or product information.
 
-If an external metadata override is needed, recommend `$manage-splunk-metadata`; do not refer to an undefined `sc4s:configure` command.
+If an external metadata override is needed, recommend `$manage-sc4s-splunk-metadata`; do not refer to an undefined `sc4s:configure` command.
 
 Ask whether the parser needs adjustments. Revise and repeat the explanation until the operator approves the content. Treat this as authoring approval only, not permission to mutate SC4S.
 
