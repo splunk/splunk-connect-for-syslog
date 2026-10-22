@@ -1,9 +1,9 @@
 ---
-name: manage-splunk-metadata
-description: Inspect and safely add, update, remove, or clear SC4S Splunk metadata overrides through MCP. Use for vendor_product index, source, sourcetype, host, or sc4s_template overrides in splunk_metadata.csv.
+name: manage-sc4s-splunk-metadata
+description: Manage SC4S Splunk Metadata by safely inspecting, adding, updating, removing, or clearing overrides through MCP. Use for vendor_product index, source, sourcetype, host, or sc4s_template overrides in splunk_metadata.csv.
 ---
 
-# Manage Splunk Metadata
+# Manage SC4S Splunk Metadata
 
 Manage the live `splunk_metadata.csv` as a full-replacement resource while preserving entries the user did not ask to change.
 
