@@ -219,7 +219,7 @@ Apply these namespace rules:
 
 ### Parser methods
 
-**`kv-parser`** parses key/value input. Do not apply it to native RFC5424 `${SDATA}` merely to expose fields that already exist in `.SDATA.*`. Use it for an actual KV message or a deliberately isolated nonstandard KV tail. Do not add `quote-pairs()` to `kv-parser`.
+**`kv-parser`** parses key/value input. Do not apply it to native RFC5424 `${SDATA}` merely to expose fields that already exist in `.SDATA.*`. Use it for an actual KV message or a deliberately isolated nonstandard KV tail.
 
 ```conf
 parser {
