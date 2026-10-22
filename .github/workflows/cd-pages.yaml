@@ -69,7 +69,6 @@ jobs:
           mkdir /tmp/package
           mkdir /tmp/index
           mkdir /tmp/origin
-          echo $GITHUB_TOKEN | gh auth login --with-token
           VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
           echo $VERSION
           wget --max-redirect=0 https://splunk.github.io/splunk-connect-for-syslog/index.yaml -P /tmp/origin
