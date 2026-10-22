@@ -41,6 +41,7 @@ Analyze every supplied sample and create a complete `.conf` file:
 3. Select parser stages, namespaces, and an output template together. Keep intermediate fragments in `.tmp.*`; put only intentionally serialized values in `.values.*`; use `fields.*` only when the operator requested indexed HEC fields. Follow the bundled guide's template, namespace, and quoting rules.
 4. Set the confirmed index, sourcetype, vendor, product, and template through SC4S rewrite conventions.
 5. Set `<filename>` to `app-<type>-<vendor>_<product>.conf`. Normalize it to lowercase, use underscores within vendor/product identifiers, retain the `.conf` suffix, and reject path separators, traversal components, or an empty name.
+6. Before previewing or deploying, check that every `block parser` and `application` declaration ends with `};`, including the last one.
 
 Show the exact `<filename>` and complete parser. Explain:
 
