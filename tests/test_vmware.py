@@ -161,12 +161,47 @@ def test_linux_vmware_nsx_fw(record_property,  setup_splunk, setup_sc4s, get_pid
     assert result_count == 1
 
 
+# <13>2018-07-03T19:44:09.749Z globalhost.com FIREWALL-PKTLOG[1234567]: b6507827 INET match PASS 1100 OUT 60 TCP 192.168.4.3/49627->192.168.4.4/49153 S
+@pytest.mark.addons("vmware")
+def test_linux_vmware_nsx_dfw(record_property, setup_splunk, setup_sc4s, get_pid):
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, _, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }}Z {{ host }} FIREWALL-PKTLOG[1234567]: {{ pid }} INET match PASS 1100 OUT 60 TCP 192.168.4.3/49627->192.168.4.4/49153 S\n"
+    )
+    message = mt.render(mark="<13>", iso_header=iso_header, host=host, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host={{ host }} {{ pid }} sourcetype="vmware:nsxlog:dfwpktlogs"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
 @pytest.mark.addons("vmware")
 def test_linux_vmware_vcenter_ietf(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    
+
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, _, _, _, _, _, epoch = time_operations(dt)
 
@@ -229,8 +264,8 @@ def test_linux_vmware_horizon_ietf(
     record_property("message", message)
 
     assert result_count == 1
-    
-    
+
+
 # <13>1 2024-05-15T19:41:25.001Z globalhost.com FIREWALL-PKTLOG - - - INET TERM PASS 5096 OUT TCP RST 10.10.10.11/60517->10.10.10.10/443 9/8 1461/4677 DR-Allow
 @pytest.mark.addons("vmware")
 def test_vmware_firewall_pktlog(
@@ -250,7 +285,7 @@ def test_vmware_firewall_pktlog(
     )
     message = mt.render(mark="<13>", iso_header=iso_header, host=host)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-    
+
     st = env.from_string(
         'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vclog:firewall-pktlog"'
     )
@@ -572,7 +607,7 @@ def test_vmware_overlapping_with_another_sdata(
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
-    
+
     iso = dt.isoformat()[0:26]
     iso_header = dt.isoformat()[0:23]
     epoch = epoch[:-3]
