@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-tcp
   annotations:
-  {{- if ( .Values.service.usemetallb | default true) }}
+  {{- if ne (toString .Values.service.usemetallb) "false" }}
     metallb.universe.tf/allow-shared-ip: {{ .Values.service.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
@@ -15,6 +15,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Local" }}
+  {{- with .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}  
   {{- end }}  
@@ -82,7 +89,7 @@ kind: Service
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-udp
   annotations:
-  {{- if ( .Values.service.usemetallb | default true) }}
+  {{- if ne (toString .Values.service.usemetallb) "false" }}
     metallb.universe.tf/allow-shared-ip: {{ .Values.service.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
@@ -93,6 +100,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Local" }}
+  {{- with .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}

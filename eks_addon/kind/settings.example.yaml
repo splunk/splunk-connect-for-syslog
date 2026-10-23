@@ -1,0 +1,26 @@
+# Example add-on configuration, as a customer would paste it into
+# "Optional configuration settings" in the EKS console or pass to
+# `aws eks create-addon --configuration-values file://settings.yaml`.
+#
+# Create the token Secret in the add-on namespace first:
+#   kubectl -n sc4s create secret generic sc4s-hec --from-file=hec_token=./token.txt
+splunk:
+  hec_url: https://splunk.example.com:8088
+  hec_verify_tls: "yes"
+  existingSecret: sc4s-hec
+
+service:
+  # AWS Load Balancer Controller. Use eks.amazonaws.com/nlb on EKS Auto Mode.
+  loadBalancerClass: service.k8s.aws/nlb
+  loadBalancerSourceRanges:
+    - 10.0.0.0/8
+
+sc4s:
+  vendor_product:
+    - name: checkpoint
+      ports:
+        tcp: [9000]
+        udp: [9000]
+  context_files:
+    splunk_metadata.csv: |-
+      cisco_asa,index,netfw
