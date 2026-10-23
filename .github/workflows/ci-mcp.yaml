@@ -146,7 +146,7 @@ jobs:
     needs:
       - meta
     container:
-      image: python:3.14-bookworm
+      image: python:3.15-bookworm@sha256:2734c1683bd937b316f31b18972026302f155f0ffd932b329811d2e3a8450775
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
