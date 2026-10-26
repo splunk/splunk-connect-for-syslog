@@ -8642,7 +8642,7 @@
 <td><a href="https://splunkbase.splunk.com/app/5601/">https://splunkbase.splunk.com/app/5601/</a></td>
 </tr>
 <tr>
-<td>Splunk Add-on nxs</td>
+<td>Splunk Add-on nsx</td>
 <td>none</td>
 </tr>
 <tr>
@@ -8776,16 +8776,16 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
 <span class="cp">#File name provided is a suggestion it must be globally unique</span>
 
 <span class="n">application</span><span class="w"> </span><span class="n">app</span><span class="o">-</span><span class="n">vps</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">vmware_vsphere</span><span class="p">[</span><span class="n">sc4s</span><span class="o">-</span><span class="n">vps</span><span class="p">]</span><span class="w"> </span><span class="p">{</span>
-<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span><span class="w">      </span>
+<span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="cp">#netmask(169.254.100.1/24)</span>
 <span class="w">        </span><span class="cp">#host("-esx-")</span>
-<span class="w">    </span><span class="p">};</span><span class="w"> </span>
-<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span><span class="w"> </span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">parser</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="n">p_set_netsource_fields</span><span class="p">(</span>
 <span class="w">            </span><span class="n">vendor</span><span class="p">(</span><span class="err">'</span><span class="n">vmware</span><span class="err">'</span><span class="p">)</span>
 <span class="w">            </span><span class="n">product</span><span class="p">(</span><span class="err">'</span><span class="n">vsphere</span><span class="err">'</span><span class="p">)</span>
-<span class="w">        </span><span class="p">);</span><span class="w"> </span>
-<span class="w">    </span><span class="p">};</span><span class="w">   </span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
 <span class="p">};</span>
 </code></pre></div>
 
