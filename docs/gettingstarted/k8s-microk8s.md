@@ -99,8 +99,7 @@ microk8s helm3 upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog 
 
 # Configure your SC4S instances through `values.yaml`
 
-With helm-based deployment you cannot configure environment variables and 
-context files directly. Instead, use the `values.yaml` file to update your configuration, for example:
+A Helm-based deployment has no `env_file` or local context directory. Use the `values.yaml` file to update your configuration instead, for example:
 
 ```yaml
 --8<---- "docs/resources/k8s/values_adv.yaml"
@@ -114,6 +113,23 @@ Use the `config_files` and `context_files` variables to specify configuration an
 ```yaml
 --8<---- "docs/resources/k8s/values_adv_config_file.yaml"
 ```
+
+## Set other SC4S environment variables
+
+For SC4S settings that have no dedicated value in the chart, such as the tuning variables in [Finetune SC4S](../architecture/fine-tuning.md), use `sc4s.env`. Each key is an environment variable name. Quote the values:
+
+```yaml
+sc4s:
+  env:
+    SC4S_SOURCE_UDP_SO_RCVBUFF: "536870912"
+    SC4S_SOURCE_LISTEN_UDP_SOCKETS: "8"
+    SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
+```
+
+The chart rejects variables that it already sets from other values. For example, use `splunk.hec_url` instead of `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, and `sc4s.listenPorts` or `sc4s.vendor_product` instead of the `SC4S_LISTEN_*_PORT` variables.
+
+!!! note "Receive buffers need a node setting"
+    The kernel caps every socket's receive buffer at the node's `net.core.rmem_max`, and a pod cannot change that sysctl. Raise it on each node that runs SC4S, as described in [Tune the receiving buffer](../architecture/fine-tuning.md#tune-the-receiving-buffer), before you raise any `*_SO_RCVBUFF` value. Otherwise the larger value has no effect. A full buffer also counts toward the pod's memory, so leave room for it in any memory limit.
 
 # Run as a non-root user
 

@@ -58,6 +58,9 @@ SC4S_SOURCE_RFC5425_SO_RCVBUFF=536870912   # RFC 5425 (syslog over TLS)
 
 3. Restart SC4S for the changes to take effect.
 
+!!! note "Kubernetes"
+    With the Helm chart, set these variables under `sc4s.env` in `values.yaml` instead of the `env_file`, and set the sysctl on each node, because a pod cannot change it. See [Set other SC4S environment variables](../gettingstarted/k8s-microk8s.md#set-other-sc4s-environment-variables).
+
 ### Additional considerations
 
 - **Sending buffer:** In rare cases, you may also need to increase the sending buffer size by modifying `net.core.wmem_max` and `net.core.wmem_default` using the same approach.

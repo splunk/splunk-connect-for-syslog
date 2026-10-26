@@ -158,6 +158,14 @@ spec:
             {{- end }}
           {{- end }}
           {{- end }}
+          {{- $managedEnv := splitList " " (include "splunk-connect-for-syslog.managedEnvNames" .) }}
+          {{- range $name, $value := .Values.sc4s.env }}
+          {{- if has $name $managedEnv }}
+          {{- fail (printf "sc4s.env.%s is already set by the chart; use the chart's own setting for it instead" $name) }}
+          {{- end }}
+          - name: {{ $name }}
+            value: {{ include "splunk-connect-for-syslog.envValue" $value }}
+          {{- end }}
 
           ports:
             - name: bsd-dflt-tcp

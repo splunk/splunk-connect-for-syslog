@@ -40,6 +40,17 @@ sc4s:
 #       https: "http://your_proxy_ip.com"
 #       no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
 
+#   Extra environment variables for SC4S settings that have no dedicated value
+#   in this chart (see the SC4S configuration and fine-tuning docs). Variables
+#   the chart already sets, such as the HEC URL or listen ports, are rejected.
+#   The kernel caps receive buffers at the node's net.core.rmem_max, so raise
+#   that sysctl on the nodes before raising *_SO_RCVBUFF.
+#   env:
+#     SC4S_SOURCE_UDP_SO_RCVBUFF: "536870912"
+#     SC4S_SOURCE_LISTEN_UDP_SOCKETS: "8"
+#     SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
+#     HEALTHCHECK_CHECK_QUEUE_SIZE: "yes"
+
 #   existingCert: example-com-tls
 #   vendor_product:
 #     - name: checkpoint
