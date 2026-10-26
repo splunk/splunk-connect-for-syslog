@@ -65,7 +65,7 @@ Create the name of the service account to use
 
 {{/*
 Space-separated names of the env vars the StatefulSet sets itself. Keep in sync with
-statefulset.yaml: sc4s.env may not repeat them, because server-side apply rejects
+statefulset.yaml: env may not repeat them, because server-side apply rejects
 duplicate env names.
 */}}
 {{- define "splunk-connect-for-syslog.managedEnvNames" -}}
@@ -94,7 +94,7 @@ duplicate env names.
 {{- end }}
 
 {{/*
-Quotes an sc4s.env value. YAML booleans become yes/no, the only form every SC4S
+Quotes an env value. YAML booleans become yes/no, the only form every SC4S
 script accepts, and whole numbers keep their digits instead of float notation.
 */}}
 {{- define "splunk-connect-for-syslog.envValue" -}}

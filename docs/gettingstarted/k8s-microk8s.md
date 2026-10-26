@@ -116,14 +116,13 @@ Use the `config_files` and `context_files` variables to specify configuration an
 
 ## Set other SC4S environment variables
 
-For SC4S settings that have no dedicated value in the chart, such as the tuning variables in [Finetune SC4S](../architecture/fine-tuning.md), use `sc4s.env`. Each key is an environment variable name. Quote the values:
+For SC4S settings that have no dedicated value in the chart, such as the tuning variables in [Finetune SC4S](../architecture/fine-tuning.md), use `env`. Each key is an environment variable name. Quote the values:
 
 ```yaml
-sc4s:
-  env:
-    SC4S_SOURCE_UDP_SO_RCVBUFF: "536870912"
-    SC4S_SOURCE_LISTEN_UDP_SOCKETS: "8"
-    SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
+env:
+  SC4S_SOURCE_UDP_SO_RCVBUFF: "536870912"
+  SC4S_SOURCE_LISTEN_UDP_SOCKETS: "8"
+  SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
 ```
 
 The chart rejects variables that it already sets from other values. For example, use `splunk.hec_url` instead of `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, and `sc4s.listenPorts` or `sc4s.vendor_product` instead of the `SC4S_LISTEN_*_PORT` variables.

@@ -1,7 +1,0 @@
-# The chart requires one SC4S pod per node, so the default 2 replicas need 2 workers.
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-  - role: control-plane
-  - role: worker
-  - role: worker
