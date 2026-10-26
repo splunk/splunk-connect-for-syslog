@@ -73,7 +73,7 @@ Docs: [metadata and legacy timezones](https://splunk.github.io/splunk-connect-fo
 ## Resource pressure, delay, disk growth, or OOM
 
 1. Use the [ingestion decision table](#missing-events-or-growing-queues) to separate input, forwarding, backlog, and drops.
-2. Select [CPU/RAM or disk/inode usage](operator-commands.md#resource-usage) for the reported symptom. For disk growth, inspect [buffer/alternate settings](operator-commands.md#configuration-and-raw-sample): `SC4S_DEST_GLOBAL_ALTERNATES` may enable `d_archive` / `d_hec_debug`. Use [archive/debug sizes](operator-commands.md#archive-and-debug-sizes) only if those destinations are enabled.
+2. Select [CPU/RAM or disk/inode usage](operator-commands.md#resource-usage) for the reported symptom. For disk growth, inspect [buffer/archive/debug settings](operator-commands.md#configuration-and-raw-sample): `SC4S_DEBUG_HEC=yes` enables global HEC payload capture (`d_hec_debug`), and `SC4S_ARCHIVE_GLOBAL=yes` enables global archiving (`d_archive`). The alternate-destination plugin ignores `SC4S_DEST_GLOBAL_ALTERNATES`. Also check source-specific alternates and custom file destinations. Use [archive/debug sizes](operator-commands.md#archive-and-debug-sizes) only if those destinations are enabled.
 3. Propose a documented SC4S capacity/throughput change when evidence supports it. Hand off external capacity/network/storage faults; increasing workers is not a universal fix.
 4. Verify restored headroom, writes, draining queues, and no new drops/OOM. Report known drops separately from backlog; already dropped events cannot be recovered from buffers.
 

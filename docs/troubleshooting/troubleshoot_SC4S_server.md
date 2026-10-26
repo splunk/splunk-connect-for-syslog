@@ -103,9 +103,9 @@ SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the ra
 * Check the HEC connection to Splunk. If the connection is down for a long period of time, the local disk buffer used for backup will exhaust local
 disk resources. The size of the local disk buffer is configured in the `env_file`: [Disk buffer configuration](https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables)
 
-* Check the `env_file` to see whether `SC4S_DEST_GLOBAL_ALTERNATES` is set to `d_hec_debug`,`d_archive`, or another file-based destination. Any of these settings will consume significant local disk space.
+* Check the `env_file` for `SC4S_DEBUG_HEC=yes`, which enables global HEC payload capture (`d_hec_debug`), and `SC4S_ARCHIVE_GLOBAL=yes`, which enables global archiving (`d_archive`). Also check source-specific alternate destinations and custom file destinations. These features can consume significant local disk space. 
 
-`d_hec_debug` and `d_archive` are organized by sourcetype; the `du -sh *` command can be used in each subdirectory to find the culprit. 
+Under the archive mount, HEC debug files are stored in `debug/<index>/<vendor_product>/`. Archive files are stored in `<sourcetype>/<host>/` in the default compliance mode, or `<year>/<month>/<day>/` when `SC4S_GLOBAL_ARCHIVE_MODE=diode`. Use `du -sh *` in the relevant directory to identify what is consuming disk space. Enable HEC debug capture only temporarily, check available disk space, and restore the previous setting after collecting the required sample.
 
 * Try rebuilding your SC4S volume:
 ```
