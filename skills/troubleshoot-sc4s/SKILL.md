@@ -7,6 +7,10 @@ description: Diagnose SC4S collector startup, ingestion, parsing, metadata, buff
 
 Find the failing SC4S boundary, give the next useful check, and verify an evidenced fix. An MCP connection is optional.
 
+## Permission before running commands
+
+This skill contains `sudo` commands that can run with elevated privileges. Before executing any command, with or without `sudo`, show the user the exact command, where it will run, and its purpose, then ask for permission and wait for explicit approval. This applies to read-only diagnostics, local and remote commands, and commands executed through tools or scripts. A general request to troubleshoot does not authorize command execution. Approval covers only the commands presented; ask again before running any new or changed command. You may present commands for the user to run themselves without executing them.
+
 ## Scope
 
 Investigate the SC4S process/container, listeners, parsers, routing/metadata overrides, queues and persistent storage.
