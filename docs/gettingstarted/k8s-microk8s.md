@@ -125,7 +125,7 @@ env:
   SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
 ```
 
-The chart rejects variables that it already sets from other values. For example, use `splunk.hec_url` instead of `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, and `sc4s.listenPorts` or `sc4s.vendor_product` instead of the `SC4S_LISTEN_*_PORT` variables.
+The chart rejects variables that it already sets from other values. For example, use `splunk.hec_url` instead of `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, and `sc4s.listenPorts` or `sc4s.vendor_product` instead of the `SC4S_LISTEN_*_PORT` variables. It also rejects `SC4S_LISTEN_STATUS_PORT` and `SC4S_LISTEN_STATUS_HOST`, because the chart's health check port is fixed at 8080.
 
 !!! note "Receive buffers need a node setting"
     The kernel caps every socket's receive buffer at the node's `net.core.rmem_max`, and a pod cannot change that sysctl. Raise it on each node that runs SC4S, as described in [Tune the receiving buffer](../architecture/fine-tuning.md#tune-the-receiving-buffer), before you raise any `*_SO_RCVBUFF` value. Otherwise the larger value has no effect. A full buffer also counts toward the pod's memory, so leave room for it in any memory limit.

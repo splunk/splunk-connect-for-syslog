@@ -96,12 +96,11 @@ spec:
                 name: {{ .Values.splunk.existingSecret | default "splunk-connection" }}
                 key: {{ .Values.splunk.existingSecretKey | default "hec_token" }}
           {{- $verify := .Values.splunk.hec_verify_tls }}
+          {{- if not (kindIs "bool" $verify) }}
+          {{- $verify = default "yes" $verify }}
+          {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
-            {{- if kindIs "bool" $verify }}
-            value: {{ ternary "yes" "no" $verify | quote }}
-            {{- else }}
-            value: {{ $verify | default "yes" | quote }}
-            {{- end }}
+            value: {{ include "splunk-connect-for-syslog.envValue" $verify }}
           {{- if .Values.persistence.enabled }}              
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "yes"
@@ -151,7 +150,7 @@ spec:
                 {{- if $vp.options.listen }}
                   {{- range $vpolkey, $vpolvalue := $vp.options.listen }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_{{ $vpolkey | upper }}
-            value: {{ $vpolvalue | quote}}
+            value: {{ include "splunk-connect-for-syslog.envValue" $vpolvalue }}
                   {{- end }}                
                 {{- end }}                
                 {{- end }}                
@@ -161,7 +160,7 @@ spec:
           {{- $managedEnv := splitList " " (include "splunk-connect-for-syslog.managedEnvNames" .) }}
           {{- range $name, $value := .Values.env }}
           {{- if has $name $managedEnv }}
-          {{- fail (printf "env.%s is already set by the chart; use the chart's own setting for it instead" $name) }}
+          {{- fail (printf "env.%s is managed by the chart and cannot be set in env" $name) }}
           {{- end }}
           - name: {{ $name }}
             value: {{ include "splunk-connect-for-syslog.envValue" $value }}

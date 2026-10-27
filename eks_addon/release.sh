@@ -15,11 +15,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/common.sh"
-
 for tool in aws helm yq jq docker; do
   command -v "${tool}" > /dev/null || { echo "Required command '${tool}' not found" >&2; exit 1; }
 done
+
+source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/common.sh"
 
 run() {
   if "${PUSH}"; then "$@"; else echo "[dry-run] $*"; fi

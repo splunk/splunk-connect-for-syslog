@@ -6,14 +6,16 @@ set -euo pipefail
 source "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/common.sh"
 
 read -r -a K8S_VERSIONS <<< "${K8S_VERSIONS:-1.30 1.31 1.32 1.33 1.34 1.35}"
-SAMPLE_SETTINGS="${EKS_ADDON_DIR}/kind/settings.example.yaml"
+SAMPLE_SETTINGS="${EKS_ADDON_DIR}/settings.example.yaml"
 failures=0
 
 pass() { echo "ok    $*"; }
 fail() { echo "FAIL  $*"; failures=$((failures + 1)); }
 
+# Hooks and CRDs stay in the output (no --no-hooks, plus --include-crds), because the
+# checks below look for them; EKS add-ons may contain neither.
 render() {
-  helm template splunk-connect-for-syslog "${EKS_CHART_DIR}" --namespace sc4s --no-hooks "$@"
+  helm template splunk-connect-for-syslog "${EKS_CHART_DIR}" --namespace sc4s --include-crds "$@"
 }
 
 prepare_chart
@@ -30,7 +32,7 @@ else
   fail "aws_mp_configuration_schema.json is missing or invalid"
 fi
 
-if rendered="$(render -f "${SAMPLE_SETTINGS}")"; then
+if rendered="$(render -f "${SAMPLE_SETTINGS}")" && [[ -n "${rendered}" ]]; then
   pass "sample settings pass the schema"
 else
   fail "sample settings rejected"
@@ -43,21 +45,24 @@ else
   fail "chart has subchart dependencies"
 fi
 
-if grep -q 'helm.sh/hook' <<< "${rendered}" || [[ -d "${EKS_CHART_DIR}/templates/tests" ]]; then
-  fail "chart contains Helm hooks"
-else
-  pass "no Helm hooks"
-fi
-
-if grep -q '^kind: CustomResourceDefinition' <<< "${rendered}"; then fail "chart renders CRDs"; else pass "no CRDs"; fi
-
 if grep -rqE '\blookup\b' "${EKS_CHART_DIR}/templates"; then fail "templates use lookup"; else pass "no lookup calls"; fi
 
-bad_images="$(grep -E '^\s+image:' <<< "${rendered}" | awk '{print $2}' | tr -d '"' | grep -v "^${ECR_REGISTRY}/" || true)"
-if [[ -z "${bad_images}" ]]; then
-  pass "all images come from ${ECR_REGISTRY}"
+if [[ -z "${rendered}" ]]; then
+  fail "hook, CRD and image checks not run: the sample settings did not render"
 else
-  fail "images outside the Marketplace registry: ${bad_images}"
+  if grep -q 'helm.sh/hook' <<< "${rendered}"; then fail "chart contains Helm hooks"; else pass "no Helm hooks"; fi
+
+  if grep -q '^kind: CustomResourceDefinition' <<< "${rendered}"; then fail "chart contains CRDs"; else pass "no CRDs"; fi
+
+  images="$(grep -E '^\s+image:' <<< "${rendered}" | awk '{print $2}' | tr -d '"' || true)"
+  bad_images="$(grep -v "^${ECR_REGISTRY}/" <<< "${images}" || true)"
+  if [[ -z "${images}" ]]; then
+    fail "no images found in the render"
+  elif [[ -n "${bad_images}" ]]; then
+    fail "images outside the Marketplace registry: ${bad_images}"
+  else
+    pass "all images come from ${ECR_REGISTRY}"
+  fi
 fi
 
 if [[ "${failures}" -gt 0 ]]; then

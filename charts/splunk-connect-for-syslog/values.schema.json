@@ -128,7 +128,7 @@
       }
     },
     "env": {
-      "description": "Extra environment variables for SC4S settings without a dedicated value, for example SC4S_SOURCE_UDP_SO_RCVBUFF or SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE. Variables the chart already sets are rejected. Booleans are converted to yes/no.",
+      "description": "Extra environment variables for SC4S settings without a dedicated value, for example SC4S_SOURCE_UDP_SO_RCVBUFF or SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE. Variables the chart manages, such as the HEC URL, listen ports or health check port, are rejected. Booleans are converted to yes/no.",
       "type": "object",
       "propertyNames": { "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
       "additionalProperties": { "type": ["string", "integer", "number", "boolean"] }

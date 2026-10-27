@@ -393,3 +393,6 @@ event.txt
 .vscode/launch.json
 # SC4S EKS add-on build output
 eks_addon/build/
+
+# Local kind test setup for the EKS add-on
+eks_addon/kind/

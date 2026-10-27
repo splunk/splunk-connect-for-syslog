@@ -168,9 +168,9 @@ sc4s:
 
 # Extra environment variables for SC4S settings that have no dedicated value in
 # this chart (see the SC4S configuration and fine-tuning docs). Variables the
-# chart already sets, such as the HEC URL or listen ports, are rejected. The
-# kernel caps receive buffers at the node's net.core.rmem_max, so raise that
-# sysctl on the nodes before raising *_SO_RCVBUFF.
+# chart manages, such as the HEC URL, listen ports or health check port, are
+# rejected. The kernel caps receive buffers at the node's net.core.rmem_max, so
+# raise that sysctl on the nodes before raising *_SO_RCVBUFF.
 env:
   {}
   # SC4S_SOURCE_UDP_SO_RCVBUFF: "536870912"

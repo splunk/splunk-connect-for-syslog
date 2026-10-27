@@ -8,8 +8,14 @@ BUILD_DIR="${EKS_ADDON_DIR}/build"
 EKS_CHART_OVERRIDES_DIR="${EKS_ADDON_DIR}/overrides"
 EKS_CHART_DIR="${BUILD_DIR}/splunk-connect-for-syslog"
 
-export CHART_VERSION="${CHART_VERSION:-$(yq e '.version' "${CHART_DIR}/Chart.yaml")}"
-export CHART_APPVERSION="$(yq e '.appVersion' "${CHART_DIR}/Chart.yaml")"
+# Assigned before export: `export X="$(cmd)"` would hide a failing yq from set -e.
+CHART_VERSION="${CHART_VERSION:-$(yq e '.version' "${CHART_DIR}/Chart.yaml")}"
+CHART_APPVERSION="$(yq e '.appVersion' "${CHART_DIR}/Chart.yaml")"
+if [[ -z "${CHART_VERSION}" || "${CHART_VERSION}" == "null" || -z "${CHART_APPVERSION}" || "${CHART_APPVERSION}" == "null" ]]; then
+  echo "Could not read version/appVersion from ${CHART_DIR}/Chart.yaml (is mikefarah yq v4 installed?)" >&2
+  exit 1
+fi
+export CHART_VERSION CHART_APPVERSION
 
 # AWS Marketplace ECR. Repository names are assigned when the listing is created; these are placeholders.
 ECR_REGION="us-east-1"

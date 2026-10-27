@@ -64,12 +64,13 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-Space-separated names of the env vars the StatefulSet sets itself. Keep in sync with
-statefulset.yaml: env may not repeat them, because server-side apply rejects
-duplicate env names.
+Space-separated names of the env vars that env may not set: the ones the StatefulSet
+sets itself (keep in sync with statefulset.yaml; server-side apply rejects duplicate
+env names), plus the health check address, which the chart's health port and the
+add-on's NLB health check assume is 0.0.0.0:8080.
 */}}
 {{- define "splunk-connect-for-syslog.managedEnvNames" -}}
-{{- $names := list "SC4S_SNMP_TRAP_COLLECT" "SC4S_CONTAINER_HOST" "SC4S_RUNTIME_ENV" "SC4S_SOURCE_TLS_ENABLE" -}}
+{{- $names := list "SC4S_SNMP_TRAP_COLLECT" "SC4S_CONTAINER_HOST" "SC4S_RUNTIME_ENV" "SC4S_SOURCE_TLS_ENABLE" "SC4S_LISTEN_STATUS_PORT" "SC4S_LISTEN_STATUS_HOST" -}}
 {{- range list "TCP" "UDP" "RFC6587" "RFC5426" "TLS" "RFC5425" -}}
 {{- $names = append $names (printf "SC4S_LISTEN_DEFAULT_%s_PORT" .) -}}
 {{- end -}}
