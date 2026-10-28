@@ -32,7 +32,19 @@ else
   fail "aws_mp_configuration_schema.json is missing or invalid"
 fi
 
-if cmp -s "${EKS_CHART_DIR}/values.schema.json" "${EKS_CHART_DIR}/aws_mp_configuration_schema.json"; then
+MP_SCHEMA="${EKS_CHART_DIR}/aws_mp_configuration_schema.json"
+schema_uri="$(jq -r '."$schema" // ""' "${MP_SCHEMA}")"
+case "${schema_uri}" in
+  https://json-schema.org/draft-04/schema | https://json-schema.org/draft-06/schema | \
+  https://json-schema.org/draft-07/schema | https://json-schema.org/draft/2019-09/schema)
+    pass "\$schema is supported by EKS add-ons" ;;
+  *) fail "\$schema '${schema_uri}' is not one EKS add-ons support" ;;
+esac
+
+undescribed="$(jq -r '[paths(type == "object") as $p | select($p[-2] == "properties") | select((getpath($p).description // "") == "") | $p | map(select(. != "properties" and . != "items")) | join(".")] | join(" ")' "${MP_SCHEMA}")"
+if [[ -z "${undescribed}" ]]; then pass "every add-on setting has a description"; else fail "add-on settings without a description: ${undescribed}"; fi
+
+if cmp -s "${EKS_CHART_DIR}/values.schema.json" "${MP_SCHEMA}"; then
   pass "chart validates with the add-on schema"
 else
   fail "values.schema.json differs from aws_mp_configuration_schema.json"
@@ -76,6 +88,9 @@ else
   if grep -q 'helm.sh/hook' <<< "${rendered}"; then fail "chart contains Helm hooks"; else pass "no Helm hooks"; fi
 
   if grep -q '^kind: CustomResourceDefinition' <<< "${rendered}"; then fail "chart contains CRDs"; else pass "no CRDs"; fi
+
+  requests="$(yq e -N 'select(.kind == "DaemonSet" or .kind == "Deployment") | .spec.template.spec.containers[0].resources.requests | (.cpu // "") + " " + (.memory // "")' - <<< "${rendered}" | xargs)"
+  if [[ "${requests}" =~ ^[^\ ]+\ [^\ ]+$ ]]; then pass "default resource requests: cpu ${requests% *}, memory ${requests#* }"; else fail "no default CPU and memory requests"; fi
 
   if grep -qE '^kind: (Deployment|DaemonSet)$' <<< "${rendered}"; then
     pass "contains a Deployment or DaemonSet"

@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft-07/schema",
   "title": "Splunk Connect for Syslog",
   "type": "object",
   "definitions": {
@@ -99,22 +99,28 @@
           "type": "object",
           "properties": {
             "tcp": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "description": "Container port for the default syslog listener over TCP. Default 514."
             },
             "udp": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "description": "Container port for the default syslog listener over UDP. Default 514."
             },
             "rfc6587": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "description": "Container port for RFC 6587 (syslog over TCP). Default 601."
             },
             "rfc5426": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "description": "Container port for RFC 5426 (syslog over UDP). Default 601."
             },
             "tls": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "description": "Container port for syslog over TLS. Default 6514."
             },
             "rfc5425": {
-              "$ref": "#/definitions/port"
+              "$ref": "#/definitions/port",
+              "description": "Container port for RFC 5425 (syslog over TLS). Default 5425."
             }
           }
         },
@@ -155,30 +161,38 @@
             ],
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "Source name, for example checkpoint or cisco_asa. Sets the SC4S_LISTEN_<NAME>_* variables."
               },
               "ports": {
                 "type": "object",
                 "properties": {
                   "tcp": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "TCP ports."
                   },
                   "udp": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "UDP ports."
                   },
                   "tls": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "TLS ports. Requires sc4s.existingCert."
                   },
                   "rfc6587": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 6587 (syslog over TCP) ports."
                   },
                   "rfc5426": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5426 (syslog over UDP) ports."
                   },
                   "rfc5425": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5425 (syslog over TLS) ports."
                   }
-                }
+                },
+                "description": "Dedicated listener ports for this source, by transport."
               },
               "options": {
                 "type": "object",
@@ -191,9 +205,11 @@
                         "boolean",
                         "integer"
                       ]
-                    }
+                    },
+                    "description": "Listener options, set as SC4S_LISTEN_<NAME>_<OPTION> variables, for example old_host_rules: \"yes\"."
                   }
-                }
+                },
+                "description": "Extra options for this source."
               }
             }
           }
@@ -221,30 +237,38 @@
             ],
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "Source name, for example checkpoint or cisco_asa. Sets the SC4S_LISTEN_<NAME>_* variables."
               },
               "ports": {
                 "type": "object",
                 "properties": {
                   "tcp": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "TCP ports."
                   },
                   "udp": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "UDP ports."
                   },
                   "tls": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "TLS ports. Requires sc4s.existingCert."
                   },
                   "rfc6587": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 6587 (syslog over TCP) ports."
                   },
                   "rfc5426": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5426 (syslog over UDP) ports."
                   },
                   "rfc5425": {
-                    "$ref": "#/definitions/portList"
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5425 (syslog over TLS) ports."
                   }
-                }
+                },
+                "description": "Dedicated listener ports for this source, by transport."
               },
               "options": {
                 "type": "object",
@@ -257,9 +281,11 @@
                         "boolean",
                         "integer"
                       ]
-                    }
+                    },
+                    "description": "Listener options, set as SC4S_LISTEN_<NAME>_<OPTION> variables, for example old_host_rules: \"yes\"."
                   }
-                }
+                },
+                "description": "Extra options for this source."
               }
             }
           }
@@ -293,7 +319,8 @@
       "type": "object",
       "properties": {
         "repository": {
-          "type": "string"
+          "type": "string",
+          "description": "Image repository."
         },
         "pullPolicy": {
           "type": "string",
@@ -301,12 +328,15 @@
             "Always",
             "IfNotPresent",
             "Never"
-          ]
+          ],
+          "description": "Image pull policy."
         },
         "tag": {
-          "type": "string"
+          "type": "string",
+          "description": "Image tag. Defaults to the chart appVersion."
         }
-      }
+      },
+      "description": "Container image."
     },
     "imagePullSecrets": {
       "type": "array",
@@ -314,40 +344,50 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Secret name."
           }
         }
-      }
+      },
+      "description": "Secrets for pulling the image from a private registry."
     },
     "nameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Replaces the chart name in resource names."
     },
     "fullnameOverride": {
-      "type": "string"
+      "type": "string",
+      "description": "Replaces the full name used for resources."
     },
     "serviceAccount": {
       "type": "object",
       "properties": {
         "create": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Create the service account."
         },
         "annotations": {
-          "$ref": "#/definitions/stringMap"
+          "$ref": "#/definitions/stringMap",
+          "description": "Annotations for the service account."
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Service account name. Generated from the release name when empty."
         }
-      }
+      },
+      "description": "Service account for the SC4S pods."
     },
     "persistence": {
       "description": "Storage for the syslog-ng disk buffer: a persistent volume per pod (statefulset) or a host directory (daemonset).",
       "type": "object",
       "properties": {
         "enabled": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Use a disk buffer, so events waiting for HEC survive restarts. When disabled, they are kept in memory only."
         },
         "annotations": {
-          "$ref": "#/definitions/stringMap"
+          "$ref": "#/definitions/stringMap",
+          "description": "Annotations for the persistent volume claims (statefulset only)."
         },
         "size": {
           "description": "Disk buffer size. With statefulset it is the volume size and cannot be changed after the first install. With daemonset it caps the buffer in the host directory and must be a whole number with an optional K, M, G, T, Ki, Mi, Gi or Ti suffix.",
@@ -367,13 +407,16 @@
       }
     },
     "podAnnotations": {
-      "$ref": "#/definitions/stringMap"
+      "$ref": "#/definitions/stringMap",
+      "description": "Annotations for the SC4S pods."
     },
     "podSecurityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Pod security context, for example runAsUser and fsGroup to run SC4S as non-root."
     },
     "securityContext": {
-      "type": "object"
+      "type": "object",
+      "description": "Container security context."
     },
     "service": {
       "type": "object",
@@ -384,7 +427,8 @@
             "ClusterIP",
             "NodePort",
             "LoadBalancer"
-          ]
+          ],
+          "description": "Service type."
         },
         "usemetallb": {
           "description": "Add the MetalLB shared-IP annotation.",
@@ -398,24 +442,28 @@
           "type": [
             "string",
             "object"
-          ]
+          ],
+          "description": "MetalLB sharing key that lets the TCP and UDP Services share one IP."
         },
         "externalTrafficPolicy": {
           "type": "string",
           "enum": [
             "Local",
             "Cluster"
-          ]
+          ],
+          "description": "Local keeps the senders source IP, which SC4S uses to identify hosts. Cluster spreads traffic over all nodes but replaces the source IP."
         },
         "annotations": {
           "description": "Service annotations, for example AWS Load Balancer Controller NLB settings.",
           "$ref": "#/definitions/stringMap"
         },
         "loadBalancerIP": {
-          "type": "string"
+          "type": "string",
+          "description": "Fixed load balancer IP, where the provider supports it."
         },
         "loadBalancerClass": {
-          "type": "string"
+          "type": "string",
+          "description": "Load balancer implementation, for example service.k8s.aws/nlb (AWS Load Balancer Controller) or eks.amazonaws.com/nlb (EKS Auto Mode)."
         },
         "loadBalancerSourceRanges": {
           "description": "CIDRs allowed to reach the load balancer.",
@@ -424,38 +472,48 @@
             "type": "string"
           }
         }
-      }
+      },
+      "description": "The Kubernetes Services in front of SC4S, one for TCP and one for UDP."
     },
     "resources": {
-      "type": "object"
+      "type": "object",
+      "description": "CPU and memory requests and limits for the SC4S container. A CPU limit can throttle SC4S and cause UDP loss, so prefer requests."
     },
     "autoscaling": {
       "type": "object",
       "properties": {
         "enabled": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "Enable autoscaling."
         },
         "minReplicas": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "description": "Minimum number of pods."
         },
         "maxReplicas": {
           "type": "integer",
-          "minimum": 1
+          "minimum": 1,
+          "description": "Maximum number of pods."
         },
         "targetCPUUtilizationPercentage": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Target average CPU use, in percent."
         },
         "targetMemoryUtilizationPercentage": {
-          "type": "integer"
+          "type": "integer",
+          "description": "Target average memory use, in percent."
         }
-      }
+      },
+      "description": "Horizontal pod autoscaling (statefulset only)."
     },
     "nodeSelector": {
-      "$ref": "#/definitions/stringMap"
+      "$ref": "#/definitions/stringMap",
+      "description": "Node labels that SC4S pods must run on, for example to dedicate nodes to SC4S."
     },
     "tolerations": {
-      "type": "array"
+      "type": "array",
+      "description": "Tolerations, so SC4S can run on tainted nodes such as dedicated ones."
     }
   }
 }

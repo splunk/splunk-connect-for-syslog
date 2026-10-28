@@ -30,6 +30,12 @@ SCHEMA_HIDDEN_PROPERTIES=(
   ".properties.imagePullSecrets"
   ".properties.service.properties.usemetallb"
   ".properties.service.properties.metallbsharingkey"
+  # AWS lists these as settings add-ons should not let customers change.
+  ".properties.nameOverride"
+  ".properties.fullnameOverride"
+  ".properties.podSecurityContext"
+  ".properties.securityContext"
+  ".properties.serviceAccount"
   # The add-on always runs as a DaemonSet; these only apply to the StatefulSet.
   ".properties.workload"
   ".properties.replicaCount"

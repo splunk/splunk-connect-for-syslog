@@ -28,6 +28,14 @@ securityContext:
     drop:
       - ALL
 
+# AWS recommends default resource requests. There are deliberately no limits: a CPU limit
+# throttles SC4S and makes it drop UDP, and an out-of-memory kill loses the in-memory part
+# of the disk buffer.
+resources:
+  requests:
+    cpu: "1"
+    memory: 1Gi
+
 sc4s:
   listenPorts:
     tcp: 5514
