@@ -24,7 +24,7 @@ export ECR_IMAGE_REPO="${ECR_REGISTRY}/splunk/images/splunk-connect-for-syslog"
 ECR_HELM_NAMESPACE="${ECR_REGISTRY}/splunk/charts"
 ECR_HELM_REPO="${ECR_HELM_NAMESPACE}/splunk-connect-for-syslog"
 
-# Values hidden from the add-on configuration schema shown to customers.
+# Values customers cannot set on the add-on: removed from the add-on schema, which refuses unknown keys.
 SCHEMA_HIDDEN_PROPERTIES=(
   ".properties.image"
   ".properties.imagePullSecrets"
@@ -92,6 +92,12 @@ prepare_chart() {
     | .properties.env.description += " Names that look like credentials (TOKEN, PASSWORD, SECRET and similar) are not accepted; put credentials in a Kubernetes Secret."
   ' "${schema}" > "${schema}.tmp" && mv "${schema}.tmp" "${schema}"
 
-  # The packaged chart validates with the same schema EKS uses for the add-on settings.
+  # Helm validates the merged values, including the chart defaults for the hidden settings and
+  # the k8version that AWS passes to helm template, so the packaged chart keeps open objects.
   cp "${schema}" "${EKS_CHART_DIR}/values.schema.json"
+
+  # EKS validates only the customer's settings, so the add-on schema refuses unknown keys
+  # everywhere: hidden settings and typos are rejected instead of silently applied.
+  jq 'walk(if type == "object" and has("properties") and (has("additionalProperties") | not)
+           then .additionalProperties = false else . end)' "${schema}" > "${schema}.tmp" && mv "${schema}.tmp" "${schema}"
 }

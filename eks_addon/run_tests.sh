@@ -22,8 +22,9 @@ prepare_chart
 
 if helm lint "${EKS_CHART_DIR}" > /dev/null; then pass "helm lint"; else fail "helm lint"; fi
 
+# AWS renders add-ons with --set k8version=<version>, so the chart must accept that value.
 for v in "${K8S_VERSIONS[@]}"; do
-  if render --kube-version "${v}" > /dev/null; then pass "renders on Kubernetes ${v}"; else fail "renders on Kubernetes ${v}"; fi
+  if render --kube-version "${v}" --set "k8version=${v}" > /dev/null; then pass "renders on Kubernetes ${v}"; else fail "renders on Kubernetes ${v}"; fi
 done
 
 if jq empty "${EKS_CHART_DIR}/aws_mp_configuration_schema.json"; then
@@ -44,18 +45,37 @@ esac
 undescribed="$(jq -r '[paths(type == "object") as $p | select($p[-2] == "properties") | select((getpath($p).description // "") == "") | $p | map(select(. != "properties" and . != "items")) | join(".")] | join(" ")' "${MP_SCHEMA}")"
 if [[ -z "${undescribed}" ]]; then pass "every add-on setting has a description"; else fail "add-on settings without a description: ${undescribed}"; fi
 
-if cmp -s "${EKS_CHART_DIR}/values.schema.json" "${MP_SCHEMA}"; then
-  pass "chart validates with the add-on schema"
+# The add-on schema is the chart schema with every object closed to unknown keys.
+open_objects='walk(if type == "object" and .additionalProperties == false then del(.additionalProperties) else . end)'
+if [[ "$(jq -S "${open_objects}" "${MP_SCHEMA}")" == "$(jq -S "${open_objects}" "${EKS_CHART_DIR}/values.schema.json")" ]]; then
+  pass "chart schema matches the add-on schema"
 else
-  fail "values.schema.json differs from aws_mp_configuration_schema.json"
+  fail "values.schema.json and aws_mp_configuration_schema.json differ beyond additionalProperties"
 fi
+if [[ "$(jq '.additionalProperties' "${MP_SCHEMA}")" == "false" ]]; then pass "add-on schema refuses unknown top-level settings"; else fail "add-on schema accepts unknown top-level settings"; fi
 
-if rendered="$(render -f "${SAMPLE_SETTINGS}")" && [[ -n "${rendered}" ]]; then
+# EKS validates the customer's settings alone against the add-on schema, before rendering.
+SCHEMA_CHART="${BUILD_DIR}/schema-check"
+mkdir -p "${SCHEMA_CHART}"
+printf 'apiVersion: v2\nname: schema-check\nversion: 0.0.0\n' > "${SCHEMA_CHART}/Chart.yaml"
+cp "${MP_SCHEMA}" "${SCHEMA_CHART}/values.schema.json"
+settings_ok() { helm template schema-check "${SCHEMA_CHART}" "$@" > /dev/null 2>&1; }
+
+if settings_ok -f "${SAMPLE_SETTINGS}" && rendered="$(render -f "${SAMPLE_SETTINGS}")" && [[ -n "${rendered}" ]]; then
   pass "sample settings pass the add-on schema"
 else
   fail "sample settings rejected"
   rendered=""
 fi
+
+accepted=()
+for prop in "${SCHEMA_HIDDEN_PROPERTIES[@]}"; do
+  setting="${prop#.properties.}"
+  setting="${setting//.properties./.}"
+  if settings_ok --set "${setting}=x"; then accepted+=("${setting}"); fi
+done
+if settings_ok --set nodeSelecter.role=sc4s; then accepted+=("nodeSelecter (typo)"); fi
+if [[ ${#accepted[@]} -eq 0 ]]; then pass "add-on schema rejects hidden settings and unknown keys"; else fail "add-on schema accepts: ${accepted[*]}"; fi
 
 # Add-on settings must be camelCase; the chart's older snake_case names are refused.
 if render --set splunk.hec_url=https://x:8088 > /dev/null 2>&1 || render --set-json 'sc4s.vendor_product=[]' > /dev/null 2>&1; then

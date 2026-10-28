@@ -210,6 +210,8 @@ fi
 
 # Set HEC indexes and test connectivity with sending "HEC TEST EVENT"
 normalize_hec_url
+# Tokens read from files or Kubernetes Secrets often end in a newline; HEC tokens never contain whitespace.
+export SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN="$(printf '%s' "${SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN}" | tr -d '[:space:]')"
 if [[ "$SC4S_DEST_SPLUNK_HEC_GLOBAL" != "no" ]]
 then
   HEC=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | cut -d' ' -f 1)
