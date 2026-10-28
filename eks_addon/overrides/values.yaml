@@ -1,5 +1,8 @@
 # EKS add-on defaults, merged over the chart's values.yaml at build time.
 
+# EKS add-ons must contain a Deployment or DaemonSet, which EKS uses to track the add-on.
+workload: daemonset
+
 # EKS add-ons may only pull images from the AWS Marketplace ECR registry.
 image:
   repository: ${ECR_IMAGE_REPO}

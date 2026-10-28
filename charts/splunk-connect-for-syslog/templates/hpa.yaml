@@ -1,4 +1,7 @@
 {{- if .Values.autoscaling.enabled }}
+{{- if eq .Values.workload "daemonset" }}
+{{- fail "autoscaling cannot be used with workload: daemonset, which runs one pod per node; scale by adding nodes instead" }}
+{{- end }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:

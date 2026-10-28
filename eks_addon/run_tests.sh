@@ -54,6 +54,12 @@ else
 
   if grep -q '^kind: CustomResourceDefinition' <<< "${rendered}"; then fail "chart contains CRDs"; else pass "no CRDs"; fi
 
+  if grep -qE '^kind: (Deployment|DaemonSet)$' <<< "${rendered}"; then
+    pass "contains a Deployment or DaemonSet"
+  else
+    fail "no Deployment or DaemonSet, which EKS needs to track the add-on"
+  fi
+
   images="$(grep -E '^\s+image:' <<< "${rendered}" | awk '{print $2}' | tr -d '"' || true)"
   bad_images="$(grep -v "^${ECR_REGISTRY}/" <<< "${images}" || true)"
   if [[ -z "${images}" ]]; then

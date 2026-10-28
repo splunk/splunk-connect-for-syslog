@@ -30,6 +30,12 @@ SCHEMA_HIDDEN_PROPERTIES=(
   ".properties.imagePullSecrets"
   ".properties.service.properties.usemetallb"
   ".properties.service.properties.metallbsharingkey"
+  # The add-on always runs as a DaemonSet; these only apply to the StatefulSet.
+  ".properties.workload"
+  ".properties.replicaCount"
+  ".properties.autoscaling"
+  ".properties.persistence.properties.storageClass"
+  ".properties.persistence.properties.annotations"
 )
 
 prepare_chart() {

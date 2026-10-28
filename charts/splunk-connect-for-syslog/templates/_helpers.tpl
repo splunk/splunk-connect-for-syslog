@@ -80,6 +80,9 @@ add-on's NLB health check assume is 0.0.0.0:8080.
 {{- if .Values.splunk.hec_tls -}}
 {{- $names = append $names "SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT" -}}
 {{- end -}}
+{{- if and (eq .Values.workload "daemonset") .Values.persistence.enabled -}}
+{{- $names = append $names "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE" -}}
+{{- end -}}
 {{- with .Values.sc4s.proxy -}}
 {{- if .http }}{{ $names = append $names "http_proxy" }}{{ end -}}
 {{- if .https }}{{ $names = append $names "https_proxy" }}{{ end -}}
@@ -92,6 +95,28 @@ add-on's NLB health check assume is 0.0.0.0:8080.
 {{- with $vp.options }}{{ range $key, $_ := .listen }}{{ $names = append $names (printf "SC4S_LISTEN_%s_%s" (upper $vp.name) (upper $key)) }}{{ end }}{{ end -}}
 {{- end -}}
 {{- join " " $names -}}
+{{- end }}
+
+{{/*
+Bytes in a size such as "10Gi" or "50G" (whole numbers, K/M/G/T or Ki/Mi/Gi/Ti).
+*/}}
+{{- define "splunk-connect-for-syslog.quantityBytes" -}}
+{{- $q := . -}}
+{{- if kindIs "float64" $q }}{{ $q = int64 $q }}{{ end -}}
+{{- $q = toString $q -}}
+{{- if not (regexMatch "^[0-9]+([KMGT]i?)?$" $q) -}}
+{{- fail (printf "persistence.size %q must be a whole number with an optional K, M, G, T, Ki, Mi, Gi or Ti suffix when workload is daemonset" $q) -}}
+{{- end -}}
+{{- $units := dict "" 1 "K" 1000 "M" 1000000 "G" 1000000000 "T" 1000000000000 "Ki" 1024 "Mi" 1048576 "Gi" 1073741824 "Ti" 1099511627776 -}}
+{{- mul (regexReplaceAll "[^0-9]" $q "" | int64) (get $units (regexReplaceAll "^[0-9]+" $q "")) -}}
+{{- end }}
+
+{{/*
+Disk buffer bytes per HEC worker, so that all workers together stay within persistence.size.
+*/}}
+{{- define "splunk-connect-for-syslog.diskBufferPerWorker" -}}
+{{- $workers := .Values.env.SC4S_DEST_SPLUNK_HEC_DEFAULT_WORKERS | default 10 | int64 -}}
+{{- div (include "splunk-connect-for-syslog.quantityBytes" .Values.persistence.size | int64) $workers -}}
 {{- end }}
 
 {{/*

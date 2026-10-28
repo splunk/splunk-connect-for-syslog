@@ -1,15 +1,23 @@
+{{- $daemonset := eq .Values.workload "daemonset" }}
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: {{ ternary "DaemonSet" "StatefulSet" $daemonset }}
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 spec:
+  {{- if $daemonset }}
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  {{- else }}
   serviceName: {{ include "splunk-connect-for-syslog.fullname" . }}
 
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:
@@ -43,6 +51,27 @@ spec:
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- $runAsUser := .Values.podSecurityContext.runAsUser | default 0 | int }}
+      {{- if and $daemonset .Values.persistence.enabled (gt $runAsUser 0) }}
+      initContainers:
+        # The kubelet creates the host directory owned by root; hand it to the non-root user.
+        - name: disk-buffer-owner
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["chown", "{{ $runAsUser }}:{{ .Values.podSecurityContext.runAsGroup | default $runAsUser }}", "/var/lib/syslog-ng"]
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/syslog-ng/
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -108,6 +137,12 @@ spec:
           {{- else }}            
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "no"
+          {{- end }}
+          {{- if and $daemonset .Values.persistence.enabled }}
+          # SC4S sizes the buffer from the free space of the filesystem, which for a
+          # host directory is the node's disk, so cap it at persistence.size.
+          - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE
+            value: {{ include "splunk-connect-for-syslog.diskBufferPerWorker" . | quote }}
           {{- end }}
           {{- if .Values.splunk.hec_tls }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT
@@ -290,6 +325,12 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
+        {{- if and $daemonset .Values.persistence.enabled }}
+        - name: data
+          hostPath:
+            path: {{ printf "%s/%s/%s" (.Values.persistence.hostPath | trimSuffix "/") .Release.Namespace .Release.Name }}
+            type: DirectoryOrCreate
+        {{- end }}
         {{- if .Values.splunk.hec_tls }}
         - name: hec-tls
           secret:
@@ -319,6 +360,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if not $daemonset }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -332,12 +374,13 @@ spec:
                 operator: In
                 values:
                 - {{ include "splunk-connect-for-syslog.name" . }}
-            topologyKey: "kubernetes.io/hostname"      
+            topologyKey: "kubernetes.io/hostname"
+      {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- if .Values.persistence.enabled }}
+  {{- if and (not $daemonset) .Values.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
       name: data

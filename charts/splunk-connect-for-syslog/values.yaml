@@ -3,6 +3,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Kubernetes workload that runs SC4S:
+#   statefulset - replicaCount pods, at most one per node, each with its own
+#                 persistent volume for the disk buffer.
+#   daemonset   - one pod on every node allowed by nodeSelector and tolerations.
+#                 The disk buffer lives in a host directory (persistence.hostPath)
+#                 capped at persistence.size, and autoscaling is not available.
+#                 Host directories are not allowed under the baseline or
+#                 restricted Pod Security Standards.
+workload: statefulset
+
 replicaCount: 2
 
 splunk:
@@ -202,6 +212,9 @@ persistence:
   enabled: true
   annotations: {}
   size: "10Gi"
+  # Disk buffer directory on the node when workload is daemonset; each release
+  # uses <hostPath>/<namespace>/<release>.
+  hostPath: /var/lib/sc4s
 
 #  storageClass: ""
 

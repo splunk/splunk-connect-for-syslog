@@ -18,8 +18,13 @@
     }
   },
   "properties": {
+    "workload": {
+      "description": "Kubernetes workload that runs SC4S: statefulset (replicaCount pods, each with its own persistent volume) or daemonset (one pod per allowed node, disk buffer in a host directory).",
+      "type": "string",
+      "enum": ["statefulset", "daemonset"]
+    },
     "replicaCount": {
-      "description": "Number of SC4S pods. Ignored when autoscaling.enabled is true.",
+      "description": "Number of SC4S pods with workload statefulset. Ignored when autoscaling.enabled is true.",
       "type": "integer",
       "minimum": 1
     },
@@ -159,17 +164,21 @@
       }
     },
     "persistence": {
-      "description": "Per-pod volume for the syslog-ng disk buffer.",
+      "description": "Storage for the syslog-ng disk buffer: a persistent volume per pod (statefulset) or a host directory (daemonset).",
       "type": "object",
       "properties": {
         "enabled": { "type": "boolean" },
         "annotations": { "$ref": "#/definitions/stringMap" },
         "size": {
-          "description": "Volume size. Cannot be changed after the first install.",
-          "type": "string"
+          "description": "Disk buffer size. With statefulset it is the volume size and cannot be changed after the first install. With daemonset it caps the buffer in the host directory and must be a whole number with an optional K, M, G, T, Ki, Mi, Gi or Ti suffix.",
+          "type": ["string", "integer"]
         },
         "storageClass": {
-          "description": "StorageClass for the volume. Uses the cluster default when empty.",
+          "description": "StorageClass for the volume (statefulset only). Uses the cluster default when empty.",
+          "type": "string"
+        },
+        "hostPath": {
+          "description": "Host directory for the disk buffer (daemonset only). Each release uses <hostPath>/<namespace>/<release>.",
           "type": "string"
         }
       }

@@ -189,6 +189,27 @@ Both `securityContext` maps default to an empty context (root). Set only the
 fields you need; the values you provide are passed through to the pod and
 container `securityContext` verbatim.
 
+# Run SC4S as a DaemonSet
+
+By default the chart runs SC4S as a StatefulSet: `replicaCount` pods, at most one per node, each with its own persistent volume for the disk buffer. To run one SC4S pod on every node instead, set `workload: daemonset`. Use `nodeSelector` and `tolerations` to limit it to the nodes you dedicate to SC4S:
+
+```yaml
+workload: daemonset
+nodeSelector:
+  sc4s: "true"
+persistence:
+  size: "10Gi"
+```
+
+In this mode:
+
+- The disk buffer is stored in a directory on the node, `<persistence.hostPath>/<namespace>/<release>` (`/var/lib/sc4s/...` by default), so it survives pod restarts and upgrades on that node. It is capped at `persistence.size`, which must be a whole number with an optional `K`, `M`, `G`, `T`, `Ki`, `Mi`, `Gi` or `Ti` suffix.
+- If SC4S runs as a non-root user, a short init container that runs as root with only the `CHOWN` capability hands the directory to that user.
+- The namespace must allow host directories, which the baseline and restricted Pod Security Standards forbid.
+- Autoscaling is not available. Add or remove nodes to scale.
+
+Switching an existing release between `statefulset` and `daemonset` leaves the previous storage behind: the StatefulSet's persistent volume claims, or the node directories. Any events still buffered there are not delivered, so let the buffer drain before you switch, then delete the old storage.
+
 # Manage resources
 
 You should expect your system to require two instances per node by default. Adjust requests and limits to allow each instance to use about 40% of each node, presuming no other workload is present. 
