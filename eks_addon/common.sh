@@ -64,11 +64,22 @@ prepare_chart() {
     jq "del(${prop})" "${schema}" > "${schema}.tmp" && mv "${schema}.tmp" "${schema}"
   done
 
+  # Add-on settings must be camelCase: the chart's older snake_case names (hec_url,
+  # vendor_product, ...) are dropped, and unknown keys are refused so they cannot slip in.
+  jq '
+    del(.properties.splunk.properties.hec_url, .properties.splunk.properties.hec_verify_tls,
+        .properties.splunk.properties.hec_tls, .properties.sc4s.properties.vendor_product,
+        .properties.sc4s.properties.context_files, .properties.sc4s.properties.config_files,
+        .properties.sc4s.properties.proxy.properties.no_proxy)
+    | .properties.sc4s.additionalProperties = false
+    | .properties.sc4s.properties.proxy.additionalProperties = false
+  ' "${schema}" > "${schema}.tmp" && mv "${schema}.tmp" "${schema}"
+
   # Add-on settings must not accept secrets. The HEC token comes from a Kubernetes Secret
-  # (splunk.existingSecret), so hec_token is refused, and so are env names that look like
-  # credentials, for example a token for a second HEC destination.
+  # (splunk.existingSecret), so hecToken/hec_token are refused, and so are env names that
+  # look like credentials, for example a token for a second HEC destination.
   jq --arg secrets "${SCHEMA_SECRET_ENV_PATTERN}" '
-    del(.properties.splunk.properties.hec_token)
+    del(.properties.splunk.properties.hec_token, .properties.splunk.properties.hecToken)
     | .properties.splunk.additionalProperties = false
     | .properties.splunk.properties.existingSecret.description = "Name of the Kubernetes Secret that holds the HEC token. Create it in the add-on namespace before installing the add-on."
     | .properties.env.propertyNames = {"allOf": [.properties.env.propertyNames, {"not": {"pattern": $secrets}}]}

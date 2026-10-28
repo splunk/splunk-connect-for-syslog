@@ -33,9 +33,9 @@ helm repo update
 replicaCount: 2
 
 splunk:
-  hec_url: "https://<your-splunk-host>:8088"
-  hec_token: "<your-hec-token>"
-  hec_verify_tls: "yes"
+  hecUrl: "https://<your-splunk-host>:8088"
+  hecToken: "<your-hec-token>"
+  hecVerifyTls: "yes"
 
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container3
@@ -160,9 +160,9 @@ To enable autoscaling, add the following to your `values.yaml`. This configures 
 replicaCount: 2
 
 splunk:
-  hec_url: "https://<your-splunk-host>:8088"
-  hec_token: "<your-hec-token>"
-  hec_verify_tls: "yes"
+  hecUrl: "https://<your-splunk-host>:8088"
+  hecToken: "<your-hec-token>"
+  hecVerifyTls: "yes"
 
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container3

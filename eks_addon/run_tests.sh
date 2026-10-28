@@ -45,6 +45,15 @@ else
   rendered=""
 fi
 
+# Add-on settings must be camelCase; the chart's older snake_case names are refused.
+if render --set splunk.hec_url=https://x:8088 > /dev/null 2>&1 || render --set-json 'sc4s.vendor_product=[]' > /dev/null 2>&1; then
+  fail "add-on schema accepts old snake_case setting names"
+else
+  pass "add-on schema rejects old snake_case setting names"
+fi
+non_camel="$(jq -r '[paths | select(.[-2] == "properties") | .[-1]] | unique | .[] | select(test("^[a-z][a-zA-Z0-9]*$") | not)' "${EKS_CHART_DIR}/aws_mp_configuration_schema.json")"
+if [[ -z "${non_camel}" ]]; then pass "all add-on setting names are camelCase"; else fail "add-on setting names not camelCase: $(echo ${non_camel})"; fi
+
 # Add-on settings must not accept secrets (AWS INVALID_HELM_SENSITIVE_CONFIG).
 if render --set splunk.hec_token=x > /dev/null 2>&1; then fail "add-on schema accepts splunk.hec_token"; else pass "add-on schema rejects splunk.hec_token"; fi
 if render --set env.SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=x > /dev/null 2>&1; then

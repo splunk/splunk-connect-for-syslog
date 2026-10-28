@@ -4,24 +4,34 @@
   "type": "object",
   "definitions": {
     "port": {
-      "type": ["integer", "string"],
+      "type": [
+        "integer",
+        "string"
+      ],
       "minimum": 1,
       "maximum": 65535
     },
     "portList": {
       "type": "array",
-      "items": { "$ref": "#/definitions/port" }
+      "items": {
+        "$ref": "#/definitions/port"
+      }
     },
     "stringMap": {
       "type": "object",
-      "additionalProperties": { "type": "string" }
+      "additionalProperties": {
+        "type": "string"
+      }
     }
   },
   "properties": {
     "workload": {
       "description": "Kubernetes workload that runs SC4S: statefulset (replicaCount pods, each with its own persistent volume) or daemonset (one pod per allowed node, disk buffer in a host directory).",
       "type": "string",
-      "enum": ["statefulset", "daemonset"]
+      "enum": [
+        "statefulset",
+        "daemonset"
+      ]
     },
     "replicaCount": {
       "description": "Number of SC4S pods with workload statefulset. Ignored when autoscaling.enabled is true.",
@@ -33,27 +43,49 @@
       "type": "object",
       "properties": {
         "hec_url": {
-          "description": "Splunk HEC URL, for example https://splunk.example.com:8088. Separate multiple URLs with commas.",
+          "description": "Deprecated: use hecUrl instead. Splunk HEC URL, for example https://splunk.example.com:8088. Separate multiple URLs with commas.",
           "type": "string"
         },
         "hec_token": {
-          "description": "HEC token. Prefer existingSecret so the token is not stored in the release values.",
+          "description": "Deprecated: use hecToken instead. HEC token. Prefer existingSecret so the token is not stored in the release values.",
           "type": "string"
         },
         "hec_verify_tls": {
-          "description": "Verify the HEC server certificate (yes or no).",
-          "type": ["string", "boolean"]
+          "description": "Deprecated: use hecVerifyTls instead. Verify the HEC server certificate (yes or no).",
+          "type": [
+            "string",
+            "boolean"
+          ]
         },
         "hec_tls": {
-          "description": "Name of a Secret with client TLS material for HEC, mounted at /etc/syslog-ng/tls/hec.",
+          "description": "Deprecated: use hecTls instead. Name of a Secret with client TLS material for HEC, mounted at /etc/syslog-ng/tls/hec.",
           "type": "string"
         },
         "existingSecret": {
-          "description": "Name of an existing Secret holding the HEC token. When set, hec_token is ignored and no Secret is created.",
+          "description": "Name of an existing Secret holding the HEC token. When set, hecToken is ignored and no Secret is created.",
           "type": "string"
         },
         "existingSecretKey": {
           "description": "Key inside existingSecret that holds the HEC token.",
+          "type": "string"
+        },
+        "hecUrl": {
+          "description": "Splunk HEC URL, for example https://splunk.example.com:8088. Separate multiple URLs with commas.",
+          "type": "string"
+        },
+        "hecToken": {
+          "description": "HEC token. Prefer existingSecret so the token is not stored in the release values.",
+          "type": "string"
+        },
+        "hecVerifyTls": {
+          "description": "Verify the HEC server certificate (yes or no).",
+          "type": [
+            "string",
+            "boolean"
+          ]
+        },
+        "hecTls": {
+          "description": "Name of a Secret with client TLS material for HEC, mounted at /etc/syslog-ng/tls/hec.",
           "type": "string"
         }
       }
@@ -66,21 +98,46 @@
           "description": "Container ports for the default listeners. The Service always exposes 514/601/6514/5425 externally.",
           "type": "object",
           "properties": {
-            "tcp": { "$ref": "#/definitions/port" },
-            "udp": { "$ref": "#/definitions/port" },
-            "rfc6587": { "$ref": "#/definitions/port" },
-            "rfc5426": { "$ref": "#/definitions/port" },
-            "tls": { "$ref": "#/definitions/port" },
-            "rfc5425": { "$ref": "#/definitions/port" }
+            "tcp": {
+              "$ref": "#/definitions/port"
+            },
+            "udp": {
+              "$ref": "#/definitions/port"
+            },
+            "rfc6587": {
+              "$ref": "#/definitions/port"
+            },
+            "rfc5426": {
+              "$ref": "#/definitions/port"
+            },
+            "tls": {
+              "$ref": "#/definitions/port"
+            },
+            "rfc5425": {
+              "$ref": "#/definitions/port"
+            }
           }
         },
         "proxy": {
           "description": "HTTP proxy settings for HEC traffic.",
           "type": "object",
           "properties": {
-            "http": { "type": "string" },
-            "https": { "type": "string" },
-            "no_proxy": { "type": "string" }
+            "http": {
+              "type": "string",
+              "description": "Proxy URL for HTTP traffic, for example http://proxy.example.com:3128."
+            },
+            "https": {
+              "type": "string",
+              "description": "Proxy URL for HTTPS traffic, such as HEC."
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Deprecated: use noProxy instead. Comma-separated hosts, domains and CIDRs that bypass the proxy."
+            },
+            "noProxy": {
+              "type": "string",
+              "description": "Comma-separated hosts, domains and CIDRs that bypass the proxy."
+            }
           }
         },
         "existingCert": {
@@ -88,22 +145,39 @@
           "type": "string"
         },
         "vendor_product": {
-          "description": "Dedicated listener ports per vendor/product.",
+          "description": "Deprecated: use vendorProduct instead. Dedicated listener ports per vendor/product.",
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["name", "ports"],
+            "required": [
+              "name",
+              "ports"
+            ],
             "properties": {
-              "name": { "type": "string" },
+              "name": {
+                "type": "string"
+              },
               "ports": {
                 "type": "object",
                 "properties": {
-                  "tcp": { "$ref": "#/definitions/portList" },
-                  "udp": { "$ref": "#/definitions/portList" },
-                  "tls": { "$ref": "#/definitions/portList" },
-                  "rfc6587": { "$ref": "#/definitions/portList" },
-                  "rfc5426": { "$ref": "#/definitions/portList" },
-                  "rfc5425": { "$ref": "#/definitions/portList" }
+                  "tcp": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "udp": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "tls": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "rfc6587": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "rfc5426": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "rfc5425": {
+                    "$ref": "#/definitions/portList"
+                  }
                 }
               },
               "options": {
@@ -111,7 +185,13 @@
                 "properties": {
                   "listen": {
                     "type": "object",
-                    "additionalProperties": { "type": ["string", "boolean", "integer"] }
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "boolean",
+                        "integer"
+                      ]
+                    }
                   }
                 }
               }
@@ -119,15 +199,77 @@
           }
         },
         "context_files": {
-          "description": "Context files such as splunk_metadata.csv or host.csv, keyed by file name.",
+          "description": "Deprecated: use contextFiles instead. Context files such as splunk_metadata.csv or host.csv, keyed by file name.",
           "$ref": "#/definitions/stringMap"
         },
         "config_files": {
-          "description": "Custom syslog-ng parser files mounted as app_parsers, keyed by file name.",
+          "description": "Deprecated: use configFiles instead. Custom syslog-ng parser files mounted as app_parsers, keyed by file name.",
           "$ref": "#/definitions/stringMap"
         },
         "addons": {
           "description": "Add-on configuration files, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "vendorProduct": {
+          "description": "Dedicated listener ports per vendor/product.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "ports"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "ports": {
+                "type": "object",
+                "properties": {
+                  "tcp": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "udp": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "tls": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "rfc6587": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "rfc5426": {
+                    "$ref": "#/definitions/portList"
+                  },
+                  "rfc5425": {
+                    "$ref": "#/definitions/portList"
+                  }
+                }
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "listen": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "boolean",
+                        "integer"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "contextFiles": {
+          "description": "Context files such as splunk_metadata.csv or host.csv, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "configFiles": {
+          "description": "Custom syslog-ng parser files mounted as app_parsers, keyed by file name.",
           "$ref": "#/definitions/stringMap"
         }
       }
@@ -135,43 +277,84 @@
     "env": {
       "description": "Extra environment variables for SC4S settings without a dedicated value, for example SC4S_SOURCE_UDP_SO_RCVBUFF or SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE. Variables the chart manages, such as the HEC URL, listen ports or health check port, are rejected. Booleans are converted to yes/no.",
       "type": "object",
-      "propertyNames": { "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" },
-      "additionalProperties": { "type": ["string", "integer", "number", "boolean"] }
+      "propertyNames": {
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "integer",
+          "number",
+          "boolean"
+        ]
+      }
     },
     "image": {
       "type": "object",
       "properties": {
-        "repository": { "type": "string" },
-        "pullPolicy": { "type": "string", "enum": ["Always", "IfNotPresent", "Never"] },
-        "tag": { "type": "string" }
+        "repository": {
+          "type": "string"
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ]
+        },
+        "tag": {
+          "type": "string"
+        }
       }
     },
     "imagePullSecrets": {
       "type": "array",
       "items": {
         "type": "object",
-        "properties": { "name": { "type": "string" } }
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
       }
     },
-    "nameOverride": { "type": "string" },
-    "fullnameOverride": { "type": "string" },
+    "nameOverride": {
+      "type": "string"
+    },
+    "fullnameOverride": {
+      "type": "string"
+    },
     "serviceAccount": {
       "type": "object",
       "properties": {
-        "create": { "type": "boolean" },
-        "annotations": { "$ref": "#/definitions/stringMap" },
-        "name": { "type": "string" }
+        "create": {
+          "type": "boolean"
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap"
+        },
+        "name": {
+          "type": "string"
+        }
       }
     },
     "persistence": {
       "description": "Storage for the syslog-ng disk buffer: a persistent volume per pod (statefulset) or a host directory (daemonset).",
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean" },
-        "annotations": { "$ref": "#/definitions/stringMap" },
+        "enabled": {
+          "type": "boolean"
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap"
+        },
         "size": {
           "description": "Disk buffer size. With statefulset it is the volume size and cannot be changed after the first install. With daemonset it caps the buffer in the host directory and must be a whole number with an optional K, M, G, T, Ki, Mi, Gi or Ti suffix.",
-          "type": ["string", "integer"]
+          "type": [
+            "string",
+            "integer"
+          ]
         },
         "storageClass": {
           "description": "StorageClass for the volume (statefulset only). Uses the cluster default when empty.",
@@ -183,44 +366,96 @@
         }
       }
     },
-    "podAnnotations": { "$ref": "#/definitions/stringMap" },
-    "podSecurityContext": { "type": "object" },
-    "securityContext": { "type": "object" },
+    "podAnnotations": {
+      "$ref": "#/definitions/stringMap"
+    },
+    "podSecurityContext": {
+      "type": "object"
+    },
+    "securityContext": {
+      "type": "object"
+    },
     "service": {
       "type": "object",
       "properties": {
-        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
+        "type": {
+          "type": "string",
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer"
+          ]
+        },
         "usemetallb": {
           "description": "Add the MetalLB shared-IP annotation.",
-          "type": ["boolean", "string", "object"]
+          "type": [
+            "boolean",
+            "string",
+            "object"
+          ]
         },
-        "metallbsharingkey": { "type": ["string", "object"] },
-        "externalTrafficPolicy": { "type": "string", "enum": ["Local", "Cluster"] },
+        "metallbsharingkey": {
+          "type": [
+            "string",
+            "object"
+          ]
+        },
+        "externalTrafficPolicy": {
+          "type": "string",
+          "enum": [
+            "Local",
+            "Cluster"
+          ]
+        },
         "annotations": {
           "description": "Service annotations, for example AWS Load Balancer Controller NLB settings.",
           "$ref": "#/definitions/stringMap"
         },
-        "loadBalancerIP": { "type": "string" },
-        "loadBalancerClass": { "type": "string" },
+        "loadBalancerIP": {
+          "type": "string"
+        },
+        "loadBalancerClass": {
+          "type": "string"
+        },
         "loadBalancerSourceRanges": {
           "description": "CIDRs allowed to reach the load balancer.",
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
-    "resources": { "type": "object" },
+    "resources": {
+      "type": "object"
+    },
     "autoscaling": {
       "type": "object",
       "properties": {
-        "enabled": { "type": "boolean" },
-        "minReplicas": { "type": "integer", "minimum": 1 },
-        "maxReplicas": { "type": "integer", "minimum": 1 },
-        "targetCPUUtilizationPercentage": { "type": "integer" },
-        "targetMemoryUtilizationPercentage": { "type": "integer" }
+        "enabled": {
+          "type": "boolean"
+        },
+        "minReplicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxReplicas": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "targetCPUUtilizationPercentage": {
+          "type": "integer"
+        },
+        "targetMemoryUtilizationPercentage": {
+          "type": "integer"
+        }
       }
     },
-    "nodeSelector": { "$ref": "#/definitions/stringMap" },
-    "tolerations": { "type": "array" }
+    "nodeSelector": {
+      "$ref": "#/definitions/stringMap"
+    },
+    "tolerations": {
+      "type": "array"
+    }
   }
 }

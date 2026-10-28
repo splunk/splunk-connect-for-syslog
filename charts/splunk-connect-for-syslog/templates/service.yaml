@@ -1,3 +1,4 @@
+{{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -49,8 +50,8 @@ spec:
       name: ietf-dflt-tls
 
   {{- if .Values.sc4s }}
-  {{- if .Values.sc4s.vendor_product }}
-    {{- range $vp := .Values.sc4s.vendor_product }}
+  {{- if $cfg.vendorProduct }}
+    {{- range $vp := $cfg.vendorProduct }}
         {{- if $vp.ports.tcp }}
           {{- range $p := $vp.ports.tcp }}
     - name: bsd-{{ $p }}-tcp
@@ -130,8 +131,8 @@ spec:
       protocol: UDP
       name: ietf-dflt-udp
 {{- if .Values.sc4s }}
-  {{- if .Values.sc4s.vendor_product }}
-    {{- range $vp := .Values.sc4s.vendor_product }}
+  {{- if $cfg.vendorProduct }}
+    {{- range $vp := $cfg.vendorProduct }}
         {{- if $vp.ports.udp }}
           {{- range $p := $vp.ports.udp }}
     - name: bsd-{{ $p }}-udp

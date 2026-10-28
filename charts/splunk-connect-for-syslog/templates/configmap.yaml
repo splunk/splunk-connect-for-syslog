@@ -1,4 +1,5 @@
-{{- if .Values.sc4s.context_files }}
+{{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml }}
+{{- if $cfg.contextFiles }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,5 +8,5 @@ metadata:
   labels:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 data:
-{{ toYaml .Values.sc4s.context_files | indent 2 }}
+{{ toYaml $cfg.contextFiles | indent 2 }}
 {{- end }}

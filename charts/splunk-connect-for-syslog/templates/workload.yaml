@@ -1,4 +1,5 @@
 {{- $daemonset := eq .Values.workload "daemonset" }}
+{{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml }}
 apiVersion: apps/v1
 kind: {{ ternary "DaemonSet" "StatefulSet" $daemonset }}
 metadata:
@@ -28,13 +29,13 @@ spec:
         {{- if not .Values.splunk.existingSecret }}
         checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
         {{- end }}
-        {{- if .Values.sc4s.config_files }}
+        {{- if $cfg.configFiles }}
         checksum/config: {{ include (print $.Template.BasePath "/config-configmap.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.sc4s.addons }}
         checksum/addon-config: {{ include (print $.Template.BasePath "/addon-configmap.yaml") . | sha256sum }}
         {{- end }}
-        {{- if .Values.sc4s.context_files }}
+        {{- if $cfg.contextFiles }}
         checksum/context-config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
       {{- with .Values.podAnnotations }}
@@ -104,7 +105,7 @@ spec:
           - name: SC4S_LISTEN_DEFAULT_RFC5425_PORT
             value: "{{ $lp.rfc5425 | default 5425 }}"
           # Inject additional enviroment variable from values.yaml to add proxy support
-          {{- with .Values.sc4s.proxy }}
+          {{- with $cfg.proxy }}
           {{- if .http }}
           - name: http_proxy
             value: {{ .http | quote }}
@@ -113,19 +114,19 @@ spec:
           - name: https_proxy
             value: {{ .https | quote }}
           {{- end }}
-          {{- if .no_proxy }}
+          {{- if .noProxy }}
           - name: no_proxy
-            value: {{ .no_proxy | quote }}
+            value: {{ .noProxy | quote }}
           {{- end }}
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
-            value: "{{ .Values.splunk.hec_url }}"
+            value: "{{ $cfg.hecUrl }}"
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
             valueFrom:
               secretKeyRef:
                 name: {{ .Values.splunk.existingSecret | default "splunk-connection" }}
                 key: {{ .Values.splunk.existingSecretKey | default "hec_token" }}
-          {{- $verify := .Values.splunk.hec_verify_tls }}
+          {{- $verify := $cfg.hecVerifyTls }}
           {{- if not (kindIs "bool" $verify) }}
           {{- $verify = default "yes" $verify }}
           {{- end }}
@@ -144,7 +145,7 @@ spec:
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE
             value: {{ include "splunk-connect-for-syslog.diskBufferPerWorker" . | quote }}
           {{- end }}
-          {{- if .Values.splunk.hec_tls }}
+          {{- if $cfg.hecTls }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT
             value: "/etc/syslog-ng/tls/hec"
           {{- end }}
@@ -156,8 +157,8 @@ spec:
             value: "no"
           {{- end }}
           {{- if .Values.sc4s }}
-          {{- if .Values.sc4s.vendor_product }}
-            {{- range $vp := .Values.sc4s.vendor_product }}
+          {{- if $cfg.vendorProduct }}
+            {{- range $vp := $cfg.vendorProduct }}
                 {{- if $vp.ports.tcp }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_TCP_PORT
             value: {{ $vp.ports.tcp | join "," | quote}}
@@ -225,8 +226,8 @@ spec:
               containerPort: 8080
               protocol: TCP
           {{- if .Values.sc4s }}
-          {{- if .Values.sc4s.vendor_product }}
-            {{- range $vp := .Values.sc4s.vendor_product }}
+          {{- if $cfg.vendorProduct }}
+            {{- range $vp := $cfg.vendorProduct }}
                 {{- if $vp.ports.tcp }}
                   {{- range $p := $vp.ports.tcp }}
             - name: bsd-{{ $p }}-tcp
@@ -277,7 +278,7 @@ spec:
           - name: data
             mountPath: /var/lib/syslog-ng/
           {{- end }}
-          {{- if .Values.splunk.hec_tls }}
+          {{- if $cfg.hecTls }}
           - name: hec-tls
             mountPath: /etc/syslog-ng/tls/hec/
             readOnly: true
@@ -287,12 +288,12 @@ spec:
             mountPath: /etc/syslog-ng/tls/
             readOnly: true
           {{- end }}
-          {{- if .Values.sc4s.context_files }}
+          {{- if $cfg.contextFiles }}
           - name: context
             mountPath: /etc/syslog-ng/conf.d/configmap/context/
             readOnly: true
           {{- end }}
-          {{- if .Values.sc4s.config_files }}
+          {{- if $cfg.configFiles }}
           - name: config
             mountPath: /etc/syslog-ng/conf.d/configmap/config/app_parsers
             readOnly: true
@@ -331,22 +332,22 @@ spec:
             path: {{ printf "%s/%s/%s" (.Values.persistence.hostPath | trimSuffix "/") .Release.Namespace .Release.Name }}
             type: DirectoryOrCreate
         {{- end }}
-        {{- if .Values.splunk.hec_tls }}
+        {{- if $cfg.hecTls }}
         - name: hec-tls
           secret:
-            secretName: {{ .Values.splunk.hec_tls }}
+            secretName: {{ $cfg.hecTls }}
         {{- end }}
         {{- if .Values.sc4s.existingCert }}
         - name: tls
           secret:
             secretName: {{ .Values.sc4s.existingCert }}
         {{- end }}               
-        {{- if .Values.sc4s.context_files }}
+        {{- if $cfg.contextFiles }}
         - name: context
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-context
         {{- end }}
-        {{- if .Values.sc4s.config_files }}
+        {{- if $cfg.configFiles }}
         - name: config
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-config

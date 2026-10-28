@@ -73,7 +73,7 @@ microk8s helm3 install sc4s splunk-connect-for-syslog/splunk-connect-for-syslog 
 2. Install SC4S:
 ```bash
 export HEC_TOKEN="00000000-0000-0000-0000-000000000000"
-microk8s helm3 install sc4s --set splunk.hec_token=$HEC_TOKEN splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
+microk8s helm3 install sc4s --set splunk.hecToken=$HEC_TOKEN splunk-connect-for-syslog/splunk-connect-for-syslog -f values.yaml
 ```
 
 # Update or upgrade SC4S 
@@ -101,15 +101,18 @@ microk8s helm3 upgrade sc4s splunk-connect-for-syslog/splunk-connect-for-syslog 
 
 A Helm-based deployment has no `env_file` or local context directory. Use the `values.yaml` file to update your configuration instead, for example:
 
+!!! note "Setting names"
+    The chart's settings use camelCase names, for example `splunk.hecUrl` and `sc4s.vendorProduct`. Earlier versions used snake_case names (`hec_url`, `hec_token`, `hec_verify_tls`, `hec_tls`, `vendor_product`, `context_files`, `config_files` and `proxy.no_proxy`). Those still work with plain Helm, and `helm install` and `helm upgrade` print a warning listing the ones you use. If you set both names, the camelCase one wins.
+
 ```yaml
 --8<---- "docs/resources/k8s/values_adv.yaml"
 
 ```
 
-Use the `config_files` and `context_files` variables to specify configuration and context files that are passed to SC4S.
+Use the `configFiles` and `contextFiles` variables to specify configuration and context files that are passed to SC4S.
 
-- `config_files`: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
-- `context_files`: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context files `splunk_metadata.csv` and `host.csv` are passed with `values.yaml`:
+- `configFiles`: This variable contains a dictionary that maps the name of the configuration file to its content in the form of a YAML block scalar.
+- `contextFiles`: This variable contains a dictionary that maps the name of the context files to its content in the form of a YAML block scalar. The context files `splunk_metadata.csv` and `host.csv` are passed with `values.yaml`:
 ```yaml
 --8<---- "docs/resources/k8s/values_adv_config_file.yaml"
 ```
@@ -125,7 +128,7 @@ env:
   SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
 ```
 
-The chart rejects variables that it already sets from other values. For example, use `splunk.hec_url` instead of `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, and `sc4s.listenPorts` or `sc4s.vendor_product` instead of the `SC4S_LISTEN_*_PORT` variables. It also rejects `SC4S_LISTEN_STATUS_PORT` and `SC4S_LISTEN_STATUS_HOST`, because the chart's health check port is fixed at 8080.
+The chart rejects variables that it already sets from other values. For example, use `splunk.hecUrl` instead of `SC4S_DEST_SPLUNK_HEC_DEFAULT_URL`, and `sc4s.listenPorts` or `sc4s.vendorProduct` instead of the `SC4S_LISTEN_*_PORT` variables. It also rejects `SC4S_LISTEN_STATUS_PORT` and `SC4S_LISTEN_STATUS_HOST`, because the chart's health check port is fixed at 8080.
 
 !!! note "Receive buffers need a node setting"
     The kernel caps every socket's receive buffer at the node's `net.core.rmem_max`, and a pod cannot change that sysctl. Raise it on each node that runs SC4S, as described in [Tune the receiving buffer](../architecture/fine-tuning.md#tune-the-receiving-buffer), before you raise any `*_SO_RCVBUFF` value. Otherwise the larger value has no effect. A full buffer also counts toward the pod's memory, so leave room for it in any memory limit.
@@ -182,7 +185,7 @@ Notes:
   ownership.**
 - When running as non-root, the container cannot update the system CA trust
   store. To trust a custom CA for the Splunk HEC destination, mount the CA
-  material directly (for example via `splunk.hec_tls`) instead of relying on the
+  material directly (for example via `splunk.hecTls`) instead of relying on the
   in-container trust update.
 
 Both `securityContext` maps default to an empty context (root). Set only the
@@ -237,5 +240,5 @@ sc4s:
   proxy:
     http: "http://example.com"
     https: "http://example.com"
-    no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
+    noProxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
 ```

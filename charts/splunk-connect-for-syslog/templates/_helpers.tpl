@@ -64,12 +64,55 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+The renamed settings, resolved: EKS add-on settings must be camelCase, so hec_url became
+hecUrl and so on. The old snake_case names still work; when both are set, the camelCase
+name wins. Templates read these through
+  {{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml }}
+*/}}
+{{- define "splunk-connect-for-syslog.settings" -}}
+{{- $s := .Values.splunk | default dict -}}
+{{- $c := .Values.sc4s | default dict -}}
+{{- $p := $c.proxy | default dict -}}
+hecUrl: {{ ternary $s.hecUrl $s.hec_url (hasKey $s "hecUrl") | default "" | toJson }}
+hecToken: {{ ternary $s.hecToken $s.hec_token (hasKey $s "hecToken") | default "" | toJson }}
+hecVerifyTls: {{ ternary $s.hecVerifyTls $s.hec_verify_tls (hasKey $s "hecVerifyTls") | toJson }}
+hecTls: {{ ternary $s.hecTls $s.hec_tls (hasKey $s "hecTls") | default "" | toJson }}
+vendorProduct: {{ ternary $c.vendorProduct $c.vendor_product (hasKey $c "vendorProduct") | toJson }}
+contextFiles: {{ ternary $c.contextFiles $c.context_files (hasKey $c "contextFiles") | toJson }}
+configFiles: {{ ternary $c.configFiles $c.config_files (hasKey $c "configFiles") | toJson }}
+proxy:
+  http: {{ $p.http | toJson }}
+  https: {{ $p.https | toJson }}
+  noProxy: {{ ternary $p.noProxy $p.no_proxy (hasKey $p "noProxy") | toJson }}
+{{- end }}
+
+{{/*
+Old snake_case setting names in use, one "old -> new" per line, for the install notes.
+*/}}
+{{- define "splunk-connect-for-syslog.deprecatedSettings" -}}
+{{- $renames := list
+  (list "splunk" "hec_url" "hecUrl") (list "splunk" "hec_token" "hecToken")
+  (list "splunk" "hec_verify_tls" "hecVerifyTls") (list "splunk" "hec_tls" "hecTls")
+  (list "sc4s" "vendor_product" "vendorProduct") (list "sc4s" "context_files" "contextFiles")
+  (list "sc4s" "config_files" "configFiles") -}}
+{{- range $renames -}}
+{{- if hasKey (get $.Values (index . 0) | default dict) (index . 1) }}
+  {{ index . 0 }}.{{ index . 1 }} -> {{ index . 0 }}.{{ index . 2 }}
+{{- end -}}
+{{- end -}}
+{{- if hasKey ((.Values.sc4s | default dict).proxy | default dict) "no_proxy" }}
+  sc4s.proxy.no_proxy -> sc4s.proxy.noProxy
+{{- end -}}
+{{- end }}
+
+{{/*
 Space-separated names of the env vars that env may not set: the ones the StatefulSet
 sets itself (keep in sync with statefulset.yaml; server-side apply rejects duplicate
 env names), plus the health check address, which the chart's health port and the
 add-on's NLB health check assume is 0.0.0.0:8080.
 */}}
 {{- define "splunk-connect-for-syslog.managedEnvNames" -}}
+{{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml -}}
 {{- $names := list "SC4S_SNMP_TRAP_COLLECT" "SC4S_CONTAINER_HOST" "SC4S_RUNTIME_ENV" "SC4S_SOURCE_TLS_ENABLE" "SC4S_LISTEN_STATUS_PORT" "SC4S_LISTEN_STATUS_HOST" -}}
 {{- range list "TCP" "UDP" "RFC6587" "RFC5426" "TLS" "RFC5425" -}}
 {{- $names = append $names (printf "SC4S_LISTEN_DEFAULT_%s_PORT" .) -}}
@@ -77,18 +120,18 @@ add-on's NLB health check assume is 0.0.0.0:8080.
 {{- range list "URL" "TOKEN" "TLS_VERIFY" "DISKBUFF_ENABLE" -}}
 {{- $names = append $names (printf "SC4S_DEST_SPLUNK_HEC_DEFAULT_%s" .) -}}
 {{- end -}}
-{{- if .Values.splunk.hec_tls -}}
+{{- if $cfg.hecTls -}}
 {{- $names = append $names "SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT" -}}
 {{- end -}}
 {{- if and (eq .Values.workload "daemonset") .Values.persistence.enabled -}}
 {{- $names = append $names "SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE" -}}
 {{- end -}}
-{{- with .Values.sc4s.proxy -}}
+{{- with $cfg.proxy -}}
 {{- if .http }}{{ $names = append $names "http_proxy" }}{{ end -}}
 {{- if .https }}{{ $names = append $names "https_proxy" }}{{ end -}}
-{{- if .no_proxy }}{{ $names = append $names "no_proxy" }}{{ end -}}
+{{- if .noProxy }}{{ $names = append $names "no_proxy" }}{{ end -}}
 {{- end -}}
-{{- range $vp := .Values.sc4s.vendor_product -}}
+{{- range $vp := $cfg.vendorProduct -}}
 {{- range $type, $ports := $vp.ports -}}
 {{- if $ports }}{{ $names = append $names (printf "SC4S_LISTEN_%s_%s_PORT" (upper $vp.name) (upper $type)) }}{{ end -}}
 {{- end -}}

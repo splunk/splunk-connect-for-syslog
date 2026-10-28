@@ -15,12 +15,15 @@ workload: statefulset
 
 replicaCount: 2
 
+# Settings use camelCase names. The older snake_case names (hec_url, hec_token,
+# hec_verify_tls, hec_tls, vendor_product, context_files, config_files and
+# proxy.no_proxy) still work; when both are set, the camelCase name wins.
 splunk:
   {}
-#   hec_url: ""
-#   hec_token: ""
-#   hec_verify_tls: "yes"
-#   Name of a Secret you manage that holds the HEC token. When set, hec_token
+#   hecUrl: ""
+#   hecToken: ""
+#   hecVerifyTls: "yes"
+#   Name of a Secret you manage that holds the HEC token. When set, hecToken
 #   is ignored and the chart does not create the "splunk-connection" Secret.
 #   existingSecret: ""
 #   existingSecretKey: hec_token
@@ -48,10 +51,10 @@ sc4s:
 #   proxy:
 #       http: "http://your_proxy_ip.com"
 #       https: "http://your_proxy_ip.com"
-#       no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
+#       noProxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
 
 #   existingCert: example-com-tls
-#   vendor_product:
+#   vendorProduct:
 #     - name: checkpoint
 #       ports:
 #         tcp: [9000]
@@ -69,13 +72,13 @@ sc4s:
 #         rfc5426:
 #           - 9100
 #           - 9101
-#   context_files:
+#   contextFiles:
 #     splunk_metadata.csv: |-
 #       cisco_meraki,index,foo
 #     host.csv: |-
 #       192.168.1.1,HOST,foo
 #       192.168.1.2,HOST,moon
-#    config_files:
+#    configFiles:
 #      app_parser_test_big.conf: |-
 #       #/opt/sc4s/local/config/filters/app-postfilter-drop_metadata.conf
 #        block parser app-postfilter-cisco_asa_metadata() {

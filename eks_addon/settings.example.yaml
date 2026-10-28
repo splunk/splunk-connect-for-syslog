@@ -5,8 +5,8 @@
 # Create the token Secret in the add-on namespace first:
 #   kubectl -n sc4s create secret generic sc4s-hec --from-file=hec_token=./token.txt
 splunk:
-  hec_url: https://splunk.example.com:8088
-  hec_verify_tls: "yes"
+  hecUrl: https://splunk.example.com:8088
+  hecVerifyTls: "yes"
   existingSecret: sc4s-hec
 
 service:
@@ -16,11 +16,11 @@ service:
     - 10.0.0.0/8
 
 sc4s:
-  vendor_product:
+  vendorProduct:
     - name: checkpoint
       ports:
         tcp: [9000]
         udp: [9000]
-  context_files:
+  contextFiles:
     splunk_metadata.csv: |-
       cisco_asa,index,netfw
