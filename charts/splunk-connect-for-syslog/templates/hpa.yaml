@@ -3,6 +3,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 spec:

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet 
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 spec:
