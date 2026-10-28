@@ -3,6 +3,11 @@
 # EKS add-ons must contain a Deployment or DaemonSet, which EKS uses to track the add-on.
 workload: daemonset
 
+# Add-on settings cannot carry secrets, so the HEC token always comes from a Secret the
+# customer creates in the add-on namespace.
+splunk:
+  existingSecret: sc4s-hec
+
 # EKS add-ons may only pull images from the AWS Marketplace ECR registry.
 image:
   repository: ${ECR_IMAGE_REPO}

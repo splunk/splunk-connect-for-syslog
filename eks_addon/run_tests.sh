@@ -32,11 +32,25 @@ else
   fail "aws_mp_configuration_schema.json is missing or invalid"
 fi
 
+if cmp -s "${EKS_CHART_DIR}/values.schema.json" "${EKS_CHART_DIR}/aws_mp_configuration_schema.json"; then
+  pass "chart validates with the add-on schema"
+else
+  fail "values.schema.json differs from aws_mp_configuration_schema.json"
+fi
+
 if rendered="$(render -f "${SAMPLE_SETTINGS}")" && [[ -n "${rendered}" ]]; then
-  pass "sample settings pass the schema"
+  pass "sample settings pass the add-on schema"
 else
   fail "sample settings rejected"
   rendered=""
+fi
+
+# Add-on settings must not accept secrets (AWS INVALID_HELM_SENSITIVE_CONFIG).
+if render --set splunk.hec_token=x > /dev/null 2>&1; then fail "add-on schema accepts splunk.hec_token"; else pass "add-on schema rejects splunk.hec_token"; fi
+if render --set env.SC4S_DEST_SPLUNK_HEC_OTHER_TOKEN=x > /dev/null 2>&1; then
+  fail "add-on schema accepts a credential in env"
+else
+  pass "add-on schema rejects credential env names"
 fi
 
 if [[ "$(yq e '(.dependencies // []) | length' "${EKS_CHART_DIR}/Chart.yaml")" == "0" && ! -d "${EKS_CHART_DIR}/charts" ]]; then

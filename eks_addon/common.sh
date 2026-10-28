@@ -38,6 +38,9 @@ SCHEMA_HIDDEN_PROPERTIES=(
   ".properties.persistence.properties.annotations"
 )
 
+# env names refused in the add-on schema because they look like credentials.
+SCHEMA_SECRET_ENV_PATTERN="(TOKEN|PASSWORD|PASSWD|SECRET|PASSPHRASE|API_KEY|PRIVATE_KEY|token|password|passwd|secret|passphrase|api_key|private_key)"
+
 prepare_chart() {
   echo "Preparing EKS add-on chart in ${EKS_CHART_DIR}"
   rm -rf "${BUILD_DIR}"
@@ -60,4 +63,18 @@ prepare_chart() {
   for prop in "${SCHEMA_HIDDEN_PROPERTIES[@]}"; do
     jq "del(${prop})" "${schema}" > "${schema}.tmp" && mv "${schema}.tmp" "${schema}"
   done
+
+  # Add-on settings must not accept secrets. The HEC token comes from a Kubernetes Secret
+  # (splunk.existingSecret), so hec_token is refused, and so are env names that look like
+  # credentials, for example a token for a second HEC destination.
+  jq --arg secrets "${SCHEMA_SECRET_ENV_PATTERN}" '
+    del(.properties.splunk.properties.hec_token)
+    | .properties.splunk.additionalProperties = false
+    | .properties.splunk.properties.existingSecret.description = "Name of the Kubernetes Secret that holds the HEC token. Create it in the add-on namespace before installing the add-on."
+    | .properties.env.propertyNames = {"allOf": [.properties.env.propertyNames, {"not": {"pattern": $secrets}}]}
+    | .properties.env.description += " Names that look like credentials (TOKEN, PASSWORD, SECRET and similar) are not accepted; put credentials in a Kubernetes Secret."
+  ' "${schema}" > "${schema}.tmp" && mv "${schema}.tmp" "${schema}"
+
+  # The packaged chart validates with the same schema EKS uses for the add-on settings.
+  cp "${schema}" "${EKS_CHART_DIR}/values.schema.json"
 }
