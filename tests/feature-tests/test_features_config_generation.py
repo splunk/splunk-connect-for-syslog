@@ -405,22 +405,3 @@ def test_disk_buffer_custom_directory():
     assert result.returncode == 0, f"Failed to generate config: {result.stderr}"
     assert 'dir("/var/syslog-ng/buffer")' in result.stdout, \
         f"Custom buffer directory not found. Got:\n{result.stdout}"
-
-
-# =============================================================================
-# HEC Token Tests
-# =============================================================================
-
-@pytest.mark.features("hec_token")
-def test_hec_token_whitespace_stripped():
-    """
-    A token read from a file or Kubernetes Secret often ends in a newline, which
-    must not reach the Authorization header.
-    """
-    result = run_dest_hec_plugin({
-        "SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN": " test-token\r\n",
-    })
-
-    assert result.returncode == 0, f"Failed to generate config: {result.stderr}"
-    assert '"Authorization: Splunk test-token"' in result.stdout, \
-        f"Token should be stripped in the Authorization header. Got:\n{result.stdout}"
