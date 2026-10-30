@@ -1,14 +1,24 @@
+{{- $daemonset := eq .Values.workload "daemonset" }}
+{{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml }}
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: {{ ternary "DaemonSet" "StatefulSet" $daemonset }}
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 spec:
+  {{- if $daemonset }}
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  {{- else }}
   serviceName: {{ include "splunk-connect-for-syslog.fullname" . }}
 
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   {{- end }}
   selector:
     matchLabels:
@@ -16,13 +26,16 @@ spec:
   template:
     metadata:
       annotations:
-        {{- if .Values.sc4s.config_files }}
+        {{- if not .Values.splunk.existingSecret }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if $cfg.configFiles }}
         checksum/config: {{ include (print $.Template.BasePath "/config-configmap.yaml") . | sha256sum }}
         {{- end }}
         {{- if .Values.sc4s.addons }}
         checksum/addon-config: {{ include (print $.Template.BasePath "/addon-configmap.yaml") . | sha256sum }}
         {{- end }}
-        {{- if .Values.sc4s.context_files }}
+        {{- if $cfg.contextFiles }}
         checksum/context-config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
       {{- with .Values.podAnnotations }}
@@ -39,6 +52,27 @@ spec:
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- $runAsUser := .Values.podSecurityContext.runAsUser | default 0 | int }}
+      {{- if and $daemonset .Values.persistence.enabled (gt $runAsUser 0) }}
+      initContainers:
+        # The kubelet creates the host directory owned by root; hand it to the non-root user.
+        - name: disk-buffer-owner
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["chown", "{{ $runAsUser }}:{{ .Values.podSecurityContext.runAsGroup | default $runAsUser }}", "/var/lib/syslog-ng"]
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/syslog-ng/
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -71,7 +105,7 @@ spec:
           - name: SC4S_LISTEN_DEFAULT_RFC5425_PORT
             value: "{{ $lp.rfc5425 | default 5425 }}"
           # Inject additional enviroment variable from values.yaml to add proxy support
-          {{- with .Values.sc4s.proxy }}
+          {{- with $cfg.proxy }}
           {{- if .http }}
           - name: http_proxy
             value: {{ .http | quote }}
@@ -80,25 +114,24 @@ spec:
           - name: https_proxy
             value: {{ .https | quote }}
           {{- end }}
-          {{- if .no_proxy }}
+          {{- if .noProxy }}
           - name: no_proxy
-            value: {{ .no_proxy | quote }}
+            value: {{ .noProxy | quote }}
           {{- end }}
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_URL
-            value: "{{ .Values.splunk.hec_url }}"
-          {{- if .Values.splunk.hec_token }}
-          - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
-            value:  "{{ .Values.splunk.hec_token }}"
-          {{- else }}
+            value: "{{ $cfg.hecUrl }}"
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TOKEN
             valueFrom:
               secretKeyRef:
-                key: hec_token
-                name: splunk-connection
+                name: {{ .Values.splunk.existingSecret | default "splunk-connection" }}
+                key: {{ .Values.splunk.existingSecretKey | default "hec_token" }}
+          {{- $verify := $cfg.hecVerifyTls }}
+          {{- if not (kindIs "bool" $verify) }}
+          {{- $verify = default "yes" $verify }}
           {{- end }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_VERIFY
-            value: "{{ .Values.splunk.hec_verify_tls }}"
+            value: {{ include "splunk-connect-for-syslog.envValue" $verify }}
           {{- if .Values.persistence.enabled }}              
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "yes"
@@ -106,7 +139,13 @@ spec:
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_ENABLE
             value: "no"
           {{- end }}
-          {{- if .Values.splunk.hec_tls }}
+          {{- if and $daemonset .Values.persistence.enabled }}
+          # SC4S sizes the buffer from the free space of the filesystem, which for a
+          # host directory is the node's disk, so cap it at persistence.size.
+          - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_DISKBUFSIZE
+            value: {{ include "splunk-connect-for-syslog.diskBufferPerWorker" . | quote }}
+          {{- end }}
+          {{- if $cfg.hecTls }}
           - name: SC4S_DEST_SPLUNK_HEC_DEFAULT_TLS_MOUNT
             value: "/etc/syslog-ng/tls/hec"
           {{- end }}
@@ -118,8 +157,8 @@ spec:
             value: "no"
           {{- end }}
           {{- if .Values.sc4s }}
-          {{- if .Values.sc4s.vendor_product }}
-            {{- range $vp := .Values.sc4s.vendor_product }}
+          {{- if $cfg.vendorProduct }}
+            {{- range $vp := $cfg.vendorProduct }}
                 {{- if $vp.ports.tcp }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_TCP_PORT
             value: {{ $vp.ports.tcp | join "," | quote}}
@@ -148,12 +187,20 @@ spec:
                 {{- if $vp.options.listen }}
                   {{- range $vpolkey, $vpolvalue := $vp.options.listen }}
           - name: SC4S_LISTEN_{{ $vp.name | upper }}_{{ $vpolkey | upper }}
-            value: {{ $vpolvalue | quote}}
+            value: {{ include "splunk-connect-for-syslog.envValue" $vpolvalue }}
                   {{- end }}                
                 {{- end }}                
                 {{- end }}                
             {{- end }}
           {{- end }}
+          {{- end }}
+          {{- $managedEnv := splitList " " (include "splunk-connect-for-syslog.managedEnvNames" .) }}
+          {{- range $name, $value := .Values.env }}
+          {{- if has $name $managedEnv }}
+          {{- fail (printf "env.%s is managed by the chart and cannot be set in env" $name) }}
+          {{- end }}
+          - name: {{ $name }}
+            value: {{ include "splunk-connect-for-syslog.envValue" $value }}
           {{- end }}
 
           ports:
@@ -179,8 +226,8 @@ spec:
               containerPort: 8080
               protocol: TCP
           {{- if .Values.sc4s }}
-          {{- if .Values.sc4s.vendor_product }}
-            {{- range $vp := .Values.sc4s.vendor_product }}
+          {{- if $cfg.vendorProduct }}
+            {{- range $vp := $cfg.vendorProduct }}
                 {{- if $vp.ports.tcp }}
                   {{- range $p := $vp.ports.tcp }}
             - name: bsd-{{ $p }}-tcp
@@ -231,7 +278,7 @@ spec:
           - name: data
             mountPath: /var/lib/syslog-ng/
           {{- end }}
-          {{- if .Values.splunk.hec_tls }}
+          {{- if $cfg.hecTls }}
           - name: hec-tls
             mountPath: /etc/syslog-ng/tls/hec/
             readOnly: true
@@ -241,12 +288,12 @@ spec:
             mountPath: /etc/syslog-ng/tls/
             readOnly: true
           {{- end }}
-          {{- if .Values.sc4s.context_files }}
+          {{- if $cfg.contextFiles }}
           - name: context
             mountPath: /etc/syslog-ng/conf.d/configmap/context/
             readOnly: true
           {{- end }}
-          {{- if .Values.sc4s.config_files }}
+          {{- if $cfg.configFiles }}
           - name: config
             mountPath: /etc/syslog-ng/conf.d/configmap/config/app_parsers
             readOnly: true
@@ -279,22 +326,28 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        {{- if .Values.splunk.hec_tls }}
+        {{- if and $daemonset .Values.persistence.enabled }}
+        - name: data
+          hostPath:
+            path: {{ printf "%s/%s/%s" (.Values.persistence.hostPath | trimSuffix "/") .Release.Namespace .Release.Name }}
+            type: DirectoryOrCreate
+        {{- end }}
+        {{- if $cfg.hecTls }}
         - name: hec-tls
           secret:
-            secretName: {{ .Values.splunk.hec_tls }}
+            secretName: {{ $cfg.hecTls }}
         {{- end }}
         {{- if .Values.sc4s.existingCert }}
         - name: tls
           secret:
             secretName: {{ .Values.sc4s.existingCert }}
         {{- end }}               
-        {{- if .Values.sc4s.context_files }}
+        {{- if $cfg.contextFiles }}
         - name: context
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-context
         {{- end }}
-        {{- if .Values.sc4s.config_files }}
+        {{- if $cfg.configFiles }}
         - name: config
           configMap:
             name: {{ include "splunk-connect-for-syslog.fullname" . }}-config
@@ -308,6 +361,7 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if not $daemonset }}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -321,12 +375,13 @@ spec:
                 operator: In
                 values:
                 - {{ include "splunk-connect-for-syslog.name" . }}
-            topologyKey: "kubernetes.io/hostname"      
+            topologyKey: "kubernetes.io/hostname"
+      {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-  {{- if .Values.persistence.enabled }}
+  {{- if and (not $daemonset) .Values.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
       name: data

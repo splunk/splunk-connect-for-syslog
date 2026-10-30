@@ -1,0 +1,519 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "Splunk Connect for Syslog",
+  "type": "object",
+  "definitions": {
+    "port": {
+      "type": [
+        "integer",
+        "string"
+      ],
+      "minimum": 1,
+      "maximum": 65535
+    },
+    "portList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/port"
+      }
+    },
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "properties": {
+    "workload": {
+      "description": "Kubernetes workload that runs SC4S: statefulset (replicaCount pods, each with its own persistent volume) or daemonset (one pod per allowed node, disk buffer in a host directory).",
+      "type": "string",
+      "enum": [
+        "statefulset",
+        "daemonset"
+      ]
+    },
+    "replicaCount": {
+      "description": "Number of SC4S pods with workload statefulset. Ignored when autoscaling.enabled is true.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "splunk": {
+      "description": "Splunk HEC destination.",
+      "type": "object",
+      "properties": {
+        "hec_url": {
+          "description": "Deprecated: use hecUrl instead. Splunk HEC URL, for example https://splunk.example.com:8088. Separate multiple URLs with commas.",
+          "type": "string"
+        },
+        "hec_token": {
+          "description": "Deprecated: use hecToken instead. HEC token. Prefer existingSecret so the token is not stored in the release values.",
+          "type": "string"
+        },
+        "hec_verify_tls": {
+          "description": "Deprecated: use hecVerifyTls instead. Verify the HEC server certificate (yes or no).",
+          "type": [
+            "string",
+            "boolean"
+          ]
+        },
+        "hec_tls": {
+          "description": "Deprecated: use hecTls instead. Name of a Secret with client TLS material for HEC, mounted at /etc/syslog-ng/tls/hec.",
+          "type": "string"
+        },
+        "existingSecret": {
+          "description": "Name of an existing Secret holding the HEC token. When set, hecToken is ignored and no Secret is created.",
+          "type": "string"
+        },
+        "existingSecretKey": {
+          "description": "Key inside existingSecret that holds the HEC token.",
+          "type": "string"
+        },
+        "hecUrl": {
+          "description": "Splunk HEC URL, for example https://splunk.example.com:8088. Separate multiple URLs with commas.",
+          "type": "string"
+        },
+        "hecToken": {
+          "description": "HEC token. Prefer existingSecret so the token is not stored in the release values.",
+          "type": "string"
+        },
+        "hecVerifyTls": {
+          "description": "Verify the HEC server certificate (yes or no).",
+          "type": [
+            "string",
+            "boolean"
+          ]
+        },
+        "hecTls": {
+          "description": "Name of a Secret with client TLS material for HEC, mounted at /etc/syslog-ng/tls/hec.",
+          "type": "string"
+        }
+      }
+    },
+    "sc4s": {
+      "description": "SC4S listener and parser configuration.",
+      "type": "object",
+      "properties": {
+        "listenPorts": {
+          "description": "Container ports for the default listeners. The Service always exposes 514/601/6514/5425 externally.",
+          "type": "object",
+          "properties": {
+            "tcp": {
+              "$ref": "#/definitions/port",
+              "description": "Container port for the default syslog listener over TCP. Default 514."
+            },
+            "udp": {
+              "$ref": "#/definitions/port",
+              "description": "Container port for the default syslog listener over UDP. Default 514."
+            },
+            "rfc6587": {
+              "$ref": "#/definitions/port",
+              "description": "Container port for RFC 6587 (syslog over TCP). Default 601."
+            },
+            "rfc5426": {
+              "$ref": "#/definitions/port",
+              "description": "Container port for RFC 5426 (syslog over UDP). Default 601."
+            },
+            "tls": {
+              "$ref": "#/definitions/port",
+              "description": "Container port for syslog over TLS. Default 6514."
+            },
+            "rfc5425": {
+              "$ref": "#/definitions/port",
+              "description": "Container port for RFC 5425 (syslog over TLS). Default 5425."
+            }
+          }
+        },
+        "proxy": {
+          "description": "HTTP proxy settings for HEC traffic.",
+          "type": "object",
+          "properties": {
+            "http": {
+              "type": "string",
+              "description": "Proxy URL for HTTP traffic, for example http://proxy.example.com:3128."
+            },
+            "https": {
+              "type": "string",
+              "description": "Proxy URL for HTTPS traffic, such as HEC."
+            },
+            "no_proxy": {
+              "type": "string",
+              "description": "Deprecated: use noProxy instead. Comma-separated hosts, domains and CIDRs that bypass the proxy."
+            },
+            "noProxy": {
+              "type": "string",
+              "description": "Comma-separated hosts, domains and CIDRs that bypass the proxy."
+            }
+          }
+        },
+        "existingCert": {
+          "description": "Name of a TLS Secret used to enable TLS syslog listeners.",
+          "type": "string"
+        },
+        "vendor_product": {
+          "description": "Deprecated: use vendorProduct instead. Dedicated listener ports per vendor/product.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "ports"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Source name, for example checkpoint or cisco_asa. Sets the SC4S_LISTEN_<NAME>_* variables."
+              },
+              "ports": {
+                "type": "object",
+                "properties": {
+                  "tcp": {
+                    "$ref": "#/definitions/portList",
+                    "description": "TCP ports."
+                  },
+                  "udp": {
+                    "$ref": "#/definitions/portList",
+                    "description": "UDP ports."
+                  },
+                  "tls": {
+                    "$ref": "#/definitions/portList",
+                    "description": "TLS ports. Requires sc4s.existingCert."
+                  },
+                  "rfc6587": {
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 6587 (syslog over TCP) ports."
+                  },
+                  "rfc5426": {
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5426 (syslog over UDP) ports."
+                  },
+                  "rfc5425": {
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5425 (syslog over TLS) ports."
+                  }
+                },
+                "description": "Dedicated listener ports for this source, by transport."
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "listen": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "boolean",
+                        "integer"
+                      ]
+                    },
+                    "description": "Listener options, set as SC4S_LISTEN_<NAME>_<OPTION> variables, for example old_host_rules: \"yes\"."
+                  }
+                },
+                "description": "Extra options for this source."
+              }
+            }
+          }
+        },
+        "context_files": {
+          "description": "Deprecated: use contextFiles instead. Context files such as splunk_metadata.csv or host.csv, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "config_files": {
+          "description": "Deprecated: use configFiles instead. Custom syslog-ng parser files mounted as app_parsers, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "addons": {
+          "description": "Add-on configuration files, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "vendorProduct": {
+          "description": "Dedicated listener ports per vendor/product.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "ports"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Source name, for example checkpoint or cisco_asa. Sets the SC4S_LISTEN_<NAME>_* variables."
+              },
+              "ports": {
+                "type": "object",
+                "properties": {
+                  "tcp": {
+                    "$ref": "#/definitions/portList",
+                    "description": "TCP ports."
+                  },
+                  "udp": {
+                    "$ref": "#/definitions/portList",
+                    "description": "UDP ports."
+                  },
+                  "tls": {
+                    "$ref": "#/definitions/portList",
+                    "description": "TLS ports. Requires sc4s.existingCert."
+                  },
+                  "rfc6587": {
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 6587 (syslog over TCP) ports."
+                  },
+                  "rfc5426": {
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5426 (syslog over UDP) ports."
+                  },
+                  "rfc5425": {
+                    "$ref": "#/definitions/portList",
+                    "description": "RFC 5425 (syslog over TLS) ports."
+                  }
+                },
+                "description": "Dedicated listener ports for this source, by transport."
+              },
+              "options": {
+                "type": "object",
+                "properties": {
+                  "listen": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": [
+                        "string",
+                        "boolean",
+                        "integer"
+                      ]
+                    },
+                    "description": "Listener options, set as SC4S_LISTEN_<NAME>_<OPTION> variables, for example old_host_rules: \"yes\"."
+                  }
+                },
+                "description": "Extra options for this source."
+              }
+            }
+          }
+        },
+        "contextFiles": {
+          "description": "Context files such as splunk_metadata.csv or host.csv, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "configFiles": {
+          "description": "Custom syslog-ng parser files mounted as app_parsers, keyed by file name.",
+          "$ref": "#/definitions/stringMap"
+        }
+      }
+    },
+    "env": {
+      "description": "Extra environment variables for SC4S settings without a dedicated value, for example SC4S_SOURCE_UDP_SO_RCVBUFF or SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE. Variables the chart manages, such as the HEC URL, listen ports or health check port, are rejected. Booleans are converted to yes/no.",
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "integer",
+          "number",
+          "boolean"
+        ]
+      }
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": {
+          "type": "string",
+          "description": "Image repository."
+        },
+        "pullPolicy": {
+          "type": "string",
+          "enum": [
+            "Always",
+            "IfNotPresent",
+            "Never"
+          ],
+          "description": "Image pull policy."
+        },
+        "tag": {
+          "type": "string",
+          "description": "Image tag. Defaults to the chart appVersion."
+        }
+      },
+      "description": "Container image."
+    },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Secret name."
+          }
+        }
+      },
+      "description": "Secrets for pulling the image from a private registry."
+    },
+    "nameOverride": {
+      "type": "string",
+      "description": "Replaces the chart name in resource names."
+    },
+    "fullnameOverride": {
+      "type": "string",
+      "description": "Replaces the full name used for resources."
+    },
+    "serviceAccount": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "boolean",
+          "description": "Create the service account."
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Annotations for the service account."
+        },
+        "name": {
+          "type": "string",
+          "description": "Service account name. Generated from the release name when empty."
+        }
+      },
+      "description": "Service account for the SC4S pods."
+    },
+    "persistence": {
+      "description": "Storage for the syslog-ng disk buffer: a persistent volume per pod (statefulset) or a host directory (daemonset).",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Use a disk buffer, so events waiting for HEC survive restarts. When disabled, they are kept in memory only."
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Annotations for the persistent volume claims (statefulset only)."
+        },
+        "size": {
+          "description": "Disk buffer size. With statefulset it is the volume size and cannot be changed after the first install. With daemonset it caps the buffer in the host directory and must be a whole number with an optional K, M, G, T, Ki, Mi, Gi or Ti suffix.",
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "storageClass": {
+          "description": "StorageClass for the volume (statefulset only). Uses the cluster default when empty.",
+          "type": "string"
+        },
+        "hostPath": {
+          "description": "Host directory for the disk buffer (daemonset only). Each release uses <hostPath>/<namespace>/<release>.",
+          "type": "string"
+        }
+      }
+    },
+    "podAnnotations": {
+      "$ref": "#/definitions/stringMap",
+      "description": "Annotations for the SC4S pods."
+    },
+    "podSecurityContext": {
+      "type": "object",
+      "description": "Pod security context, for example runAsUser and fsGroup to run SC4S as non-root."
+    },
+    "securityContext": {
+      "type": "object",
+      "description": "Container security context."
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "ClusterIP",
+            "NodePort",
+            "LoadBalancer"
+          ],
+          "description": "Service type."
+        },
+        "usemetallb": {
+          "description": "Add the MetalLB shared-IP annotation.",
+          "type": [
+            "boolean",
+            "string",
+            "object"
+          ]
+        },
+        "metallbsharingkey": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "MetalLB sharing key that lets the TCP and UDP Services share one IP."
+        },
+        "externalTrafficPolicy": {
+          "type": "string",
+          "enum": [
+            "Local",
+            "Cluster"
+          ],
+          "description": "Local keeps the senders source IP, which SC4S uses to identify hosts. Cluster spreads traffic over all nodes but replaces the source IP."
+        },
+        "annotations": {
+          "description": "Service annotations, for example AWS Load Balancer Controller NLB settings.",
+          "$ref": "#/definitions/stringMap"
+        },
+        "loadBalancerIP": {
+          "type": "string",
+          "description": "Fixed load balancer IP, where the provider supports it."
+        },
+        "loadBalancerClass": {
+          "type": "string",
+          "description": "Load balancer implementation, for example service.k8s.aws/nlb (AWS Load Balancer Controller) or eks.amazonaws.com/nlb (EKS Auto Mode)."
+        },
+        "loadBalancerSourceRanges": {
+          "description": "CIDRs allowed to reach the load balancer.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "The Kubernetes Services in front of SC4S, one for TCP and one for UDP."
+    },
+    "resources": {
+      "type": "object",
+      "description": "CPU and memory requests and limits for the SC4S container. A CPU limit can throttle SC4S and cause UDP loss, so prefer requests."
+    },
+    "autoscaling": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable autoscaling."
+        },
+        "minReplicas": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Minimum number of pods."
+        },
+        "maxReplicas": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum number of pods."
+        },
+        "targetCPUUtilizationPercentage": {
+          "type": "integer",
+          "description": "Target average CPU use, in percent."
+        },
+        "targetMemoryUtilizationPercentage": {
+          "type": "integer",
+          "description": "Target average memory use, in percent."
+        }
+      },
+      "description": "Horizontal pod autoscaling (statefulset only)."
+    },
+    "nodeSelector": {
+      "$ref": "#/definitions/stringMap",
+      "description": "Node labels that SC4S pods must run on, for example to dedicate nodes to SC4S."
+    },
+    "tolerations": {
+      "type": "array",
+      "description": "Tolerations, so SC4S can run on tainted nodes such as dedicated ones."
+    }
+  }
+}
