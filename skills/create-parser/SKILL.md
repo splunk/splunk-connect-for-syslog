@@ -37,11 +37,12 @@ Use these lookups to supplement the bundled guide, not replace it.
 Analyze every supplied sample and create a complete `.conf` file:
 
 1. Identify RFC3164, RFC5424, CEF, LEEF, JSON, or a supported almost-syslog variant described by the guide.
-2. Select the narrowest reliable application topic and filter. Prefer structured identity or program values over message-text matching. Account for the positive samples and avoid the supplied negative examples.
+2. Select the narrowest reliable application topic and filter. Prefer structured identity or program values over message-text matching. Account for the positive samples and avoid the supplied negative examples. Cover the confirmed source scope. Do not limit the parser to the event contents shown in the examples.
 3. Select parser stages, namespaces, and an output template together. Keep intermediate fragments in `.tmp.*`; put only intentionally serialized values in `.values.*`; use `fields.*` only when the operator requested indexed HEC fields. Follow the bundled guide's template, namespace, and quoting rules.
-4. Set the confirmed index, sourcetype, vendor, product, and template through SC4S rewrite conventions.
+4. Set the confirmed index, sourcetype, vendor, product, and template through SC4S rewrite conventions. When the policy derives metadata from each event, implement that rule instead of hardcoding values shared by the samples.
 5. Set `<filename>` to `app-<type>-<vendor>_<product>.conf`. Normalize it to lowercase, use underscores within vendor/product identifiers, retain the `.conf` suffix, and reject path separators, traversal components, or an empty name.
-6. Use only documented options for each function. Before previewing or deploying, check the parser's syntax and ensure it ends with `;`.
+6. Use only documented options in the statement scopes where they are supported. Place inline rewrite operations such as `set()` inside `rewrite { ... };`. Before previewing or deploying, inspect the complete configuration and ensure it ends with `;`.
+7. Trace each supplied positive sample from topic eligibility through every application filter predicate, parser stage, and validation gate to the destination and field assignments. Check each matcher's pattern language and flags against the guide's matcher rules. Describe this walkthrough as static reasoning unless you have executed the configuration.
 
 Show the exact `<filename>` and complete parser. Explain:
 
