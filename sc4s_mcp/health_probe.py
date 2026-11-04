@@ -19,7 +19,9 @@ def _build_url() -> str:
 
 def main() -> int:
     url = _build_url()
-    ctx = ssl._create_unverified_context() if url.startswith("https://") else None
+    ctx = ssl.create_default_context() if url.startswith("https://") else None
+    if ctx:
+        ctx.load_verify_locations(cafile=os.environ["SC4S_MCP_TLS_CERT"])
     try:
         with urllib.request.urlopen(url, timeout=_TIMEOUT_SEC, context=ctx) as resp:
             return 0 if resp.status == 200 else 1
