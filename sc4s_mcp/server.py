@@ -12,13 +12,14 @@ from transport_security import TransportSecurityMiddleware
 from utils.transport import TransportMode, resolve_transport
 
 import resources.docs  # noqa: F401
+import resources.skills  # noqa: F401
 import tools.configuration_tools  # noqa: F401
 import tools.event_tools  # noqa: F401
 import tools.metadata_tools  # noqa: F401
 import prompts.workflows  # noqa: F401
 
-
 logger = logging.getLogger(__name__)
+
 
 def _build_api() -> FastAPI:
     mcp_app = mcp.http_app(path="/")

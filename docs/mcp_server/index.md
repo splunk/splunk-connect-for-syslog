@@ -11,23 +11,24 @@ API to any MCP-compatible AI assistant or agent (for example: Cursor,
 Claude Desktop, or Visual Studio Code with an MCP extension). It lets the
 assistant help you discover supported vendors, author and validate
 syslog-ng parsers, inspect a running SC4S instance, and apply
-configuration changes through well-defined MCP tools, resources, and
+configuration changes through well-defined MCP tools, resources, skills, and
 prompts.
 
 ## What it is
 
 The server is shipped as a small containerized Python application based on
-[FastMCP](https://github.com/jlowin/fastmcp). It provides three categories of
+[FastMCP](https://github.com/jlowin/fastmcp). It provides four categories of
 capabilities:
 
 | Category | Purpose                                                                                                                          |
 |---|----------------------------------------------------------------------------------------------------------------------------------|
 | **Tools** | Callable functions the assistant can invoke (for example: upload a new parser, modify environment variables, check SC4S health). |
 | **Resources** | Read-only documents the assistant can load on demand (parser creation guide, troubleshooting guide, vendor docs).                |
+| **Skills** | Discoverable workflow instructions and supporting files, served through the MCP Skills extension. |
 | **Prompts** | Guided workflows (for example: `create_parser`, `troubleshoot_sc4s`) that orient the assistant to a specific task.               |
 
-The full list of tools, resources, and prompts is documented in
-[Tools](tools.md) and [Resources and prompts](resources_and_prompts.md).
+The full list of tools, resources, skills, and prompts is documented in
+[Tools](tools.md) and [Resources, skills, and prompts](resources_and_prompts.md).
 
 ## Architecture
 
@@ -61,8 +62,8 @@ Concretely, the MCP server performs these kinds of I/O:
 
 * **Reads** a small, read-only set of files that are baked into its own
   container image at build time: the documentation under `docs/`, the
-  parser library under `package/shared/addons/`, and the parser-creator
-  knowledge base. These are static; the MCP server does not reach into
+  parser library under `package/shared/addons/`, and the bundled workflows
+  under `skills/`. These are static; the MCP server does not reach into
   your host filesystem.
 * **Makes HTTP(S) requests** to `SC4S_API_URL`, the REST API running
   inside the SC4S container. Every "management" tool is a thin wrapper
@@ -120,5 +121,5 @@ procedure.
 * **[Installation](installation.md)**, build the image, run it with
   Docker or Podman, and configure your MCP client.
 * **[Tools](tools.md)**, reference of every callable tool.
-* **[Resources and prompts](resources_and_prompts.md)**, reference of
-  the available MCP resources and guided prompts.
+* **[Resources, skills, and prompts](resources_and_prompts.md)**, reference of
+  the available MCP resources, discoverable skills, and guided prompts.
