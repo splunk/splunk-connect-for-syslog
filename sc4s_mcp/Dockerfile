@@ -2,37 +2,36 @@ FROM python:3.14-alpine3.24 AS builder
 
 WORKDIR /app
 
-RUN pip install --no-cache-dir poetry==2.4.1 && \
+RUN pip install --no-cache-dir --only-binary :all: poetry==2.4.1 && \
     poetry config virtualenvs.in-project true && \
     poetry config virtualenvs.options.no-pip true
 
 COPY sc4s_mcp/pyproject.toml sc4s_mcp/poetry.lock* ./
-RUN poetry install --no-interaction --no-ansi --only main
+RUN POETRY_INSTALLER_ONLY_BINARY=:all: poetry install --no-interaction --no-ansi --only main
 
 FROM python:3.14-alpine3.24
 
 ARG VERSION
 
-# Require the Alpine fix for CVE-2026-85091
-RUN apk add --no-cache --upgrade bash ca-certificates 'zlib>=1.3.2-r1'
-
+# Require the Alpine fix for CVE-2026-85091.
 # Runtime package installation is unnecessary; pip bundles vulnerable libraries.
-RUN python -m pip uninstall --yes pip
-
-RUN addgroup -S -g 10001 mcp && \
+RUN apk add --no-cache --upgrade bash ca-certificates 'zlib>=1.3.2-r1' && \
+    python -m pip uninstall --yes pip && \
+    addgroup -S -g 10001 mcp && \
     adduser -S -D -u 10001 -G mcp -s /sbin/nologin mcp
 
 WORKDIR /app
 
-COPY --from=builder --chown=mcp:mcp /app/.venv /app/.venv
+# Application files stay root-owned so the runtime user cannot modify them.
+COPY --from=builder /app/.venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 ENV SC4S_MCP_VERSION=${VERSION}
 
-COPY --chown=mcp:mcp sc4s_mcp/ ./sc4s_mcp/
-COPY --chown=mcp:mcp docs/ ./docs/
-COPY --chown=mcp:mcp package/shared/addons/ ./package/shared/addons/
-COPY --chown=mcp:mcp skills/parser-creator/ ./skills/parser-creator/
-COPY --chown=mcp:mcp configuration-tool.sh ./configuration-tool.sh
+COPY sc4s_mcp/ ./sc4s_mcp/
+COPY docs/ ./docs/
+COPY package/shared/addons/ ./package/shared/addons/
+COPY skills/parser-creator/ ./skills/parser-creator/
+COPY configuration-tool.sh ./configuration-tool.sh
 
 ENV MCP_TRANSPORT=http
 ENV MCP_HOST=0.0.0.0

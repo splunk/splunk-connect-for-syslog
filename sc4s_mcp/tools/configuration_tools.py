@@ -3,6 +3,7 @@ import re
 import subprocess
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlparse
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -11,6 +12,7 @@ from utils.http import sc4s_request as _sc4s_request
 
 
 _CONFIG_SCRIPT: Path = REPO_ROOT / "configuration-tool.sh"
+_CONF_GLOB = "*.conf"
 
 
 def _yes_no(value: bool) -> str:
@@ -172,7 +174,7 @@ def sc4s_build_config(config: SC4SConfiguratorInput) -> dict:
             "TLS verification is disabled; use this only for development or "
             "trusted self-signed certificates."
         )
-    if config.sc4s_hec_url.startswith("http://"):
+    if urlparse(config.sc4s_hec_url).scheme == "http":
         warnings.append(
             "The HEC URL uses plaintext HTTP; the token and log data will be "
             "unencrypted."
@@ -199,7 +201,7 @@ def list_all_parsers() -> list[str]:
         Repository-relative .conf paths.
     """
     addons_dir = REPO_ROOT / "package" / "shared" / "addons"
-    return [str(f.relative_to(REPO_ROOT)) for f in addons_dir.rglob("*.conf")]
+    return [str(f.relative_to(REPO_ROOT)) for f in addons_dir.rglob(_CONF_GLOB)]
 
 
 @mcp.tool
@@ -216,7 +218,7 @@ def list_vendor_parsers(vendor: str) -> list[str]:
     results = []
     vendor_pattern = re.compile(rf"\b{re.escape(vendor)}\b", re.IGNORECASE)
 
-    for conf_file in addons_dir.rglob("*.conf"):
+    for conf_file in addons_dir.rglob(_CONF_GLOB):
         try:
             content = conf_file.read_text(encoding="utf-8")
         except Exception:
@@ -240,7 +242,7 @@ def get_parser(parser_name: str) -> dict:
         otherwise found=False and message.
     """
     addons_dir = REPO_ROOT / "package" / "shared" / "addons"
-    for conf_file in addons_dir.rglob("*.conf"):
+    for conf_file in addons_dir.rglob(_CONF_GLOB):
         if conf_file.name == parser_name or conf_file.stem == parser_name:
             return {
                 "found": True,

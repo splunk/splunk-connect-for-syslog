@@ -39,7 +39,7 @@ def _run_http() -> int:
     try:
         ssl_kwargs = build_uvicorn_ssl_kwargs()
     except TlsConfigError as exc:
-        logger.error("TLS configuration error: %s", exc)
+        logger.exception("TLS configuration error: %s", exc)
         return 1
 
     if ssl_kwargs:

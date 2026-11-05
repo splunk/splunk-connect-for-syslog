@@ -9,6 +9,7 @@ function join_by {
 # Normalize HEC URLs: extract host:port, append /services/collector/event, replace commas with spaces
 normalize_hec_url() {
   SC4S_DEST_SPLUNK_HEC_DEFAULT_URL=$(echo $SC4S_DEST_SPLUNK_HEC_DEFAULT_URL | sed 's/\(https\{0,1\}\:\/\/[^\/, ]*\)[^, ]*/\1\/services\/collector\/event/g' | sed 's/,/ /g')
+  return 0
 }
 
 # Rebuild derived source lists from the current environment before validating
@@ -17,6 +18,7 @@ refresh_source_sets() {
   export SOURCE_SIMPLE_SET=$(printenv | grep '^SC4S_LISTEN_SIMPLE_.*_PORT=.' | sed 's/^SC4S_LISTEN_SIMPLE_//;s/_..._PORT\=.*//;s/_[^_]*_NOPARSE_PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:upper:]' '[:lower:]' )
   export SOURCE_ALL_SET=$(printenv | grep '^SC4S_LISTEN_.*_PORT=.' | grep -v "disabled" | sed 's/^SC4S_LISTEN_//;s/_..._PORT\=.*//;s/_[^_]*_NOPARSE_PORT\=.*//;s/_[^_]*_PORT\=.*//' | sort | uniq |  xargs echo | sed 's/ /,/g' | tr '[:lower:]' '[:upper:]' )
   python3 /source_ports_validator.py
+  return $?
 }
 
 # Activate python environment and run parsing/caching for conf files
@@ -46,6 +48,7 @@ apply_sc4s_defaults() {
   export SC4S_BIN=${SC4S_BIN:=/usr/bin}
   export SC4S_SBIN=${SC4S_SBIN:=/usr/sbin}
   export SC4S_DEBUG_LOGS=${SC4S_DEBUG_LOGS:=no}
+  return 0
 }
 
 apply_sc4s_defaults

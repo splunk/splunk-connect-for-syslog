@@ -13,10 +13,12 @@ logger = logging.getLogger(__name__)
 config_bp = Blueprint("config", __name__)
 csrf = CSRFProtect()
 
+PARSER_SUFFIX = ".conf"
+
 
 def _parser_path(name):
     """Accept only unchanged, safe filenames within the parser directory."""
-    if not name or not name.endswith(".conf") or secure_filename(name) != name:
+    if not name or not name.endswith(PARSER_SUFFIX) or secure_filename(name) != name:
         raise ValueError(f"invalid parser filename: {name}")
 
     parser_path = PARSERS_DIR / name
@@ -78,7 +80,7 @@ def add_parser():
             jsonify({"status": "error", "message": "file must be a .conf file"}),
             400,
         )
-    if not file.filename.endswith(".conf"):
+    if not file.filename.endswith(PARSER_SUFFIX):
         return (
             jsonify(
                 {
@@ -104,8 +106,8 @@ def add_parser():
 
 @config_bp.route("/config/parser/<name>", methods=["GET"])
 def get_parser(name):
-    if not name.endswith(".conf"):
-        name += ".conf"
+    if not name.endswith(PARSER_SUFFIX):
+        name += PARSER_SUFFIX
 
     try:
         parser_path = _parser_path(name)
@@ -128,8 +130,8 @@ def get_parser(name):
 @csrf.exempt
 @config_bp.route("/config/parser/<name>", methods=["DELETE"])
 def delete_parser(name):
-    if not name.endswith(".conf"):
-        name += ".conf"
+    if not name.endswith(PARSER_SUFFIX):
+        name += PARSER_SUFFIX
 
     try:
         parser_path = _parser_path(name)

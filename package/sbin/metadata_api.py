@@ -114,6 +114,30 @@ def get_compliance():
     return jsonify({"conf_content": conf_text, "csv_content": csv_content}), 200
 
 
+def _compliance_error(conf_content, csv_content):
+    """Return an error message for invalid compliance input, or None."""
+    if not conf_content and not csv_content:
+        return "No conf_content or csv_content provided"
+
+    for entry in csv_content:
+        if not all(k in entry for k in ("filter_name", "field_name", "value")):
+            return "Each entry must have 'filter_name', 'field_name', 'value'"
+        if not COMPLIANCE_FIELD_RE.match(entry["field_name"]):
+            return (
+                f"Invalid field_name '{entry['field_name']}'. "
+                "Must be .splunk.index, .splunk.source, .splunk.sourcetype, or fields.<name>"
+            )
+
+    if conf_content and csv_content:
+        defined_filters = set(FILTER_BLOCK_RE.findall(conf_content))
+        csv_filters = {e["filter_name"] for e in csv_content}
+        orphaned = csv_filters - defined_filters
+        if orphaned:
+            return f"csv_content references filters not defined in conf_content: {sorted(orphaned)}"
+
+    return None
+
+
 @metadata_bp.route("/config/metadata/compliance", methods=["POST"])
 def set_compliance():
     data = request.get_json(silent=True)
@@ -123,56 +147,9 @@ def set_compliance():
     conf_content = data.get("conf_content", "")
     csv_content = data.get("csv_content", [])
 
-    if not conf_content and not csv_content:
-        return (
-            jsonify(
-                {
-                    "status": "error",
-                    "message": "No conf_content or csv_content provided",
-                }
-            ),
-            400,
-        )
-
-    for entry in csv_content:
-        if not all(k in entry for k in ("filter_name", "field_name", "value")):
-            return (
-                jsonify(
-                    {
-                        "status": "error",
-                        "message": "Each entry must have 'filter_name', 'field_name', 'value'",
-                    }
-                ),
-                400,
-            )
-        if not COMPLIANCE_FIELD_RE.match(entry["field_name"]):
-            return (
-                jsonify(
-                    {
-                        "status": "error",
-                        "message": (
-                            f"Invalid field_name '{entry['field_name']}'. "
-                            "Must be .splunk.index, .splunk.source, .splunk.sourcetype, or fields.<name>"
-                        ),
-                    }
-                ),
-                400,
-            )
-
-    if conf_content and csv_content:
-        defined_filters = set(FILTER_BLOCK_RE.findall(conf_content))
-        csv_filters = {e["filter_name"] for e in csv_content}
-        orphaned = csv_filters - defined_filters
-        if orphaned:
-            return (
-                jsonify(
-                    {
-                        "status": "error",
-                        "message": f"csv_content references filters not defined in conf_content: {sorted(orphaned)}",
-                    }
-                ),
-                400,
-            )
+    error = _compliance_error(conf_content, csv_content)
+    if error:
+        return jsonify({"status": "error", "message": error}), 400
 
     files_to_write = {}
     if conf_content:
