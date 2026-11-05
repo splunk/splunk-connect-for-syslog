@@ -21,7 +21,8 @@ def main() -> int:
     url = _build_url()
     ctx = ssl.create_default_context() if url.startswith("https://") else None
     if ctx:
-        ctx.load_verify_locations(cafile=os.environ["SC4S_MCP_TLS_CERT"])
+        ctx.check_hostname = False
+        ctx.load_verify_locations(cafile=os.environ[tls.TLS_CERT_ENV])
     try:
         with urllib.request.urlopen(url, timeout=_TIMEOUT_SEC, context=ctx) as resp:
             return 0 if resp.status == 200 else 1
