@@ -46,7 +46,6 @@ def get_env():
     )
 
 
-@csrf.exempt
 @config_bp.route("/config/env", methods=["POST"])
 def set_env():
     if "file" not in request.files:
@@ -68,7 +67,6 @@ def set_env():
     return submit_job(apply_env)
 
 
-@csrf.exempt
 @config_bp.route("/config/parser", methods=["POST"])
 def add_parser():
     if "file" not in request.files:
@@ -127,7 +125,6 @@ def get_parser(name):
     )
 
 
-@csrf.exempt
 @config_bp.route("/config/parser/<name>", methods=["DELETE"])
 def delete_parser(name):
     if not name.endswith(PARSER_SUFFIX):
