@@ -72,10 +72,6 @@ You will see entries similar to the following:
 
 ```
 SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful; checking indexes...
-
-SC4S_ENV_CHECK_INDEX: Checking email {"text":"Incorrect index","code":7,"invalid-event-number":1}
-SC4S_ENV_CHECK_INDEX: Checking epav {"text":"Incorrect index","code":7,"invalid-event-number":1}
-SC4S_ENV_CHECK_INDEX: Checking main {"text":"Success","code":0}
 ```
 
 Note the specifics of the indexes that are not configured correctly, and rectify this in your Splunk configuration. If this is not addressed properly, you may see output similar to the below when data flows into SC4S:

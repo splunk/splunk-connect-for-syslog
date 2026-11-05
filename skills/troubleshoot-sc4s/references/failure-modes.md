@@ -16,7 +16,7 @@ Read [counter trends](operator-commands.md#counter-trends) during affected traff
 
 | Observed trend | Next check |
 | --- | --- |
-| Source `processed` does not advance | [Listener/arrival branch](#one-senderprotocol-missing) |
+| Source `processed` does not advance in matching active or orphaned (`o`) rows | [Listener/arrival branch](#one-senderprotocol-missing) |
 | Source advances, HEC `processed` does not | [Parser/filter/routing branch](#fallback-parsing-or-missing-fields) or [metadata branch](#wrong-metadata-or-timestamp) |
 | HEC `written` stalls, `queued` grows | [Outgoing HEC errors](#outgoing-hectls-error); correlate with [TCP backlog](operator-commands.md#tcp-backlog) only if transport stalls remain unclear |
 | `dropped` increases | [Resource branch](#resource-pressure-delay-disk-growth-or-oom) and the current SC4S error; flag active loss |
@@ -28,7 +28,7 @@ Docs: [statistics and TCP backpressure](https://splunk.github.io/splunk-connect-
 
 ## Outgoing HEC/TLS error
 
-Read [SC4S startup/current logs](operator-commands.md#container-status-and-logs) for `SC4S_ENV_CHECK_HEC`, `SC4S_ENV_CHECK_INDEX`, and the exact destination error/status. Then inspect the implicated [SC4S configuration excerpt](operator-commands.md#configuration-and-raw-sample): URL, token presence, TLS/CA mount, proxy, or index override.
+Read [SC4S startup/current logs](operator-commands.md#container-status-and-logs) for `SC4S_ENV_CHECK_HEC`, and the destination error/status. Then inspect the implicated [SC4S configuration excerpt](operator-commands.md#configuration-and-raw-sample): URL, token presence, TLS/CA mount, proxy, or index override.
 
 | SC4S evidence | Action within scope |
 | --- | --- |

@@ -22,7 +22,7 @@ sudo "$RUNTIME" inspect --format '{{json .State}}' "$CONTAINER"
 sudo "$RUNTIME" logs --since 15m --timestamps --tail 100 "$CONTAINER"
 ```
 
-Use the failure/startup window instead of `15m` when needed. Return the state and first relevant error with nearby lines. Look for syntax errors, port conflicts, OOM, and `SC4S_ENV_CHECK_HEC` / `SC4S_ENV_CHECK_INDEX`. The startup markers record SC4S's HEC/index checks at startup, not current delivery.
+Use the failure/startup window instead of `15m` when needed. Return the state and first relevant error with nearby lines. Look for syntax errors, port conflicts, OOM, and `SC4S_ENV_CHECK_HEC`. The startup markers record SC4S's HEC/index checks at startup, not current delivery.
 
 ## Systemd status and logs
 
@@ -57,7 +57,7 @@ Use the actual collector API address/scheme/port and trusted CA for TLS. Return 
 
 ## Counter trends
 
-Measure receiving, routing, and forwarding while affected traffic is expected. Run twice about 30 seconds apart and return both timestamps and matching active rows:
+Measure receiving, routing, and forwarding while affected traffic is expected. Run twice about 30 seconds apart and return both timestamps and matching `a` and `o` rows:
 
 ```bash
 date -u
@@ -65,7 +65,7 @@ sudo "$RUNTIME" exec "$CONTAINER" syslog-ng-ctl stats \
   | grep -E '(^src\..*;(processed|connections);|d_hec.*;(processed|written|queued|dropped|memory_usage);)'
 ```
 
-Ignore orphaned state `o` rows; active rows use `a`. Do not compare across restarts or reset counters. Missing optional counters or different component names are not proof of failure; request the affected component's unfiltered rows only when necessary. `processed` alone does not prove delivery; shared source counters do not prove receipt from one particular sender. Use the [ingestion decision table](failure-modes.md#missing-events-or-growing-queues) to choose the next check.
+Do not compare across restarts or counter resets. Missing optional counters or different component names are not proof of failure; request the affected component's unfiltered rows only when necessary. `processed` alone does not prove delivery; shared source counters do not prove receipt from one particular sender. Use the [ingestion decision table](failure-modes.md#missing-events-or-growing-queues) to choose the next check.
 
 ## Listener ownership
 
