@@ -19,7 +19,6 @@
 ARG SYSLOGNG_VERSION=4.29.0@sha256:40a965250acf4bd45a3ff2b2621a1751ee832e47f359e871508f1cefd0b227a3
 FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
-# Install base packages, then upgrade system packages to address CVEs
 RUN apk add -U --upgrade --no-cache \
     bash \
     binutils \
@@ -52,8 +51,10 @@ RUN apk add -U --upgrade --no-cache \
     && useradd -M -g 1024 -u 1024 syslog \
     && usermod -L syslog \
     && touch /var/log/syslog-ng.out /var/log/syslog-ng.err \
-    && chmod 755 /var/log/syslog-ng.* \
-    && apk add --no-cache --upgrade \
+    && chmod 755 /var/log/syslog-ng.*
+
+# Upgrade system packages to address CVEs
+RUN apk add --no-cache --upgrade \
     --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
     c-ares \
     curl \
@@ -77,9 +78,10 @@ RUN python3 -m venv /var/lib/python-venv \
     && poetry export --format requirements.txt | /var/lib/python-venv/bin/pip3 --no-cache-dir install -r /dev/stdin \
     && rm -rf /var/lib/python-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
     && rm -rf /var/lib/syslog-ng-venv/lib/python3.*/site-packages/setuptools/_vendor/*.dist-info || true \
-    && apk del build-base python3-dev libffi-dev cargo poetry py3-pip py3-poetry-plugin-export py3-virtualenv \
-    # Patch axosyslog Python dependencies for vulnerabilities
-    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" \
+    && apk del build-base python3-dev libffi-dev cargo poetry py3-pip py3-poetry-plugin-export py3-virtualenv
+
+# Patch axosyslog Python dependencies for vulnerabilities
+RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2.7.0" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "idna>=3.15" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "cryptography>=48.0.1" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "tornado>=6.5.6" \
