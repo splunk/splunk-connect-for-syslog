@@ -56,10 +56,10 @@ def sc4s_request(method: str, path: str, **kwargs) -> dict:
             body = e.response.json()
         except Exception:
             body = {"detail": e.response.text}
-        logger.error(
+        logger.exception(
             "SC4S API %s %s -> %s %s", method.upper(), url, e.response.status_code, body
         )
         return {"status": "error", "http_status": e.response.status_code, **body}
     except httpx.HTTPError as e:
-        logger.error("SC4S API %s %s -> %s", method.upper(), url, e)
+        logger.exception("SC4S API %s %s -> %s", method.upper(), url, e)
         return {"status": "error", "message": str(e)}

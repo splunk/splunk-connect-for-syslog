@@ -95,7 +95,15 @@ class TransportSecurityMiddleware:
             await self.app(scope, receive, send)
             return
 
-        headers = Headers(scope=scope)
+        response = self._rejection(Headers(scope=scope))
+        if response is not None:
+            await response(scope, receive, send)
+            return
+
+        await self.app(scope, receive, send)
+
+    def _rejection(self, headers: Headers) -> PlainTextResponse | None:
+        """Return an error response for an untrusted Host or Origin, else None."""
         if not self.allow_any_host:
             host_header = headers.get("host", "")
             try:
@@ -105,9 +113,7 @@ class TransportSecurityMiddleware:
 
             if host is None or not self._host_allowed(host):
                 logger.warning("MCP HTTP request rejected: disallowed Host %r", host_header)
-                response = PlainTextResponse("Invalid Host header", status_code=421)
-                await response(scope, receive, send)
-                return
+                return PlainTextResponse("Invalid Host header", status_code=421)
 
         origin_header = headers.get("origin")
         if origin_header and not self.allow_any_origin:
@@ -120,12 +126,9 @@ class TransportSecurityMiddleware:
                 logger.warning(
                     "MCP HTTP request rejected: disallowed Origin %r", origin_header
                 )
-                response = PlainTextResponse("Invalid Origin header", status_code=403)
-                await response(scope, receive, send)
-                return
+                return PlainTextResponse("Invalid Origin header", status_code=403)
 
-        await self.app(scope, receive, send)
-
+        return None
 
     def _host_allowed(
         self,
