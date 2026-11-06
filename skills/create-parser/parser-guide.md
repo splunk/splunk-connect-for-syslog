@@ -216,6 +216,7 @@ Place `set()`, `subst()`, and `unset()` inside a `rewrite { ... };` block within
 - `subst()` performs a scoped string or regular-expression substitution.
 - `unset()` removes a field such as an invalid `PROGRAM` or `PID`.
 - `rewrite(r_set_dest_splunk_null_queue)` drops an event in a postfilter.
+- `map-value-pairs()` remaps groups of name-value pairs between namespaces.
 
 ### Choose the final event format and namespaces
 
