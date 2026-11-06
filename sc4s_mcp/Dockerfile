@@ -30,7 +30,12 @@ ENV SC4S_MCP_VERSION=${VERSION}
 COPY sc4s_mcp/ ./sc4s_mcp/
 COPY docs/ ./docs/
 COPY package/shared/addons/ ./package/shared/addons/
-COPY skills/parser-creator/ ./skills/parser-creator/
+COPY skills/create-parser/ ./skills/create-parser/
+COPY skills/manage-sc4s-parsers/ ./skills/manage-sc4s-parsers/
+COPY skills/manage-sc4s-splunk-metadata/ ./skills/manage-sc4s-splunk-metadata/
+COPY skills/sc4s-guided-configuration/ ./skills/sc4s-guided-configuration/
+COPY skills/sc4s-send-syslog/ ./skills/sc4s-send-syslog/
+COPY skills/troubleshoot-sc4s/ ./skills/troubleshoot-sc4s/
 COPY configuration-tool.sh ./configuration-tool.sh
 
 ENV MCP_TRANSPORT=http
