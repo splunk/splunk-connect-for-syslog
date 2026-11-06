@@ -63,6 +63,7 @@ RUN apk add --no-cache --upgrade \
     'libexpat>=2.10.0-r0' \
     'mongo-c-driver>=1.30.14-r0' \
     'musl-utils>=1.2.6-r3' \
+    'oauthlib>=4.0.1' \
     'python3>=3.14.10-r0'
 
 EXPOSE 514
