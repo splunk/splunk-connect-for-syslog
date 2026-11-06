@@ -52,6 +52,40 @@ def test_cisco_asa_traditional(
     assert result_count == 1
 
 
+# Hostname starting with a timezone abbreviation ("pt") must not be parsed as the event timezone
+@pytest.mark.addons("cisco")
+def test_cisco_asa_traditional_tz_like_host(
+    record_property,  setup_splunk, setup_sc4s
+):
+    host = f"pt1{shortuuid.ShortUUID().random(length=2).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    _, bsd, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    epoch = epoch[:-7]
+
+    mt = env.from_string(
+        "{{ mark }} {{ bsd }} {{ host }} : %ASA-3-003164: TCP access denied by ACL from 179.236.133.160/3624 to outside:72.142.18.38/23\n"
+    )
+    message = mt.render(mark="<127>", bsd=bsd, host=host)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="cisco:asa" "%ASA-3-003164"'
+    )
+    search = st.render(epoch=epoch, host=host)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
 @pytest.mark.addons("cisco")
 def test_cisco_asa_no_host_no_seq(
     record_property,  setup_splunk, setup_sc4s

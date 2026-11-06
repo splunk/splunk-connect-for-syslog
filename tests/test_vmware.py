@@ -352,12 +352,13 @@ def test_linux_vmware_bsd_tmd(
         '{{ mark }}{{ iso_header }}Z {{ host }} cmmdsTimeMachineDump: 1644579494.944824,527e4880-c1ec-8c0b-646d-7d818784807b,16,472131,5f60e727-3b12-e650-9fe0-b47af135162a,2,{"capacityUsed": 669883700346, "l2CacheUsed": 0, "l1CacheUsed": 0, "writeConsolidationRatio": 10, "avgReadsPerSecond": 1, "avgWritesPerSecond": 11, "avgThroughPutUsed": 185856, "avgReadServiceTime": 0, "avgReadQueueTime": 0, "avgWriteServiceTime": 0, "avgWriteQueueTime": 0, "avgDiskReadsPerSec": 0, "avgDiskWritesPerSec": 0, "avgSSDReadsPerSec": 0, "avgSSDWritesPerSec": 0, "estTimeToFailure": 0, "numDataComponents": 27, "logicalCapacityUsed": 0, "physDiskCapacityUsed": 0, "pendingWrite": 0, "pendingDelete": 0, "dgPendingWrite": 0, "dgPendingDelete": 0, "dgLogicalCapacityUsed": 0, "dgAvgDataDestageBytesSec": 37560838, "dgAvgZeroDestageBytesSec": 0, "dgAvgResyncReadBytesPerSec": 0, "dgAvgTo.\n'
     )
     message = mt.render(mark="<144>", iso_header=iso_header, host=host)
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     mt = env.from_string(
         '{{ mark }}{{ iso_header }}Z {{ host }} cmmdsTimeMachineDump: talReadBytesPerSec": 911767, "dgAvgRecWriteBytesPerSec": 0, "dgAvgTotalWriteBytesPerSec": 872405, "writeBufferSize": 0, "writeBufferUsage": 17259835392, "pendingUnmap": 0}\q.'
     )
-    message = mt.render(mark="<144>", iso_header=iso_header, host=host)
+    message += mt.render(mark="<144>", iso_header=iso_header, host=host)
+    # Both fragments must share one connection; syslog-ng does not preserve
+    # ordering across connections, which breaks the grouping-by reassembly.
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
