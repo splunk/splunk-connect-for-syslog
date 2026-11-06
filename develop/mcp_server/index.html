@@ -8536,11 +8536,11 @@ API to any MCP-compatible AI assistant or agent (for example: Cursor,
 Claude Desktop, or Visual Studio Code with an MCP extension). It lets the
 assistant help you discover supported vendors, author and validate
 syslog-ng parsers, inspect a running SC4S instance, and apply
-configuration changes through well-defined MCP tools, resources, and
+configuration changes through well-defined MCP tools, resources, skills, and
 prompts.</p>
 <h2 id="what-it-is">What it is<a class="headerlink" href="#what-it-is" title="Permanent link">&para;</a></h2>
 <p>The server is shipped as a small containerized Python application based on
-<a href="https://github.com/jlowin/fastmcp">FastMCP</a>. It provides three categories of
+<a href="https://github.com/jlowin/fastmcp">FastMCP</a>. It provides four categories of
 capabilities:</p>
 <table>
 <thead>
@@ -8559,13 +8559,17 @@ capabilities:</p>
 <td>Read-only documents the assistant can load on demand (parser creation guide, troubleshooting guide, vendor docs).</td>
 </tr>
 <tr>
+<td><strong>Skills</strong></td>
+<td>Discoverable workflow instructions and supporting files, served through the MCP Skills extension.</td>
+</tr>
+<tr>
 <td><strong>Prompts</strong></td>
 <td>Guided workflows (for example: <code>create_parser</code>, <code>troubleshoot_sc4s</code>) that orient the assistant to a specific task.</td>
 </tr>
 </tbody>
 </table>
-<p>The full list of tools, resources, and prompts is documented in
-<a href="tools/">Tools</a> and <a href="resources_and_prompts/">Resources and prompts</a>.</p>
+<p>The full list of tools, resources, skills, and prompts is documented in
+<a href="tools/">Tools</a> and <a href="resources_and_prompts/">Resources, skills, and prompts</a>.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p>The MCP server runs in its own OCI container (Docker or Podman) and
 communicates with:</p>
@@ -8595,8 +8599,8 @@ and restarts <code>syslog-ng</code> inside the SC4S container when needed.</p>
 <ul>
 <li><strong>Reads</strong> a small, read-only set of files that are baked into its own
   container image at build time: the documentation under <code>docs/</code>, the
-  parser library under <code>package/shared/addons/</code>, and the parser-creator
-  knowledge base. These are static; the MCP server does not reach into
+  parser library under <code>package/shared/addons/</code>, and the bundled workflows
+  under <code>skills/</code>. These are static; the MCP server does not reach into
   your host filesystem.</li>
 <li><strong>Makes HTTP(S) requests</strong> to <code>SC4S_API_URL</code>, the REST API running
   inside the SC4S container. Every &ldquo;management&rdquo; tool is a thin wrapper
@@ -8650,8 +8654,8 @@ procedure.</p>
 <li><strong><a href="installation/">Installation</a></strong>, build the image, run it with
   Docker or Podman, and configure your MCP client.</li>
 <li><strong><a href="tools/">Tools</a></strong>, reference of every callable tool.</li>
-<li><strong><a href="resources_and_prompts/">Resources and prompts</a></strong>, reference of
-  the available MCP resources and guided prompts.</li>
+<li><strong><a href="resources_and_prompts/">Resources, skills, and prompts</a></strong>, reference of
+  the available MCP resources, discoverable skills, and guided prompts.</li>
 </ul>
 
 

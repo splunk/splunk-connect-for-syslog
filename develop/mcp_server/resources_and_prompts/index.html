@@ -8049,6 +8049,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#skills-over-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Skills over MCP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prompts" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -8469,6 +8480,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#skills-over-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Skills over MCP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prompts" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -8535,9 +8557,9 @@
                   
 
 
-<h1 id="resources-and-prompts">Resources and prompts<a class="headerlink" href="#resources-and-prompts" title="Permanent link">&para;</a></h1>
+<h1 id="resources-skills-and-prompts">Resources, skills, and prompts<a class="headerlink" href="#resources-skills-and-prompts" title="Permanent link">&para;</a></h1>
 <p>In addition to <a href="../tools/">tools</a>, the SC4S MCP server exposes two other
-MCP primitives:</p>
+MCP primitives and the Skills extension:</p>
 <ul>
 <li><strong>Resources</strong>: read-only documents that the assistant (or the user)
   can request by URI. Resources are static content baked into the MCP
@@ -8545,9 +8567,11 @@ MCP primitives:</p>
 <li><strong>Prompts</strong>: pre-built workflows that seed a conversation with all
   the context needed for a specific task. Prompts do not execute code
   on their own; they just structure the conversation.</li>
+<li><strong>Skills</strong>: reusable workflow instructions and supporting files,
+  discovered through the MCP Skills extension and loaded on demand.</li>
 </ul>
 <h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<p>All resources use the <code>sc4s://</code> URI scheme. They are assembled from the
+<p>Documentation resources use the <code>sc4s://</code> URI scheme. They are assembled from the
 project&rsquo;s markdown documentation at the time they are fetched, so they
 always match the docs that ship with the image you are running.</p>
 <table>
@@ -8572,8 +8596,67 @@ always match the docs that ship with the image you are running.</p>
 </tr>
 </tbody>
 </table>
-<p>Resources are read-only by construction: they return text, nothing
-else. The server cannot use them to modify state.</p>
+<p>Documentation resources are read-only by construction: they return text,
+nothing else. The server cannot use them to modify state.</p>
+<h2 id="skills-over-mcp">Skills over MCP<a class="headerlink" href="#skills-over-mcp" title="Permanent link">&para;</a></h2>
+<p>The server implements the published
+<a href="https://modelcontextprotocol.io/extensions/skills/overview">Skills extension (SEP-2640)</a>,
+identified as <code>io.modelcontextprotocol/skills</code>. It advertises the extension
+alongside the Resources capability in <code>server/discover</code> on MCP protocol.</p>
+<p>This integration uses FastMCP experimental feature from <code>4.1.x</code> release.</p>
+<p>The MCP image bundles these workflows:</p>
+<table>
+<thead>
+<tr>
+<th>Skill URI</th>
+<th>Workflow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skill://create-parser/SKILL.md</code></td>
+<td>Design a parser from raw logs, with the supporting <code>parser-guide.md</code>.</td>
+</tr>
+<tr>
+<td><code>skill://manage-sc4s-parsers/SKILL.md</code></td>
+<td>Inspect, deploy, update, or remove custom parsers.</td>
+</tr>
+<tr>
+<td><code>skill://manage-sc4s-splunk-metadata/SKILL.md</code></td>
+<td>Manage Splunk metadata overrides.</td>
+</tr>
+<tr>
+<td><code>skill://sc4s-guided-configuration/SKILL.md</code></td>
+<td>Build and optionally apply SC4S configuration.</td>
+</tr>
+<tr>
+<td><code>skill://sc4s-send-syslog/SKILL.md</code></td>
+<td>Send sample syslog events to SC4S.</td>
+</tr>
+<tr>
+<td><code>skill://troubleshoot-sc4s/SKILL.md</code></td>
+<td>Diagnose SC4S health and ingestion issues.</td>
+</tr>
+</tbody>
+</table>
+<p>Clients that support the extension use:</p>
+<ol>
+<li><code>skills/list</code> to discover workflow metadata. Each entry includes the
+   original YAML frontmatter and a complete file manifest with SHA-256
+   digests and byte sizes, including supporting files.</li>
+<li><code>skills/get</code> with a skill&rsquo;s <code>SKILL.md</code> URI to fetch or refresh an entry
+   directly, without first listing skills.</li>
+<li><code>resources/read</code> with a manifest file URI to load its contents only when
+   needed. For example, the parser guide is available at
+   <code>skill://create-parser/parser-guide.md</code>.</li>
+</ol>
+<p>Reading a skill does not activate it or execute its contents. The host
+controls activation, verifies fetched files, and obtains any required
+approval. All skill requests use the same MCP authentication and transport
+security as tools and documentation resources. Reading skills does not
+require a live SC4S management API connection.</p>
+<p>Clients without Skills extension support can still read the <code>skill://</code>
+resources as ordinary resources.</p>
 <h2 id="prompts">Prompts<a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h2>
 <p>Prompts are ready-made workflows that include the relevant knowledge
 base and a set of diagnostic steps. Invoke them from your client&rsquo;s
