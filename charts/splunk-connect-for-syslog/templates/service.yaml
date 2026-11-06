@@ -1,9 +1,11 @@
+{{- $cfg := include "splunk-connect-for-syslog.settings" . | fromYaml }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-tcp
+  namespace: {{ .Release.Namespace }}
   annotations:
-  {{- if ( .Values.service.usemetallb | default true) }}
+  {{- if ne (toString .Values.service.usemetallb) "false" }}
     metallb.universe.tf/allow-shared-ip: {{ .Values.service.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
@@ -14,10 +16,21 @@ metadata:
 
 spec:
   type: {{ .Values.service.type }}
+  {{- if ne .Values.service.type "ClusterIP" }}
   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Local" }}
+  {{- end }}
+  {{- if eq .Values.service.type "LoadBalancer" }}
+  {{- with .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.service.loadBalancerIP }}
-  loadBalancerIP: {{ .Values.service.loadBalancerIP }}  
-  {{- end }}  
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  {{- end }}
   ports:
     - port: 514
       targetPort: bsd-dflt-tcp
@@ -37,8 +50,8 @@ spec:
       name: ietf-dflt-tls
 
   {{- if .Values.sc4s }}
-  {{- if .Values.sc4s.vendor_product }}
-    {{- range $vp := .Values.sc4s.vendor_product }}
+  {{- if $cfg.vendorProduct }}
+    {{- range $vp := $cfg.vendorProduct }}
         {{- if $vp.ports.tcp }}
           {{- range $p := $vp.ports.tcp }}
     - name: bsd-{{ $p }}-tcp
@@ -81,8 +94,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "splunk-connect-for-syslog.fullname" . }}-udp
+  namespace: {{ .Release.Namespace }}
   annotations:
-  {{- if ( .Values.service.usemetallb | default true) }}
+  {{- if ne (toString .Values.service.usemetallb) "false" }}
     metallb.universe.tf/allow-shared-ip: {{ .Values.service.metallbsharingkey | default "splunk-connect" | quote }}
   {{- end }}
   {{- with .Values.service.annotations }}
@@ -92,9 +106,20 @@ metadata:
     {{- include "splunk-connect-for-syslog.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
+  {{- if ne .Values.service.type "ClusterIP" }}
   externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy | default "Local" }}
+  {{- end }}
+  {{- if eq .Values.service.type "LoadBalancer" }}
+  {{- with .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   {{- if .Values.service.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
   {{- end }}
   ports:
     - port: 514
@@ -106,8 +131,8 @@ spec:
       protocol: UDP
       name: ietf-dflt-udp
 {{- if .Values.sc4s }}
-  {{- if .Values.sc4s.vendor_product }}
-    {{- range $vp := .Values.sc4s.vendor_product }}
+  {{- if $cfg.vendorProduct }}
+    {{- range $vp := $cfg.vendorProduct }}
         {{- if $vp.ports.udp }}
           {{- range $p := $vp.ports.udp }}
     - name: bsd-{{ $p }}-udp
