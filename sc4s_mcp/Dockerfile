@@ -1,4 +1,4 @@
-FROM python:3.14-alpine3.24 AS builder
+FROM python:3.15-alpine3.24@sha256:a0f2e268f2ce8f3709611a90054ec6a8ae31f6251f5896b8648b9bb99835e30a AS builder
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir --only-binary :all: poetry==2.4.1 && \
 COPY sc4s_mcp/pyproject.toml sc4s_mcp/poetry.lock* ./
 RUN POETRY_INSTALLER_ONLY_BINARY=:all: poetry install --no-interaction --no-ansi --only main
 
-FROM python:3.14-alpine3.24
+FROM python:3.15-alpine3.24@sha256:a0f2e268f2ce8f3709611a90054ec6a8ae31f6251f5896b8648b9bb99835e30a
 
 ARG VERSION
 
