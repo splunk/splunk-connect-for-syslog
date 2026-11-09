@@ -305,7 +305,6 @@ def test_fortinet_prefiltering(record_property,  setup_splunk, setup_sc4s):
     assert result_count == 0
 
 
-# FortiGate security-rating events (msg_tag=fgt-security-rating) arrive without a type= field and header
 @pytest.mark.addons("fortinet")
 def test_fortinet_fgt_security_rating(record_property, setup_splunk, setup_sc4s):
     host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
@@ -318,7 +317,7 @@ def test_fortinet_fgt_security_rating(record_property, setup_splunk, setup_sc4s)
     epoch = epoch[:-7]
 
     mt = env.from_string(
-        '{{ mark }}date={{ date }} time={{ time }} devname={{ host }} devid=FGT91G1234567890 logid=0004000017 level=notice vd=root msg_tag=fgt-security-rating\n'
+        '{{ mark }}devid=FGT91GTK25007808 msg_tag=fgt-security-rating msg_format=json itime={{ date }} {{ time }} devname={{ host }} idseq=201826227894361324 adom_name=SDW_CORPORATE msg=test dtime={{ date }} {{ time }}\n'
     )
     message = mt.render(
         mark="<111>", bsd=bsd, date=date, time=time, host=host, tzoffset=tzoffset
@@ -327,7 +326,7 @@ def test_fortinet_fgt_security_rating(record_property, setup_splunk, setup_sc4s)
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
-        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="fgt_security-rating"'
+        'search _time={{ epoch }} index=netfw host="{{ host }}" sourcetype="fgt_event"'
     )
     search = st.render(epoch=epoch, host=host)
 
