@@ -1,4 +1,7 @@
+---
 interface:
   display_name: "Troubleshoot SC4S"
   short_description: "Diagnose SC4S with focused checks and clear commands"
-  default_prompt: "Use $troubleshoot-sc4s to diagnose my collector issue, keep checks within SC4S, and give concise commands with expected results."
+  default_prompt: >-
+    Use $troubleshoot-sc4s to diagnose my collector issue,
+    keep checks within SC4S, and give concise commands with expected results.

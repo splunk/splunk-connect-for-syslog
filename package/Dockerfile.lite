@@ -62,8 +62,11 @@ RUN apk add --no-cache --upgrade \
     'libcurl>=8.23.0-r0' \
     'libexpat>=2.10.0-r0' \
     'mongo-c-driver>=1.30.14-r0' \
+    'musl>=1.2.6-r3' \
+    'musl-dbg>=1.2.6-r3' \
     'musl-utils>=1.2.6-r3' \
-    'python3>=3.14.10-r0'
+    'python3>=3.14.10-r0' \
+    'zlib>=1.4-r0'
 
 EXPOSE 514
 EXPOSE 601/tcp
