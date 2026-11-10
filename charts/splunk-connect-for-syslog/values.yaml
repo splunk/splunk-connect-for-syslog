@@ -3,13 +3,30 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Kubernetes workload that runs SC4S:
+#   statefulset - replicaCount pods, at most one per node, each with its own
+#                 persistent volume for the disk buffer.
+#   daemonset   - one pod on every node allowed by nodeSelector and tolerations.
+#                 The disk buffer lives in a host directory (persistence.hostPath)
+#                 capped at persistence.size, and autoscaling is not available.
+#                 Host directories are not allowed under the baseline or
+#                 restricted Pod Security Standards.
+workload: statefulset
+
 replicaCount: 2
 
+# Settings use camelCase names. The older snake_case names (hec_url, hec_token,
+# hec_verify_tls, hec_tls, vendor_product, context_files, config_files and
+# proxy.no_proxy) still work; when both are set, the camelCase name wins.
 splunk:
   {}
-#   hec_url: ""
-#   hec_token: ""
-#   hec_verify_tls: "yes"
+#   hecUrl: ""
+#   hecToken: ""
+#   hecVerifyTls: "yes"
+#   Name of a Secret you manage that holds the HEC token. When set, hecToken
+#   is ignored and the chart does not create the "splunk-connection" Secret.
+#   existingSecret: ""
+#   existingSecretKey: hec_token
 
 sc4s:
   {}
@@ -34,10 +51,10 @@ sc4s:
 #   proxy:
 #       http: "http://your_proxy_ip.com"
 #       https: "http://your_proxy_ip.com"
-#       no_proxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
+#       noProxy: "localhost,127.0.0.1,10.0.0.0/8,splunk-hec.internal.zone"
 
 #   existingCert: example-com-tls
-#   vendor_product:
+#   vendorProduct:
 #     - name: checkpoint
 #       ports:
 #         tcp: [9000]
@@ -55,13 +72,13 @@ sc4s:
 #         rfc5426:
 #           - 9100
 #           - 9101
-#   context_files:
+#   contextFiles:
 #     splunk_metadata.csv: |-
 #       cisco_meraki,index,foo
 #     host.csv: |-
 #       192.168.1.1,HOST,foo
 #       192.168.1.2,HOST,moon
-#    config_files:
+#    configFiles:
 #      app_parser_test_big.conf: |-
 #       #/opt/sc4s/local/config/filters/app-postfilter-drop_metadata.conf
 #        block parser app-postfilter-cisco_asa_metadata() {
@@ -162,6 +179,18 @@ sc4s:
 #         - thycotic
 #         - tim
 
+# Extra environment variables for SC4S settings that have no dedicated value in
+# this chart (see the SC4S configuration and fine-tuning docs). Variables the
+# chart manages, such as the HEC URL, listen ports or health check port, are
+# rejected. The kernel caps receive buffers at the node's net.core.rmem_max, so
+# raise that sysctl on the nodes before raising *_SO_RCVBUFF.
+env:
+  {}
+  # SC4S_SOURCE_UDP_SO_RCVBUFF: "536870912"
+  # SC4S_SOURCE_LISTEN_UDP_SOCKETS: "8"
+  # SC4S_DEST_SPLUNK_HEC_DEFAULT_DISKBUFF_RELIABLE: "yes"
+  # HEALTHCHECK_CHECK_QUEUE_SIZE: "yes"
+
 image:
   repository: ghcr.io/splunk/splunk-connect-for-syslog/container3
   pullPolicy: IfNotPresent
@@ -186,6 +215,9 @@ persistence:
   enabled: true
   annotations: {}
   size: "10Gi"
+  # Disk buffer directory on the node when workload is daemonset; each release
+  # uses <hostPath>/<namespace>/<release>.
+  hostPath: /var/lib/sc4s
 
 #  storageClass: ""
 
@@ -220,7 +252,7 @@ securityContext:
 
 service:
   type: LoadBalancer
-  usemetallb: {}
+  usemetallb: true
   metallbsharingkey: {}
   # externalTrafficPolicy controls how external traffic is routed to pods on
   # Service types `LoadBalancer` and `NodePort`. Defaults to `Local` to
@@ -229,6 +261,9 @@ service:
   # kube-proxy to load-balance traffic across all nodes at the cost of losing
   # the original source IP (kube-proxy will SNAT the traffic).
   externalTrafficPolicy: Local
+  # loadBalancerClass: service.k8s.aws/nlb  # AWS LB Controller; eks.amazonaws.com/nlb on EKS Auto Mode
+  # loadBalancerSourceRanges:
+  #   - 10.0.0.0/8
 
 resources:
   {}
