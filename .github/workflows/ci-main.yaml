@@ -60,7 +60,7 @@ jobs:
         id: version
         uses: cycjimmy/semantic-release-action@ad51787758d9654d5a75150a89a6fa9b3ccef95e # v8.1.4
         with:
-          semantic_version: 25
+          semantic_version: 26
           extra_plugins: |
             @semantic-release/exec@v6.0.3
             @semantic-release/git
@@ -517,7 +517,7 @@ jobs:
         id: version
         uses: cycjimmy/semantic-release-action@ad51787758d9654d5a75150a89a6fa9b3ccef95e # v8.1.4
         with:
-          semantic_version: 25
+          semantic_version: 26
           extra_plugins: |
             @semantic-release/exec@v6.0.3
             @semantic-release/git
