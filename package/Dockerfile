@@ -61,6 +61,7 @@ RUN apk add --no-cache --upgrade \
     'libbson>=1.30.14-r0' \
     'libcurl>=8.23.0-r0' \
     'libexpat>=2.10.0-r0' \
+    'libpq>=18.7-r0' \
     'mongo-c-driver>=1.30.14-r0' \
     'musl>=1.2.6-r3' \
     'musl-dbg>=1.2.6-r3' \
