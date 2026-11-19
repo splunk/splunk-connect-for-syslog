@@ -3,7 +3,7 @@ from fastmcp.prompts import Message
 from app import mcp, REPO_ROOT
 from utils.file_utils import read_dir_markdown
 
-PARSER_CREATOR_DIR = REPO_ROOT / "skills" / "parser-creator"
+PARSER_CREATOR_DIR = REPO_ROOT / "skills" / "create-parser"
 
 
 @mcp.prompt(
@@ -30,7 +30,7 @@ def create_parser_prompt(
 
 ## Project Knowledge (FOLLOW THESE CONVENTIONS EXACTLY)
 
-The parser-creator workflow and its referenced parser guide are embedded below.
+The create-parser workflow and its referenced parser guide are embedded below.
 
 {knowledge}
 

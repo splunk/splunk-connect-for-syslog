@@ -83,6 +83,50 @@ def _log_send_failure(exc, *, destination, protocol, event_number, event_count):
     )
 
 
+def _frame(payload, framing):
+    if framing == "octet-counting":
+        return f"{len(payload)} ".encode("ascii") + payload
+    if framing == "newline":
+        return payload + b"\n"
+    return payload
+
+
+def _connect(protocol, destination, timeout):
+    """Return (sock, send) where send(data) transmits data and returns bytes sent."""
+    if protocol == "tcp":
+        sock = socket.create_connection(destination, timeout=timeout)
+
+        def send(data):
+            sock.sendall(data)
+            return len(data)
+
+        return sock, send
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.settimeout(timeout)
+    return sock, lambda data: sock.sendto(data, destination)
+
+
+def _send_all(send, payloads, *, framing, destination, protocol):
+    """Send every payload, returning (sent, failed, bytes_sent)."""
+    sent = failed = bytes_sent = 0
+    for event_number, payload in enumerate(payloads, start=1):
+        try:
+            bytes_sent += send(_frame(payload, framing))
+        except OSError as exc:
+            failed += 1
+            _log_send_failure(
+                exc,
+                destination=destination,
+                protocol=protocol,
+                event_number=event_number,
+                event_count=len(payloads),
+            )
+        else:
+            sent += 1
+    return sent, failed, bytes_sent
+
+
 def send_text(*, text, protocol, port, framing=None, timeout=5.0):
     """Send each non-empty line in *text* to the configured SC4S host."""
     protocol = protocol.lower()
@@ -93,47 +137,15 @@ def send_text(*, text, protocol, port, framing=None, timeout=5.0):
     destination = (_host(), port)
     started = time.monotonic()
     sock = None
-    sent = failed = bytes_sent = 0
     try:
-        if protocol == "tcp":
-            sock = socket.create_connection(destination, timeout=timeout)
-            for event_number, payload in enumerate(payloads, start=1):
-                framed = (
-                    f"{len(payload)} ".encode("ascii") + payload
-                    if framing == "octet-counting"
-                    else payload + b"\n"
-                )
-                try:
-                    sock.sendall(framed)
-                except OSError as exc:
-                    failed += 1
-                    _log_send_failure(
-                        exc,
-                        destination=destination,
-                        protocol=protocol,
-                        event_number=event_number,
-                        event_count=len(payloads),
-                    )
-                else:
-                    sent += 1
-                    bytes_sent += len(framed)
-        else:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.settimeout(timeout)
-            for event_number, payload in enumerate(payloads, start=1):
-                try:
-                    bytes_sent += sock.sendto(payload, destination)
-                except OSError as exc:
-                    failed += 1
-                    _log_send_failure(
-                        exc,
-                        destination=destination,
-                        protocol=protocol,
-                        event_number=event_number,
-                        event_count=len(payloads),
-                    )
-                else:
-                    sent += 1
+        sock, send = _connect(protocol, destination, timeout)
+        sent, failed, bytes_sent = _send_all(
+            send,
+            payloads,
+            framing=framing,
+            destination=destination,
+            protocol=protocol,
+        )
     finally:
         if sock:
             sock.close()

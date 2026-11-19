@@ -15,7 +15,7 @@ WARNING use of a load balancer with udp will cause "corrupt" event behavior due 
 |----------------|---------------------------------------------------------------------------------------------------------|
 | Splunk Add-on ESX | <https://splunkbase.splunk.com/app/5603/>                                                                |
 | Splunk Add-on Vcenter | <https://splunkbase.splunk.com/app/5601/> |
-| Splunk Add-on nxs | none |
+| Splunk Add-on nsx | none |
 | Splunk Add-on vsan | none |
 
 ## Sourcetypes
@@ -86,16 +86,16 @@ SC4S_USE_VPS_CACHE=yes
 #File name provided is a suggestion it must be globally unique
 
 application app-vps-test-vmware_vsphere[sc4s-vps] {
- filter {      
+ filter {
         #netmask(169.254.100.1/24)
         #host("-esx-")
-    }; 
-    parser { 
+    };
+    parser {
         p_set_netsource_fields(
             vendor('vmware')
             product('vsphere')
-        ); 
-    };   
+        );
+    };
 };
 
 ```

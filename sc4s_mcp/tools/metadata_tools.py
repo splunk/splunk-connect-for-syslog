@@ -3,6 +3,8 @@ from utils.http import sc4s_request
 
 
 CONTEXT_TEMPLATES = REPO_ROOT / "package" / "etc" / "context_templates"
+SPLUNK_METADATA_PATH = "/config/metadata/splunk"
+COMPLIANCE_PATH = "/config/metadata/compliance"
 
 
 # ---------------------------------------------------------------------------
@@ -17,7 +19,7 @@ def get_splunk_metadata() -> dict:
     Returns:
         Dict with entries (key, metadata, value rows), or status=error and details.
     """
-    return sc4s_request("get", "/config/metadata/splunk", timeout=30)
+    return sc4s_request("get", SPLUNK_METADATA_PATH, timeout=30)
 
 
 @mcp.tool
@@ -33,7 +35,7 @@ def set_splunk_metadata(entries: list[dict]) -> dict:
     """
     return sc4s_request(
         "post",
-        "/config/metadata/splunk",
+        SPLUNK_METADATA_PATH,
         json={"entries": entries},
         timeout=30,
     )
@@ -46,7 +48,7 @@ def delete_splunk_metadata() -> dict:
     Returns:
         Dict with job_id to poll via get_job_status, or status=error and details.
     """
-    return sc4s_request("delete", "/config/metadata/splunk", timeout=30)
+    return sc4s_request("delete", SPLUNK_METADATA_PATH, timeout=30)
 
 
 # ---------------------------------------------------------------------------
@@ -62,7 +64,7 @@ def get_compliance_overrides() -> dict:
         Dict with conf_content (filters) and csv_content (filter_name, field_name,
         value rows), or status=error and details.
     """
-    return sc4s_request("get", "/config/metadata/compliance", timeout=10)
+    return sc4s_request("get", COMPLIANCE_PATH, timeout=10)
 
 
 @mcp.tool
@@ -79,7 +81,7 @@ def set_compliance_override(conf_content: str, csv_content: list[dict]) -> dict:
     """
     return sc4s_request(
         "post",
-        "/config/metadata/compliance",
+        COMPLIANCE_PATH,
         json={"conf_content": conf_content, "csv_content": csv_content},
         timeout=30,
     )
@@ -92,4 +94,4 @@ def delete_compliance_override() -> dict:
     Returns:
         Dict with job_id to poll via get_job_status, or status=error and details.
     """
-    return sc4s_request("delete", "/config/metadata/compliance", timeout=30)
+    return sc4s_request("delete", COMPLIANCE_PATH, timeout=30)

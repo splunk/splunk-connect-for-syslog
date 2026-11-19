@@ -33,6 +33,9 @@ csrf.init_app(app)
 app.register_blueprint(healthcheck_bp)
 
 if management_enabled:
+    # The management API authenticates with a bearer token header, not cookies,
+    # so CSRF does not apply to its state-changing routes.
+    csrf.exempt(config_bp)
     app.register_blueprint(config_bp)
     csrf.exempt(metadata_bp)
     app.register_blueprint(metadata_bp)

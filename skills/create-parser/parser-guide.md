@@ -178,6 +178,28 @@ Choose the narrowest stable discriminator and use the field-aware function that 
 - `"${MACRO}" eq "value"` and `ne` perform equality comparisons. Backtick expansion is for SC4S environment variables, not message macros.
 - `tags()` matches source, vendor/product, or wire-format tags and is preferable to reparsing content when a stable tag already exists.
 
+### Source scope and derived metadata
+
+Samples illustrate the confirmed source scope; they do not define a complete list of event actions or message text. Identify the source using stable program values, structured identity, or source enrichment. Add payload guards only when needed to distinguish the source or validate required extraction. Common payload values alone do not identify the source. Preserve the confirmed family, prefix, and case behavior. State any uncertainty about additional variants instead of guessing how to broaden coverage.
+
+When an output policy derives the product, source, sourcetype, or category from each event, use the relevant parsed value and apply the required transformation. Do not replace this rule with constants or branches based on the example values. Use static reasoning to check that the rule still works when the variable part changes within the confirmed scope. Describe this reasoning as hypothetical, not as another supplied sample or an executed test.
+
+### Literal and regex matchers
+
+Choose the field, matcher type, pattern, and flags together when using `program()`, `message()`, or field-aware `match()`:
+
+| Intent | Example predicate |
+|--------|-------------------|
+| Exact literal program | `program('service_a' type(string))` |
+| Intentional literal program prefix | `program('service_' type(string) flags(prefix))` |
+| One of two exact literal programs | `program('service_a' type(string)) or program('service_b' type(string))` |
+| Regex character class and anchors | `program('^service_[ab]$')` |
+| Regex validation of a parsed value | `match('^[0-9]+$' value('.tmp.count'))` |
+
+`type(string)` treats the pattern as literal text. It does not interpret regex anchors, alternation, character classes, quantifiers, or regex escapes. For example, `program('^service_a$' type(string))` does not match a PROGRAM value of `service_a`. Use plain literal text with the appropriate string flags, or omit `type(string)` and use the documented regex syntax when you need regex operators. Literal punctuation is valid in a string matcher when the target value contains those characters.
+
+Check post-parse validation filters in the same way. A filter can be syntactically valid and still always evaluate to false, preventing later metadata and field assignments. For each supplied positive sample, substitute its parsed values into every predicate and trace the full path to the output assignments. A static walkthrough does not verify that the configuration loads or routes events at runtime.
+
 ## Step 3 — Write the block parser
 
 ### Splunk destination rewrites
@@ -188,11 +210,13 @@ Choose the narrowest stable discriminator and use the field-aware function that 
 
 ### Other rewrite operations
 
+Place `set()`, `subst()`, and `unset()` inside a `rewrite { ... };` block within the channel, including in conditional branches. These operations cannot be called directly as channel-level processing stages. Check statement placement as well as function names and supported options.
+
 - `set()` copies or assigns a value, including to `HOST`, `PROGRAM`, or `MESSAGE`.
 - `subst()` performs a scoped string or regular-expression substitution.
 - `unset()` removes a field such as an invalid `PROGRAM` or `PID`.
-- `map-value-pairs()` remaps groups of name-value pairs between namespaces.
 - `rewrite(r_set_dest_splunk_null_queue)` drops an event in a postfilter.
+- `map-value-pairs()` remaps groups of name-value pairs between namespaces.
 
 ### Choose the final event format and namespaces
 
@@ -203,7 +227,8 @@ Ask what must be preserved instead of treating every raw-message template as equ
 | Preserve only the parsed message body | `t_msg_only` | `.tmp.*` for internal values | `${MSGONLY}` |
 | Preserve parsed header plus message | `t_hdr_msg` | `.tmp.*` for internal values | `${MSGHDR}${MESSAGE}` |
 | Preserve program, PID, and message | `t_program_msg` | `.tmp.*` for internal values | Reconstructed program/PID plus message |
-| Preserve RFC5424 header and SDATA | `t_hdr_sdata_msg` or `t_5424_hdr_sdata_compact` | `.tmp.*` for internal values | Reconstructed RFC5424 content; not necessarily original wire bytes |
+| Preserve RFC5424 timestamp, hostname, SDATA, and message | `t_5424_hdr_sdata_msg` | `.tmp.*` for internal values | Reconstructed RFC5424 header fields and message; not original wire bytes |
+| Preserve RFC5424 SDATA and message with timestamp and hostname omitted by explicit choice | `t_5424_hdr_sdata_compact` | `.tmp.*` for internal values | Timestamp and hostname replaced with `-`; program, PID, MSGID, SDATA, and message retained |
 | Replace the body with normalized key/value text | `t_kv_values` | `.values.*` | WELF-formatted values, native `.SDATA.*`, and `.metadata.*` |
 | Replace the body with JSON | `t_json_values` | `.values.*` | JSON values, native `.SDATA.*`, and `.metadata.*` |
 | Include parsed values and original message as a field | `t_kv_values_msg` or `t_json_values_msg` | `.values.*` | Transformed WELF or JSON with a `message` field |
@@ -306,7 +331,7 @@ These examples are final `.conf` content. MCP or JSON transport can display addi
 
 ## Complete minimal example: RFC5424 with native SDATA
 
-This routing-only example preserves RFC5424 structured data. It does not reparse SDATA into `.values.*` because `t_5424_hdr_sdata_compact` consumes the native `${SDATA}` value directly.
+This routing-only example preserves the parsed RFC5424 timestamp, hostname, structured data, and message using `t_5424_hdr_sdata_msg`. It does not reparse SDATA into `.values.*` because the template consumes the native `${SDATA}` value directly.
 
 ```conf
 block parser app-syslog-thinkst_canary() {
@@ -317,7 +342,7 @@ block parser app-syslog-thinkst_canary() {
                 sourcetype('thinkst:canary')
                 vendor('thinkst')
                 product('canary')
-                template('t_5424_hdr_sdata_compact')
+                template('t_5424_hdr_sdata_msg')
             );
         };
     };
@@ -338,7 +363,7 @@ To transform this event into JSON or WELF, select the corresponding values templ
 ## Authoring checklist
 
 - Confirm the framing, payload format, application topic, and topic precedence.
-- Confirm whether body-only, header-plus-message, RFC5424 SDATA, WELF, or JSON output is required.
+- Confirm whether body-only, header-plus-message, RFC5424 timestamp/hostname/SDATA, WELF, or JSON output is required; use compact RFC5424 output only when timestamp and hostname omissions are explicitly accepted.
 - Confirm every requested field and its exact expected value for each sample.
 - Keep intermediate fragments and unparsed tails in `.tmp.*`.
 - Do not duplicate native `.SDATA.*` unless a nonstandard tail genuinely requires reparsing.

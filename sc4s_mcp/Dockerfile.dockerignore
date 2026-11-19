@@ -14,7 +14,12 @@
 !sc4s_mcp/utils/
 !docs/
 !package/shared/addons/
-!skills/parser-creator/
+!skills/create-parser/
+!skills/manage-sc4s-parsers/
+!skills/manage-sc4s-splunk-metadata/
+!skills/sc4s-guided-configuration/
+!skills/sc4s-send-syslog/
+!skills/troubleshoot-sc4s/
 !configuration-tool.sh
 **/__pycache__
 **/*.pyc

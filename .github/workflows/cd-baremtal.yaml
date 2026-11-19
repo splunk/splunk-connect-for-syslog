@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
-      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.14' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
@@ -63,6 +63,6 @@ jobs:
           poetry install
           BAREMETAL_TAR=/tmp/baremetal.tar poetry run pytest tests/test_baremetal_package.py -v -m baremetal
       - name: Release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         with:
           files: /tmp/baremetal.tar, /tmp/baremetal_checksum.txt
