@@ -62,10 +62,13 @@ RUN apk add --no-cache --upgrade \
     'libcurl>=8.23.0-r0' \
     'libexpat>=2.10.0-r0' \
     'libpq>=18.7-r0' \
+    'libssl3>=3.5.9-r1' \
+    'libcrypto3>=3.5.9-r1' \
     'mongo-c-driver>=1.30.14-r0' \
     'musl>=1.2.6-r3' \
     'musl-dbg>=1.2.6-r3' \
     'musl-utils>=1.2.6-r3' \
+    'openssl>=3.5.9-r1' \
     'python3>=3.14.10-r0' \
     'zlib>=1.4-r0'
 

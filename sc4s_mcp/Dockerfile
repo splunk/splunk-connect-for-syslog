@@ -13,9 +13,10 @@ FROM python:3.14-alpine3.24
 
 ARG VERSION
 
-# Require the Alpine fix for CVE-2026-85091.
+# Require the Alpine fixes for CVE-2026-85091 (zlib) and OpenSSL CVEs fixed in 3.5.9-r1.
 # Runtime package installation is unnecessary; pip bundles vulnerable libraries.
-RUN apk add --no-cache --upgrade bash ca-certificates 'zlib>=1.3.2-r1' && \
+RUN apk add --no-cache --upgrade bash ca-certificates 'zlib>=1.3.2-r1' \
+    'libssl3>=3.5.9-r1' 'libcrypto3>=3.5.9-r1' && \
     python -m pip uninstall --yes pip && \
     addgroup -S -g 10001 mcp && \
     adduser -S -D -u 10001 -G mcp -s /sbin/nologin mcp
