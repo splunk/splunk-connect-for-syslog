@@ -227,7 +227,8 @@ Ask what must be preserved instead of treating every raw-message template as equ
 | Preserve only the parsed message body | `t_msg_only` | `.tmp.*` for internal values | `${MSGONLY}` |
 | Preserve parsed header plus message | `t_hdr_msg` | `.tmp.*` for internal values | `${MSGHDR}${MESSAGE}` |
 | Preserve program, PID, and message | `t_program_msg` | `.tmp.*` for internal values | Reconstructed program/PID plus message |
-| Preserve RFC5424 header and SDATA | `t_hdr_sdata_msg` or `t_5424_hdr_sdata_compact` | `.tmp.*` for internal values | Reconstructed RFC5424 content; not necessarily original wire bytes |
+| Preserve RFC5424 timestamp, hostname, SDATA, and message | `t_5424_hdr_sdata_msg` | `.tmp.*` for internal values | Reconstructed RFC5424 header fields and message; not original wire bytes |
+| Preserve RFC5424 SDATA and message with timestamp and hostname omitted by explicit choice | `t_5424_hdr_sdata_compact` | `.tmp.*` for internal values | Timestamp and hostname replaced with `-`; program, PID, MSGID, SDATA, and message retained |
 | Replace the body with normalized key/value text | `t_kv_values` | `.values.*` | WELF-formatted values, native `.SDATA.*`, and `.metadata.*` |
 | Replace the body with JSON | `t_json_values` | `.values.*` | JSON values, native `.SDATA.*`, and `.metadata.*` |
 | Include parsed values and original message as a field | `t_kv_values_msg` or `t_json_values_msg` | `.values.*` | Transformed WELF or JSON with a `message` field |
@@ -330,7 +331,7 @@ These examples are final `.conf` content. MCP or JSON transport can display addi
 
 ## Complete minimal example: RFC5424 with native SDATA
 
-This routing-only example preserves RFC5424 structured data. It does not reparse SDATA into `.values.*` because `t_5424_hdr_sdata_compact` consumes the native `${SDATA}` value directly.
+This routing-only example preserves the parsed RFC5424 timestamp, hostname, structured data, and message using `t_5424_hdr_sdata_msg`. It does not reparse SDATA into `.values.*` because the template consumes the native `${SDATA}` value directly.
 
 ```conf
 block parser app-syslog-thinkst_canary() {
@@ -341,7 +342,7 @@ block parser app-syslog-thinkst_canary() {
                 sourcetype('thinkst:canary')
                 vendor('thinkst')
                 product('canary')
-                template('t_5424_hdr_sdata_compact')
+                template('t_5424_hdr_sdata_msg')
             );
         };
     };
@@ -362,7 +363,7 @@ To transform this event into JSON or WELF, select the corresponding values templ
 ## Authoring checklist
 
 - Confirm the framing, payload format, application topic, and topic precedence.
-- Confirm whether body-only, header-plus-message, RFC5424 SDATA, WELF, or JSON output is required.
+- Confirm whether body-only, header-plus-message, RFC5424 timestamp/hostname/SDATA, WELF, or JSON output is required; use compact RFC5424 output only when timestamp and hostname omissions are explicitly accepted.
 - Confirm every requested field and its exact expected value for each sample.
 - Keep intermediate fragments and unparsed tails in `.tmp.*`.
 - Do not duplicate native `.SDATA.*` unless a nonstandard tail genuinely requires reparsing.
