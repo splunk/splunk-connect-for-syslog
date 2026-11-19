@@ -1,6 +1,6 @@
 {
   "name": "sc4s-plugin",
-  "version": "3.48.1",
+  "version": "3.49.0",
   "description": "Create, configure, troubleshoot, and safely manage SC4S.",
   "author": {
     "name": "Karol Wrona"
