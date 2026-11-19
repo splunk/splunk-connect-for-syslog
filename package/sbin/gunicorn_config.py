@@ -11,6 +11,7 @@ def ssl_context(conf, default_ssl_context_factory):
         return default_ssl_context_factory()
 
     context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=conf.ca_certs)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
     context.load_cert_chain(
         certfile=conf.certfile, keyfile=conf.keyfile, password=password
     )

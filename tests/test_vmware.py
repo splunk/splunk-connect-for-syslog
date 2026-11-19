@@ -161,12 +161,47 @@ def test_linux_vmware_nsx_fw(record_property,  setup_splunk, setup_sc4s, get_pid
     assert result_count == 1
 
 
+# <13>2018-07-03T19:44:09.749Z globalhost.com FIREWALL-PKTLOG[1234567]: b6507827 INET match PASS 1100 OUT 60 TCP 192.168.4.3/49627->192.168.4.4/49153 S
+@pytest.mark.addons("vmware")
+def test_linux_vmware_nsx_dfw(record_property, setup_splunk, setup_sc4s, get_pid):
+    host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+    pid = get_pid
+
+    dt = datetime.datetime.now(datetime.UTC)
+    _, _, _, _, _, _, epoch = time_operations(dt)
+
+    # Tune time functions
+    # iso from included timeutils is from local timezone; need to keep iso as UTC
+    iso_header = dt.isoformat()[0:23]
+    epoch = epoch[:-3]
+
+    mt = env.from_string(
+        "{{ mark }}{{ iso_header }}Z {{ host }} FIREWALL-PKTLOG[1234567]: {{ pid }} INET match PASS 1100 OUT 60 TCP 192.168.4.3/49627->192.168.4.4/49153 S\n"
+    )
+    message = mt.render(mark="<13>", iso_header=iso_header, host=host, pid=pid)
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    st = env.from_string(
+        'search _time={{ epoch }} index=netfw host={{ host }} {{ pid }} sourcetype="vmware:nsxlog:dfwpktlogs"'
+    )
+    search = st.render(epoch=epoch, host=host, pid=pid)
+
+    result_count, _ = splunk_single(setup_splunk, search)
+
+    record_property("host", host)
+    record_property("resultCount", result_count)
+    record_property("message", message)
+
+    assert result_count == 1
+
+
 @pytest.mark.addons("vmware")
 def test_linux_vmware_vcenter_ietf(
     record_property,  setup_splunk, setup_sc4s
 ):
     host = f"testvmw-host-{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
-    
+
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, _, _, _, _, _, epoch = time_operations(dt)
 
@@ -219,40 +254,6 @@ def test_linux_vmware_horizon_ietf(
 
     st = env.from_string(
         'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:horizon"'
-    )
-    search = st.render(epoch=epoch, host=host)
-
-    result_count, _ = splunk_single(setup_splunk, search)
-
-    record_property("host", host)
-    record_property("resultCount", result_count)
-    record_property("message", message)
-
-    assert result_count == 1
-    
-    
-# <13>1 2024-05-15T19:41:25.001Z globalhost.com FIREWALL-PKTLOG - - - INET TERM PASS 5096 OUT TCP RST 10.10.10.11/60517->10.10.10.10/443 9/8 1461/4677 DR-Allow
-@pytest.mark.addons("vmware")
-def test_vmware_firewall_pktlog(
-    record_property,  get_host_key, setup_splunk, setup_sc4s
-):
-    host = "testvmw-" + get_host_key
-    dt = datetime.datetime.now(datetime.timezone.utc)
-    _, _, _, _, _, _, epoch = time_operations(dt)
-
-    # Tune time functions
-    # iso from included timeutils is from local timezone; need to keep iso as UTC
-    iso_header = dt.isoformat()[0:23]
-    epoch = epoch[:-3]
-
-    mt = env.from_string(
-        '{{ mark }}{{ iso_header }}Z {{ host }} FIREWALL-PKTLOG - - - INET TERM PASS 5096 OUT TCP RST 10.10.10.11/60512->10.10.10.10/443 9/9 1461/4738 DR-Allow\n'
-    )
-    message = mt.render(mark="<13>", iso_header=iso_header, host=host)
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
-    
-    st = env.from_string(
-        'search _time={{ epoch }} index=infraops host={{ host }} sourcetype="vmware:vclog:firewall-pktlog"'
     )
     search = st.render(epoch=epoch, host=host)
 
@@ -351,12 +352,13 @@ def test_linux_vmware_bsd_tmd(
         '{{ mark }}{{ iso_header }}Z {{ host }} cmmdsTimeMachineDump: 1644579494.944824,527e4880-c1ec-8c0b-646d-7d818784807b,16,472131,5f60e727-3b12-e650-9fe0-b47af135162a,2,{"capacityUsed": 669883700346, "l2CacheUsed": 0, "l1CacheUsed": 0, "writeConsolidationRatio": 10, "avgReadsPerSecond": 1, "avgWritesPerSecond": 11, "avgThroughPutUsed": 185856, "avgReadServiceTime": 0, "avgReadQueueTime": 0, "avgWriteServiceTime": 0, "avgWriteQueueTime": 0, "avgDiskReadsPerSec": 0, "avgDiskWritesPerSec": 0, "avgSSDReadsPerSec": 0, "avgSSDWritesPerSec": 0, "estTimeToFailure": 0, "numDataComponents": 27, "logicalCapacityUsed": 0, "physDiskCapacityUsed": 0, "pendingWrite": 0, "pendingDelete": 0, "dgPendingWrite": 0, "dgPendingDelete": 0, "dgLogicalCapacityUsed": 0, "dgAvgDataDestageBytesSec": 37560838, "dgAvgZeroDestageBytesSec": 0, "dgAvgResyncReadBytesPerSec": 0, "dgAvgTo.\n'
     )
     message = mt.render(mark="<144>", iso_header=iso_header, host=host)
-    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     mt = env.from_string(
         '{{ mark }}{{ iso_header }}Z {{ host }} cmmdsTimeMachineDump: talReadBytesPerSec": 911767, "dgAvgRecWriteBytesPerSec": 0, "dgAvgTotalWriteBytesPerSec": 872405, "writeBufferSize": 0, "writeBufferUsage": 17259835392, "pendingUnmap": 0}\q.'
     )
-    message = mt.render(mark="<144>", iso_header=iso_header, host=host)
+    message += mt.render(mark="<144>", iso_header=iso_header, host=host)
+    # Both fragments must share one connection; syslog-ng does not preserve
+    # ordering across connections, which breaks the grouping-by reassembly.
     sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
 
     st = env.from_string(
@@ -572,7 +574,7 @@ def test_vmware_overlapping_with_another_sdata(
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, _, _, _, _, _, epoch = time_operations(dt)
-    
+
     iso = dt.isoformat()[0:26]
     iso_header = dt.isoformat()[0:23]
     epoch = epoch[:-3]

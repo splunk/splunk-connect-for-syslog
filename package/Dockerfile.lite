@@ -55,14 +55,22 @@ RUN apk add -U --upgrade --no-cache \
 
 # Upgrade system packages to address CVEs
 RUN apk add --no-cache --upgrade \
-    --repository=https://dl-cdn.alpinelinux.org/alpine/v3.23/main \
-    c-ares \
-    curl \
-    'expat>=2.9.0-r0' \
-    'libexpat>=2.9.0-r0' \
-    libpq \
-    postgresql-libs \ 
-    socat
+    'brotli-libs>=1.2.1-r0' \
+    'curl>=8.23.0-r0' \
+    'expat>=2.10.0-r0' \
+    'libbson>=1.30.14-r0' \
+    'libcurl>=8.23.0-r0' \
+    'libexpat>=2.10.0-r0' \
+    'libpq>=18.7-r0' \
+    'libssl3>=3.5.9-r1' \
+    'libcrypto3>=3.5.9-r1' \
+    'mongo-c-driver>=1.30.14-r0' \
+    'musl>=1.2.6-r3' \
+    'musl-dbg>=1.2.6-r3' \
+    'musl-utils>=1.2.6-r3' \
+    'openssl>=3.5.9-r1' \
+    'python3>=3.14.10-r0' \
+    'zlib>=1.4-r0'
 
 EXPOSE 514
 EXPOSE 601/tcp
@@ -89,6 +97,7 @@ RUN /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "urllib3>=2
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "setuptools>=83.0.0" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "msgpack>=1.2.1" \
     && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "certifi>=2026.10.19" \
+    && /var/lib/syslog-ng-venv/bin/pip install --no-cache-dir --upgrade "oauthlib>=4.0.1" \
     && /var/lib/syslog-ng-venv/bin/pip uninstall -y pip \
     && /var/lib/python-venv/bin/pip uninstall -y pip
 
