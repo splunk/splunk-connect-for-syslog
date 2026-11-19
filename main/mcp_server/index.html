@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../images/logo.png">
-      <meta name="generator" content="zensical-0.0.71">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -31,7 +31,7 @@
       
         
       
-      <link rel="stylesheet" href="../assets/stylesheets/modern/main.e442bf79.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.ebb7f775.min.css">
       
         
           
@@ -112,9 +112,10 @@
   <img src="../images/logo.png" alt="Splunk Connect for Syslog">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+    <label class="md-header__button md-icon" for="__drawer">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -152,9 +153,10 @@
     
       
       
-        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+        <label class="md-header__button md-icon" for="__search">
           
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
         <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
   <button type="button" class="md-search__button">
@@ -8534,11 +8536,11 @@ API to any MCP-compatible AI assistant or agent (for example: Cursor,
 Claude Desktop, or Visual Studio Code with an MCP extension). It lets the
 assistant help you discover supported vendors, author and validate
 syslog-ng parsers, inspect a running SC4S instance, and apply
-configuration changes through well-defined MCP tools, resources, and
+configuration changes through well-defined MCP tools, resources, skills, and
 prompts.</p>
 <h2 id="what-it-is">What it is<a class="headerlink" href="#what-it-is" title="Permanent link">&para;</a></h2>
 <p>The server is shipped as a small containerized Python application based on
-<a href="https://github.com/jlowin/fastmcp">FastMCP</a>. It provides three categories of
+<a href="https://github.com/jlowin/fastmcp">FastMCP</a>. It provides four categories of
 capabilities:</p>
 <table>
 <thead>
@@ -8557,13 +8559,17 @@ capabilities:</p>
 <td>Read-only documents the assistant can load on demand (parser creation guide, troubleshooting guide, vendor docs).</td>
 </tr>
 <tr>
+<td><strong>Skills</strong></td>
+<td>Discoverable workflow instructions and supporting files, served through the MCP Skills extension.</td>
+</tr>
+<tr>
 <td><strong>Prompts</strong></td>
 <td>Guided workflows (for example: <code>create_parser</code>, <code>troubleshoot_sc4s</code>) that orient the assistant to a specific task.</td>
 </tr>
 </tbody>
 </table>
-<p>The full list of tools, resources, and prompts is documented in
-<a href="tools/">Tools</a> and <a href="resources_and_prompts/">Resources and prompts</a>.</p>
+<p>The full list of tools, resources, skills, and prompts is documented in
+<a href="tools/">Tools</a> and <a href="resources_and_prompts/">Resources, skills, and prompts</a>.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p>The MCP server runs in its own OCI container (Docker or Podman) and
 communicates with:</p>
@@ -8593,8 +8599,8 @@ and restarts <code>syslog-ng</code> inside the SC4S container when needed.</p>
 <ul>
 <li><strong>Reads</strong> a small, read-only set of files that are baked into its own
   container image at build time: the documentation under <code>docs/</code>, the
-  parser library under <code>package/shared/addons/</code>, and the parser-creator
-  knowledge base. These are static; the MCP server does not reach into
+  parser library under <code>package/shared/addons/</code>, and the bundled workflows
+  under <code>skills/</code>. These are static; the MCP server does not reach into
   your host filesystem.</li>
 <li><strong>Makes HTTP(S) requests</strong> to <code>SC4S_API_URL</code>, the REST API running
   inside the SC4S container. Every &ldquo;management&rdquo; tool is a thin wrapper
@@ -8648,8 +8654,8 @@ procedure.</p>
 <li><strong><a href="installation/">Installation</a></strong>, build the image, run it with
   Docker or Podman, and configure your MCP client.</li>
 <li><strong><a href="tools/">Tools</a></strong>, reference of every callable tool.</li>
-<li><strong><a href="resources_and_prompts/">Resources and prompts</a></strong>, reference of
-  the available MCP resources and guided prompts.</li>
+<li><strong><a href="resources_and_prompts/">Resources, skills, and prompts</a></strong>, reference of
+  the available MCP resources, discoverable skills, and guided prompts.</li>
 </ul>
 
 
@@ -8708,10 +8714,10 @@ procedure.</p>
       
         
         
-      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.code.copy"],"redirect":null,"search":"../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.code.copy"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.a2388154.min.js"></script>
+      <script src="../assets/javascripts/bundle.3cb411a8.min.js"></script>
       
     
   </body>

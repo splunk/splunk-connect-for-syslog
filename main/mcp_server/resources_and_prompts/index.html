@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../images/logo.png">
-      <meta name="generator" content="zensical-0.0.71">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -31,7 +31,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e442bf79.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.ebb7f775.min.css">
       
         
           
@@ -112,9 +112,10 @@
   <img src="../../images/logo.png" alt="Splunk Connect for Syslog">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+    <label class="md-header__button md-icon" for="__drawer">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -152,9 +153,10 @@
     
       
       
-        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+        <label class="md-header__button md-icon" for="__search">
           
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
         <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
   <button type="button" class="md-search__button">
@@ -8047,6 +8049,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#skills-over-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Skills over MCP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prompts" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -8467,6 +8480,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#skills-over-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Skills over MCP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#prompts" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -8533,9 +8557,9 @@
                   
 
 
-<h1 id="resources-and-prompts">Resources and prompts<a class="headerlink" href="#resources-and-prompts" title="Permanent link">&para;</a></h1>
+<h1 id="resources-skills-and-prompts">Resources, skills, and prompts<a class="headerlink" href="#resources-skills-and-prompts" title="Permanent link">&para;</a></h1>
 <p>In addition to <a href="../tools/">tools</a>, the SC4S MCP server exposes two other
-MCP primitives:</p>
+MCP primitives and the Skills extension:</p>
 <ul>
 <li><strong>Resources</strong>: read-only documents that the assistant (or the user)
   can request by URI. Resources are static content baked into the MCP
@@ -8543,9 +8567,11 @@ MCP primitives:</p>
 <li><strong>Prompts</strong>: pre-built workflows that seed a conversation with all
   the context needed for a specific task. Prompts do not execute code
   on their own; they just structure the conversation.</li>
+<li><strong>Skills</strong>: reusable workflow instructions and supporting files,
+  discovered through the MCP Skills extension and loaded on demand.</li>
 </ul>
 <h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
-<p>All resources use the <code>sc4s://</code> URI scheme. They are assembled from the
+<p>Documentation resources use the <code>sc4s://</code> URI scheme. They are assembled from the
 project&rsquo;s markdown documentation at the time they are fetched, so they
 always match the docs that ship with the image you are running.</p>
 <table>
@@ -8570,8 +8596,67 @@ always match the docs that ship with the image you are running.</p>
 </tr>
 </tbody>
 </table>
-<p>Resources are read-only by construction: they return text, nothing
-else. The server cannot use them to modify state.</p>
+<p>Documentation resources are read-only by construction: they return text,
+nothing else. The server cannot use them to modify state.</p>
+<h2 id="skills-over-mcp">Skills over MCP<a class="headerlink" href="#skills-over-mcp" title="Permanent link">&para;</a></h2>
+<p>The server implements the published
+<a href="https://modelcontextprotocol.io/extensions/skills/overview">Skills extension (SEP-2640)</a>,
+identified as <code>io.modelcontextprotocol/skills</code>. It advertises the extension
+alongside the Resources capability in <code>server/discover</code> on MCP protocol.</p>
+<p>This integration uses FastMCP experimental feature from <code>4.1.x</code> release.</p>
+<p>The MCP image bundles these workflows:</p>
+<table>
+<thead>
+<tr>
+<th>Skill URI</th>
+<th>Workflow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skill://create-parser/SKILL.md</code></td>
+<td>Design a parser from raw logs, with the supporting <code>parser-guide.md</code>.</td>
+</tr>
+<tr>
+<td><code>skill://manage-sc4s-parsers/SKILL.md</code></td>
+<td>Inspect, deploy, update, or remove custom parsers.</td>
+</tr>
+<tr>
+<td><code>skill://manage-sc4s-splunk-metadata/SKILL.md</code></td>
+<td>Manage Splunk metadata overrides.</td>
+</tr>
+<tr>
+<td><code>skill://sc4s-guided-configuration/SKILL.md</code></td>
+<td>Build and optionally apply SC4S configuration.</td>
+</tr>
+<tr>
+<td><code>skill://sc4s-send-syslog/SKILL.md</code></td>
+<td>Send sample syslog events to SC4S.</td>
+</tr>
+<tr>
+<td><code>skill://troubleshoot-sc4s/SKILL.md</code></td>
+<td>Diagnose SC4S health and ingestion issues.</td>
+</tr>
+</tbody>
+</table>
+<p>Clients that support the extension use:</p>
+<ol>
+<li><code>skills/list</code> to discover workflow metadata. Each entry includes the
+   original YAML frontmatter and a complete file manifest with SHA-256
+   digests and byte sizes, including supporting files.</li>
+<li><code>skills/get</code> with a skill&rsquo;s <code>SKILL.md</code> URI to fetch or refresh an entry
+   directly, without first listing skills.</li>
+<li><code>resources/read</code> with a manifest file URI to load its contents only when
+   needed. For example, the parser guide is available at
+   <code>skill://create-parser/parser-guide.md</code>.</li>
+</ol>
+<p>Reading a skill does not activate it or execute its contents. The host
+controls activation, verifies fetched files, and obtains any required
+approval. All skill requests use the same MCP authentication and transport
+security as tools and documentation resources. Reading skills does not
+require a live SC4S management API connection.</p>
+<p>Clients without Skills extension support can still read the <code>skill://</code>
+resources as ordinary resources.</p>
 <h2 id="prompts">Prompts<a class="headerlink" href="#prompts" title="Permanent link">&para;</a></h2>
 <p>Prompts are ready-made workflows that include the relevant knowledge
 base and a set of diagnostic steps. Invoke them from your client&rsquo;s
@@ -8716,10 +8801,10 @@ details.</p>
       
         
         
-      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["content.code.copy"],"redirect":null,"search":"../../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["content.code.copy"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a2388154.min.js"></script>
+      <script src="../../assets/javascripts/bundle.3cb411a8.min.js"></script>
       
     
   </body>

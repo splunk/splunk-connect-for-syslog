@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../images/logo.png">
-      <meta name="generator" content="zensical-0.0.71">
+      <meta name="generator" content="zensical-0.1.2">
     
     
       
@@ -31,7 +31,7 @@
       
         
       
-      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.e442bf79.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/modern/main.ebb7f775.min.css">
       
         
           
@@ -112,9 +112,10 @@
   <img src="../../images/logo.png" alt="Splunk Connect for Syslog">
 
     </a>
-    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+    <label class="md-header__button md-icon" for="__drawer">
       
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -152,9 +153,10 @@
     
       
       
-        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+        <label class="md-header__button md-icon" for="__search">
           
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
         <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
   <button type="button" class="md-search__button">
@@ -8896,10 +8898,6 @@ Jul 15 18:45:20 sra-sc4s-alln01-02 systemd[1]: sc4s.service: Main process exited
 </code></pre></div>
 <p>You will see entries similar to the following:</p>
 <div class="highlight"><pre><span></span><code>SC4S_ENV_CHECK_HEC: Splunk HEC connection test successful; checking indexes...
-
-SC4S_ENV_CHECK_INDEX: Checking email {"text":"Incorrect index","code":7,"invalid-event-number":1}
-SC4S_ENV_CHECK_INDEX: Checking epav {"text":"Incorrect index","code":7,"invalid-event-number":1}
-SC4S_ENV_CHECK_INDEX: Checking main {"text":"Success","code":0}
 </code></pre></div>
 <p>Note the specifics of the indexes that are not configured correctly, and rectify this in your Splunk configuration. If this is not addressed properly, you may see output similar to the below when data flows into SC4S:</p>
 <p><div class="highlight"><pre><span></span><code>Mar 16 19:00:06 b817af4e89da syslog-ng[1]: Server returned with a 4XX (client errors) status code, which means we are not authorized or the URL is not found.; url='https://splunk-instance.com:8088/services/collector/event', status_code='400', driver='d_hec#0', location='/opt/syslog-ng/etc/conf.d/destinations/splunk_hec.conf:2:5'
@@ -8921,10 +8919,10 @@ SC4S_LISTEN_MERAKI_SWITCHES_TLS_PORT: 999999999999 must be integer within the ra
 disk resources. The size of the local disk buffer is configured in the <code>env_file</code>: <a href="https://splunk-connect-for-syslog.readthedocs.io/en/latest/configuration/#disk-buffer-variables">Disk buffer configuration</a></p>
 </li>
 <li>
-<p>Check the <code>env_file</code> to see whether <code>SC4S_DEST_GLOBAL_ALTERNATES</code> is set to <code>d_hec_debug</code>,<code>d_archive</code>, or another file-based destination. Any of these settings will consume significant local disk space.</p>
+<p>Check the <code>env_file</code> for <code>SC4S_DEBUG_HEC=yes</code>, which enables global HEC payload capture (<code>d_hec_debug</code>), and <code>SC4S_ARCHIVE_GLOBAL=yes</code>, which enables global archiving (<code>d_archive</code>). Also check source-specific alternate destinations and custom file destinations. These features can consume significant local disk space. </p>
 </li>
 </ul>
-<p><code>d_hec_debug</code> and <code>d_archive</code> are organized by sourcetype; the <code>du -sh *</code> command can be used in each subdirectory to find the culprit. </p>
+<p>Under the archive mount, HEC debug files are stored in <code>debug/&lt;index&gt;/&lt;vendor_product&gt;/</code>. Archive files are stored in <code>&lt;sourcetype&gt;/&lt;host&gt;/</code> in the default compliance mode, or <code>&lt;year&gt;/&lt;month&gt;/&lt;day&gt;/</code> when <code>SC4S_GLOBAL_ARCHIVE_MODE=diode</code>. Use <code>du -sh *</code> in the relevant directory to identify what is consuming disk space. Enable HEC debug capture only temporarily, check available disk space, and restore the previous setting after collecting the required sample.</p>
 <ul>
 <li>Try rebuilding your SC4S volume:
 <div class="highlight"><pre><span></span><code>podman volume rm splunk-sc4s-var
@@ -9114,10 +9112,10 @@ Run the following commands to implement your changes:
       
         
         
-      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["content.code.copy"],"redirect":null,"search":"../../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
+      <script id="__config" type="application/json">{"annotate":null,"base":"../..","features":["content.code.copy"],"redirect":null,"search":"../../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":{"provider":"mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a2388154.min.js"></script>
+      <script src="../../assets/javascripts/bundle.3cb411a8.min.js"></script>
       
     
   </body>
