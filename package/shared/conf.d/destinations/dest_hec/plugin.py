@@ -82,7 +82,8 @@ for group in dests:
     user_headers = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_HEADERS", "")
     if user_headers != "":
         headers += user_headers.split(",")
-    token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TOKEN")
+    # Tokens read from files or Kubernetes Secrets often end in a newline, which breaks the header.
+    token = os.getenv(f"SC4S_DEST_SPLUNK_HEC_{group}_TOKEN", "").strip()
     headers.append(f"Authorization: Splunk {token}")
     headers.append("__splunk_app_name: sc4syslog")
     sc4s_version = os.getenv('SC4S_VERSION', "0.0.0")

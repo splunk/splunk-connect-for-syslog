@@ -391,3 +391,6 @@ event.txt
 # vscode
 
 .vscode/launch.json
+# SC4S EKS add-on build output and test setup
+eks_addon/build/
+eks_addon/kind/

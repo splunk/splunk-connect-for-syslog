@@ -175,8 +175,11 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-      - name: Run docker vulnerability scanner
+      # The image is multi-arch and Trivy scans only one platform per run, so scan each.
+      - name: Run docker vulnerability scanner (linux/amd64)
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        env:
+          TRIVY_PLATFORM: linux/amd64
         with:
           image-ref: ${{ needs.meta.outputs.container_base }}
           format: 'table'
@@ -184,7 +187,20 @@ jobs:
           severity: 'CRITICAL,HIGH,MEDIUM,LOW'
           trivyignores: '.trivyignore'
           scanners: "vuln"
-          
+      - name: Run docker vulnerability scanner (linux/arm64)
+        # Run even when the amd64 scan fails, so both results are reported.
+        if: ${{ !cancelled() }}
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        env:
+          TRIVY_PLATFORM: linux/arm64
+        with:
+          image-ref: ${{ needs.meta.outputs.container_base }}
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+          trivyignores: '.trivyignore'
+          scanners: "vuln"
+
   test-container:
     runs-on: ubuntu-26.04
     needs:
