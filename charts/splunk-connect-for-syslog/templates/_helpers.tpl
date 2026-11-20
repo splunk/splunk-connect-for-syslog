@@ -39,7 +39,8 @@ helm.sh/chart: {{ include "splunk-connect-for-syslog.chart" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- /* Hardcoded: EKS add-ons support only the Release Name and Namespace objects, and in Helm 3 the release service is always "Helm". */}}
+app.kubernetes.io/managed-by: Helm
 app.kubernetes.io/component: "input"
 app.kubernetes.io/part-of: "Splunk"
 {{- end }}

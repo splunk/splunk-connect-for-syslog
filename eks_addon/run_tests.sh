@@ -102,6 +102,10 @@ fi
 
 if grep -rqE '\blookup\b' "${EKS_CHART_DIR}/templates"; then fail "templates use lookup"; else pass "no lookup calls"; fi
 
+# EKS add-ons support only Release.Name and Release.Namespace (AWS INCOMPATIBLE_HELM_OBJECTS).
+release_objects="$(grep -rhoE '\.Release\.[A-Za-z]+' "${EKS_CHART_DIR}/templates" | grep -vE '\.Release\.(Name|Namespace)$' | sort -u | xargs || true)"
+if [[ -z "${release_objects}" ]]; then pass "only Release.Name and Release.Namespace are used"; else fail "unsupported Release objects: ${release_objects}"; fi
+
 if [[ -z "${rendered}" ]]; then
   fail "hook, CRD and image checks not run: the sample settings did not render"
 else
