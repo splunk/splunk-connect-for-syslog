@@ -19,7 +19,7 @@
 | fgt_log        | Catch-all sourcetype; not used by the TA                                                                |
 | fgt_traffic    | None                                                                                                    |
 | fgt_utm        | None                                                                                                    |
-| fgt_event      | None                                                                                                    |
+| fgt_event      | Covers standard event logs and Security Rating events identified by msg_tag=fgt-security-rating                                                                                                    |
 
 ## Sourcetype and Index Configuration
 
@@ -27,7 +27,7 @@
 |----------------|----------------|----------------|----------------|
 | fortinet_fortios_traffic      | fgt_traffic      | netfw          | none          |
 | fortinet_fortios_utm    | fgt_utm      | netfw          | none          |
-| fortinet_fortios_event    | fgt_event      | netops          | none          |
+| fortinet_fortios_event    | fgt_event      | netops          | Also handles Security Rating events (msg_tag=fgt-security-rating)          |
 | fortinet_fortios_log    | fgt_log      | netops          | none          |
 
 ## Source Setup and Configuration
