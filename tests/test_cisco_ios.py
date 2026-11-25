@@ -19,6 +19,12 @@ import shortuuid
 env = Environment(autoescape=select_autoescape(default_for_string=False))
 
 
+@pytest.fixture
+def cisco_host_key(get_host_key):
+    # The Cisco parser skips hostname candidates that start with four or more digits.
+    return f"ios-{get_host_key}"
+
+
 # 30: foo: 6340004: *Mar  4 11:45:20: %SEC-6-IPACCESSLOGP: list INET-BLOCK permitted tcp 192.168.20.252(55244) -> 10.54.3.178(44818), 1 packet
 # 30: foo: *Apr 29 13:58:46.000001: %SYS-6-LOGGINGHOST_STARTSTOP: Logging to host 192.168.1.239 stopped - CLI initiated
 # 30: foo: *Apr 29 13:58:46.411: %SYS-6-LOGGINGHOST_START   STOP: Logging to host 192.168.1.239 stopped - CLI initiated
@@ -189,8 +195,8 @@ def adjust_epoch_by_timezone_context(epoch, abbr):
 
 @pytest.mark.parametrize("event", testdata)
 @pytest.mark.addons("cisco")
-def test_cisco_ios(record_property, get_host_key, setup_splunk, setup_sc4s, event):
-    host = get_host_key
+def test_cisco_ios(record_property, cisco_host_key, setup_splunk, setup_sc4s, event):
+    host = cisco_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
@@ -236,9 +242,9 @@ def test_cisco_ios(record_property, get_host_key, setup_splunk, setup_sc4s, even
 @pytest.mark.parametrize("event", testdata_badtime)
 @pytest.mark.addons("cisco")
 def test_cisco_ios_badtime(
-    record_property, get_host_key, setup_splunk, setup_sc4s, event
+    record_property, cisco_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = get_host_key
+    host = cisco_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
@@ -283,9 +289,9 @@ def test_cisco_ios_badtime(
 @pytest.mark.parametrize("event", testdata_uptime)
 @pytest.mark.addons("cisco")
 def test_cisco_ios_uptime(
-    record_property, get_host_key, setup_splunk, setup_sc4s, event
+    record_property, cisco_host_key, setup_splunk, setup_sc4s, event
 ):
-    host = get_host_key
+    host = cisco_host_key
 
     mt = env.from_string(event + "\n")
     message = mt.render(mark="<166>", seq=20, host=host)
@@ -307,8 +313,8 @@ def test_cisco_ios_uptime(
 
 
 @pytest.mark.addons("cisco")
-def test_cisco_nx_os_soup(record_property, get_host_key, setup_splunk, setup_sc4s):
-    host = get_host_key
+def test_cisco_nx_os_soup(record_property, cisco_host_key, setup_splunk, setup_sc4s):
+    host = cisco_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
@@ -341,8 +347,8 @@ def test_cisco_nx_os_soup(record_property, get_host_key, setup_splunk, setup_sc4
 
 # <187>364241: May 19 16:58:44.814 GMT: %ADJ-3-RESOLVE_REQ: Adj resolve request: Failed to resolve 1.1.1.1 Vlan1
 @pytest.mark.addons("cisco")
-def test_cisco_nx_os_soup2(record_property, get_host_key, setup_splunk, setup_sc4s):
-    host = get_host_key
+def test_cisco_nx_os_soup2(record_property, cisco_host_key, setup_splunk, setup_sc4s):
+    host = cisco_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
@@ -586,8 +592,8 @@ def test_cisco_ios_xr_hostname_with_underscore(
 
 @pytest.mark.parametrize("event", testdata_timezone)
 @pytest.mark.addons("cisco")
-def test_cisco_ios_tz(record_property, get_host_key, setup_splunk, setup_sc4s, event):
-    host = get_host_key
+def test_cisco_ios_tz(record_property, cisco_host_key, setup_splunk, setup_sc4s, event):
+    host = cisco_host_key
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     iso, bsd, time, _, _, tzname, epoch = time_operations(dt)
