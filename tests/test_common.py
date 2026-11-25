@@ -116,9 +116,8 @@ def test_metrics(record_property,  setup_splunk, setup_sc4s):
     assert result_count != 0
 
 
-def test_tz_guess(record_property,  setup_splunk, setup_sc4s):
-
-    host = f"{shortuuid.ShortUUID().random(length=5).lower()}-{shortuuid.ShortUUID().random(length=5).lower()}"
+def test_tz_guess(record_property, get_host_key, setup_splunk, setup_sc4s):
+    host = f"asa-{get_host_key}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
