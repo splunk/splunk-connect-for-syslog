@@ -8,7 +8,7 @@ and sends events to Splunk through the HTTP Event Collector (HEC).
 |---|---|
 | Add-on name | `splunk_splunk-connect-for-syslog` |
 | Namespace | `sc4s` |
-| Kubernetes versions | 1.31 - 1.35 |
+| Kubernetes versions | 1.31 - 1.37 |
 | Architectures | amd64 and arm64 (AWS Graviton) |
 
 To deploy SC4S on EKS yourself instead, see [EKS](eks.md).
@@ -26,10 +26,6 @@ To deploy SC4S on EKS yourself instead, see [EKS](eks.md).
    for the indexes SC4S uses.
 4. A subscription to Splunk Connect for Syslog in AWS Marketplace. You can subscribe from the EKS console while
    adding the add-on (step 2 below).
-
-!!! note "Private Marketplace"
-    If your organization uses an AWS Private Marketplace, an administrator must approve Splunk Connect for Syslog
-    before you can subscribe. The product page shows "not approved for procurement" until then.
 
 # Install the add-on
 
