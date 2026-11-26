@@ -1,2 +1,7 @@
 Check microk8s helm docs to check how to maintain the pods
+{{- $deprecated := include "splunk-connect-for-syslog.deprecatedSettings" . }}
+{{- if $deprecated }}
 
+WARNING: these settings use old names. They still work, but switch to the new names:
+{{- $deprecated }}
+{{- end }}
