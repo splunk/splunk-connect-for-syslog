@@ -117,7 +117,7 @@ def test_metrics(record_property,  setup_splunk, setup_sc4s):
 
 
 def test_tz_guess(record_property, get_host_key, setup_splunk, setup_sc4s):
-    host = f"asa-{get_host_key}"
+    host = f"test-host-{get_host_key}"
 
     dt = datetime.datetime.now(datetime.timezone.utc)
     _, bsd, time, date, tzoffset, _, epoch = time_operations(dt)
