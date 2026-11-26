@@ -376,6 +376,33 @@ def test_linux_vmware_bsd_tmd(
 
 
 @pytest.mark.addons("vmware")
+def test_linux_vmware_grouping_bounded_and_complete(setup_splunk, setup_sc4s):
+    host = f"testvmw-group-{shortuuid.ShortUUID().random(length=10).lower()}"
+    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat(
+        timespec="milliseconds"
+    ).replace("+00:00", "Z")
+    marker = "SC4S-GROUP-PART"
+    message = "".join(
+        f"<144>1 {timestamp} {host} vpxd 123 - - {marker}-{part:02d}:\n"
+        for part in range(33)
+    )
+
+    sendsingle(message, setup_sc4s[0], setup_sc4s[1][514])
+
+    search = f'search index=infraops host={host} sourcetype="vmware:vclog:vpxd"'
+    complete, _ = splunk_single(
+        setup_splunk,
+        f'{search} | rex max_match=0 "{marker}-(?<part>[0-9]+)" '
+        '| mvexpand part | stats dc(part) as distinct_parts count as total_parts '
+        '| where distinct_parts=33 AND total_parts=33',
+    )
+    total, _ = splunk_single(setup_splunk, search)
+
+    assert complete == 1
+    assert total == 2
+
+
+@pytest.mark.addons("vmware")
 def test_vmware_bsd_vpscache(
     record_property,  get_host_key, setup_splunk, setup_sc4s
 ):
