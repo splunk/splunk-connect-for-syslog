@@ -68,6 +68,7 @@ nav:
           - mk8s: "gettingstarted/ansible-mk8s.md"
         - AWS cloud deployment:
           - EKS: "gettingstarted/eks.md"
+          - EKS add-on (AWS Marketplace): "gettingstarted/eks-addon.md"
           - ECS/Fargate (Experimental): "gettingstarted/ecs-fargate.md"
         - Other cloud deployments:
           - GKE (Experimental): "gettingstarted/gke.md"
