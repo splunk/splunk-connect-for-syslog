@@ -55,7 +55,7 @@ SC4S will normalize the structure of vmware events from multiple incorrectly for
 | SC4S_LISTEN_VMWARE_VSPHERE_TCP_PORT      | empty string      | Enable a TCP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_VMWARE_VSPHERE_UDP_PORT      | empty string      | Enable a UDP port for this specific vendor product using a comma-separated list of port numbers |
 | SC4S_LISTEN_VMWARE_VSPHERE_TLS_PORT      | empty string      | Enable a TLS port for this specific vendor product using a comma-separated list of port numbers |
-| SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG      | empty string      | empty/yes groups known instances of improperly split events set "yes" to return to enable  |
+| SC4S_SOURCE_VMWARE_VSPHERE_GROUPMSG      | empty string      | Set to `yes` to combine known split events. A group closes after an idle timeout, a recognized terminator, or 32 parts. Longer events are emitted in multiple parts. |
 
 ### Verification
 
