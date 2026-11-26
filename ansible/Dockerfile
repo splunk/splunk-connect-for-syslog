@@ -1,5 +1,5 @@
 # install requirements in venv
-FROM python:3.14 AS venv_builder
+FROM python:3.15@sha256:e4bc83a3314d078d651f06c8440e9a03ba892ee2f6577437f174abd8731fb343 AS venv_builder
 
 RUN pip install --require-hashes --only-binary :all: \
     ansible~=6.1.0 --no-cache-dir \
