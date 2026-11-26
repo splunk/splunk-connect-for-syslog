@@ -21,7 +21,6 @@ FROM ghcr.io/axoflow/axosyslog:${SYSLOGNG_VERSION}
 
 RUN apk add -U --upgrade --no-cache \
     bash \
-    binutils \
     build-base \
     ca-certificates \
     cargo \
