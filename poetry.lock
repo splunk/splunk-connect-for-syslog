@@ -3280,21 +3280,21 @@ email = ["email-validator (>=2.0)"]
 
 [[package]]
 name = "zensical"
-version = "0.1.3"
+version = "0.1.4"
 description = "A modern static site generator built by the creators of Material for MkDocs"
 optional = false
 python-versions = ">=3.11"
 groups = ["dev"]
 files = [
-    {file = "zensical-0.1.3-cp311-abi3-macosx_10_12_x86_64.whl", hash = "sha256:63ff8c2e2bc939459d1c76bdea45deaca83b15a056913f4d9fe7391c730a58c1"},
-    {file = "zensical-0.1.3-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:8bb4fa0fbfa36fc8ed8d81a0a47d9013f40073e265438e4ce1bcff1f0caa71fb"},
-    {file = "zensical-0.1.3-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:6d8a797347cf94ebae348bdf09ee67dd8d131b9508222fa5731dd39fa270382d"},
-    {file = "zensical-0.1.3-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:a033f82e089abb76cc2c7531cf1702782472acceb14c96e7020edc8c3d8a736c"},
-    {file = "zensical-0.1.3-cp311-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:2002b246cc242b6670f216d395bc18b30dafe5fe38a7d34b73df34362e9b2570"},
-    {file = "zensical-0.1.3-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:5a27828e8831c4ef08e1d54e050bef81030b8ac20ea60bb972e6fac56e47b9c6"},
-    {file = "zensical-0.1.3-cp311-abi3-win_amd64.whl", hash = "sha256:d93dc520a91340c44d5ff0b78d5e69858ec97dcbab6448e42d17b919da3e0ab3"},
-    {file = "zensical-0.1.3-cp311-abi3-win_arm64.whl", hash = "sha256:a878c768d03d983946ef31d1fe2bd43bb03b8c8ef373a32113136c3d2f733aa5"},
-    {file = "zensical-0.1.3.tar.gz", hash = "sha256:70db96f93c0cebba22c47e7480b51c2132a28e10360f648f2df3f40f6287d386"},
+    {file = "zensical-0.1.4-cp311-abi3-macosx_10_12_x86_64.whl", hash = "sha256:0574d0aa43d4bd4b601375932859a42dfbad085470aba635bc6823ee1d933a3d"},
+    {file = "zensical-0.1.4-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:6022949420ace0a9c9c15cfc41e2ca06e079ed06a1bcd20ce8df92a215162189"},
+    {file = "zensical-0.1.4-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d3f314fb9206dbbde53e743a3fd530ff445c8c179d9f2446d4920e961e5680c4"},
+    {file = "zensical-0.1.4-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:e60cc4a508e38eab7ed2e3bf256ca1b88aca38342b00da5ab67324a986f503b4"},
+    {file = "zensical-0.1.4-cp311-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:722eb57fafd432114b73b62c9db8694d5b29f0769867f52f26230b74e770c930"},
+    {file = "zensical-0.1.4-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:1d00d2851bf4817d7837e3c853cc3ca8de2b9f5f5805e35f01f56dba47e6b464"},
+    {file = "zensical-0.1.4-cp311-abi3-win_amd64.whl", hash = "sha256:4207542570a7e686815650dfefb4767489f309ff914f47cd89b8182721f9d55c"},
+    {file = "zensical-0.1.4-cp311-abi3-win_arm64.whl", hash = "sha256:456d7efad2b5540152373bab5cf4dd70247dba96dc522b5c15076fdd8f18d732"},
+    {file = "zensical-0.1.4.tar.gz", hash = "sha256:30e89b0f006af47e9780baa4b83f732cd2b11199dde8d1ec107345f1ecb808d5"},
 ]
 
 [package.dependencies]
@@ -3306,18 +3306,18 @@ pygments = ">=2.20"
 pymdown-extensions = ">=11.0"
 pyyaml = ">=6.0.2"
 tomli = ">=2.4.0"
-zensical-ui = "0.0.43"
+zensical-ui = "0.0.44"
 
 [[package]]
 name = "zensical-ui"
-version = "0.0.43"
+version = "0.0.44"
 description = "Templates and browser assets for Zensical"
 optional = false
 python-versions = ">=3.11"
 groups = ["dev"]
 files = [
-    {file = "zensical_ui-0.0.43-py3-none-any.whl", hash = "sha256:804bfe979ccc1b96244b7decde09e3a92a3c67da64e6887a617877a30ce02ff2"},
-    {file = "zensical_ui-0.0.43.tar.gz", hash = "sha256:e82d161ad797fff833cd045cfa3ddb9be69f276386b78dd5a4dff76dfbd41596"},
+    {file = "zensical_ui-0.0.44-py3-none-any.whl", hash = "sha256:d3f15987042c1b9930df85418a1400c52a3bec96e310e35d42e4f9e69ffd8b9b"},
+    {file = "zensical_ui-0.0.44.tar.gz", hash = "sha256:7c47d4f02b5ac6aedbd0ea0b9591012e13519448df75d5e009af2ea0e60567f2"},
 ]
 
 [[package]]
